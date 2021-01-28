@@ -21,9 +21,6 @@
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
-.idea
 
-#本地多余的
-JAVAWeb-Project-master
-javayanjiu.iml
-logistics
+.idea
+wuliu.iml
