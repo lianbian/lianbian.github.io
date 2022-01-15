@@ -1,0 +1,1036 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="世界时间系统构成原理, 连边, Java, 架构">
+    <meta name="description" content="连边，专注于Java和架构领域，坚持撰写有原理，有实战，有体系的技术文章。">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+    <title>世界时间系统构成原理 | 连边</title>
+    <link rel="icon" type="image/png" href="/favicon.png">
+
+    <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
+    <link rel="stylesheet" type="text/css" href="/libs/materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/aos/aos.css">
+    <link rel="stylesheet" type="text/css" href="/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/lightGallery/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="/css/my.css">
+
+    <script src="/libs/jquery/jquery.min.js"></script>
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+
+
+<body>
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <img src="/medias/logo.png" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">连边</span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>首页</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/tags" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>标签</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/categories" class="waves-effect waves-light">
+      
+      <i class="fas fa-bookmark" style="zoom: 0.6;"></i>
+      
+      <span>分类</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives" class="waves-effect waves-light">
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>归档</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/about" class="waves-effect waves-light">
+      
+      <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
+      
+      <span>关于</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="搜索" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+</ul>
+
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="/medias/logo.png" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">连边</div>
+        <div class="logo-desc">
+            
+            连边，专注于Java和架构领域，坚持撰写有原理，有实战，有体系的技术文章。
+            
+        </div>
+    </div>
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			首页
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/tags" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			标签
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/categories" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-bookmark"></i>
+			
+			分类
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/archives" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-archive"></i>
+			
+			归档
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/about" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-user-circle"></i>
+			
+			关于
+		</a>
+          
+        </li>
+        
+        
+    </ul>
+</div>
+
+
+        </div>
+
+        
+    </nav>
+
+</header>
+
+    
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/3.jpg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">世界时间系统构成原理</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="post-container content">
+
+    
+    <link rel="stylesheet" href="/libs/tocbot/tocbot.css">
+<style>
+    #articleContent h1::before,
+    #articleContent h2::before,
+    #articleContent h3::before,
+    #articleContent h4::before,
+    #articleContent h5::before,
+    #articleContent h6::before {
+        display: block;
+        content: " ";
+        height: 100px;
+        margin-top: -100px;
+        visibility: hidden;
+    }
+
+    #articleContent :focus {
+        outline: none;
+    }
+
+    .toc-fixed {
+        position: fixed;
+        top: 64px;
+    }
+
+    .toc-widget {
+        width: 345px;
+        padding-left: 20px;
+    }
+
+    .toc-widget .toc-title {
+        padding: 35px 0 15px 17px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    .toc-widget ol {
+        padding: 0;
+        list-style: none;
+    }
+
+    #toc-content {
+        padding-bottom: 30px;
+        overflow: auto;
+    }
+
+    #toc-content ol {
+        padding-left: 10px;
+    }
+
+    #toc-content ol li {
+        padding-left: 10px;
+    }
+
+    #toc-content .toc-link:hover {
+        color: #42b983;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    #toc-content .toc-link::before {
+        background-color: transparent;
+        max-height: 25px;
+
+        position: absolute;
+        right: 23.5vw;
+        display: block;
+    }
+
+    #toc-content .is-active-link {
+        color: #42b983;
+    }
+
+    #floating-toc-btn {
+        position: fixed;
+        right: 15px;
+        bottom: 76px;
+        padding-top: 15px;
+        margin-bottom: 0;
+        z-index: 998;
+    }
+
+    #floating-toc-btn .btn-floating {
+        width: 48px;
+        height: 48px;
+    }
+
+    #floating-toc-btn .btn-floating i {
+        line-height: 48px;
+        font-size: 1.4rem;
+    }
+</style>
+<div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/%E5%85%B6%E4%BB%96/">
+                                <span class="chip bg-color">其他</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/%E5%85%B6%E4%BB%96/" class="post-category">
+                                其他
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2021-08-04
+                </div>
+                
+
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
+                    4.9k
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
+                    16 分
+                </div>
+                
+
+                
+            </div>
+        </div>
+        <hr class="clearfix">
+
+        
+        <!-- 是否加载使用自带的 prismjs. -->
+        <link rel="stylesheet" href="/libs/prism/prism.css">
+        
+
+        
+
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <p><strong>大家好，我是连边，</strong></p>
+<p><strong>今天给大家带来一篇老少皆宜的科普文章。</strong></p>
+<p>下面是同一时刻的中国时间、英国时间和美国时间：</p>
+<p><img src="http://mkstatic.lianbian.net/640-20210804094044562.png" alt="图片"></p>
+<p>此时此刻，中国的人们刚午休完准备开始下午的工作，英国的人们已经睡了一晚上正准备早晨起床，美国的人们有的还在熬夜、有的已经进入梦乡，但不管睡没睡，他们都即将迎来新的一天。</p>
+<p>为什么会是这样的呢？本文将告诉你完整的答案，记住本文之后，够你受用一辈子，至少也会是半辈子，祝愿所有的读者都能够去实地看一看。</p>
+<h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>人们很早就知道自己脚下的这片土地非常大，还知道在很远的地方居住着其它人们，还有山川、河流、大海。但是人们并没有办法给出很远的地方到底在哪里。</p>
+<p>就像小孩子问你，美国在哪里，大人们总是说，美国和中国之间啊，有一个很大的大海，美国就在大海的对岸，总之很远。</p>
+<p>后来人们认识到地球是一个球体，但是人们依然没有好的办法给出很远的地方究竟在哪里。就像我们对小孩说，美国啊，在地球的另一面，总之还是很远。</p>
+<h2 id="经度、纬度"><a href="#经度、纬度" class="headerlink" title="经度、纬度"></a>经度、纬度</h2><p>为了更好的描述地球上的一个具体位置，人们引入了经度和纬度的概念，并规定，东西方向的线是纬线，南北方向的线是经线。</p>
+<p>由于地球是自西向东转动，且球体中间是最粗的地方，所以就把地球的中间定义为纬度的起点，即0度纬线，其实就是赤道了。</p>
+<p>往北半球称为北纬，南半球称为南纬。可见赤道是最长的纬线，越往南北极方向走，纬线越短，且北极是北纬90度，南极是南纬90度。</p>
+<p><img src="http://mkstatic.lianbian.net/640-20210804094049269.jpeg" alt="图片"></p>
+<p>纬度的起点选在赤道没有任何争议，但是经度的起点选在哪里呢？这确实是一个问题，因为每条经线都是一样长的，且没有什么本质差别。</p>
+<p>1851年御用天文学家艾里在英国伦敦格林威治天文台设置中星仪，并以此确定格林威治子午线。因为当时超过三分之二的船只已使用该线为参考子午线，在1884年于美国华盛顿特区举行的国际本初子午线大会上正式定之为经度的起点。</p>
+<p><img src="http://mkstatic.lianbian.net/640-20210804094057459.jpeg" alt="图片"></p>
+<p>（格林威治天文台）</p>
+<p>因此经过这个地方的经线就是0度经线，又称为本初子午线。自此向东称为东经，向西称为西经。0度经线被东经和西经共用。</p>
+<p><img src="http://mkstatic.lianbian.net/640-20210804094102521.jpeg" alt="图片"></p>
+<p>（0度经线 / 本初子午线）</p>
+<p>由于一个圆周是360度，东经西经各分一半，所以都是180度，且东经西经的终点是重合的，就在180度处，就像它们的起点也是重合的，就在0度处一样。</p>
+<p>所以经过180度处的经线同样被东经和西经共用，由于180度经线和0度经线正好相对，因此又称为对向子午线，是和本初子午线相对的一种叫法。</p>
+<p><img src="http://mkstatic.lianbian.net/640-20210804094108739.jpeg" alt="图片"></p>
+<p>因此，东经0度和西经0度是一样的，同样东经180度和西经180度也是一样的，那么自然北纬0度和南纬0度也是一样的。</p>
+<h2 id="时区"><a href="#时区" class="headerlink" title="时区"></a>时区</h2><p>虽然截止到现在科学界对于时间的研究还没有什么结论，但是人们对于时间的认识却是在很早很早以前就开始了。</p>
+<p>人们认识到日出东方落于西山，昼夜交替日复一日，都是源于地球的自转，能照到太阳光的地方就是白天，照不到的就是黑夜。</p>
+<p>因此人们认为时间和地球的自转有关，由于自转是自西向东的，主要和经度有关，所以时间也和经度有关。</p>
+<p>以前国际时间不统一，经常出现“穿越”情况，比如收到信件的当地时间比寄出信件的当地时间还要早，即人家还没寄呢你就已经收到了。</p>
+<p>1879年，加拿大铁路工程师伏列明提出了“区时”的概念，在1884年的一次国际会议上得到认同，由此正式建立了统一世界计量时刻的“区时系统”。</p>
+<p>该系统规定，地球上每15度经度范围作为一个区域（即太阳1个小时内走过的经度）。这样，整个地球的表面就被划分为24个区域。</p>
+<p>每个区域内的时间都按照该区域的中央经线（距离东西两侧各7.5度位置的那条经线）处的时间来计量，这样一个区域内就只有一个时间了。</p>
+<p>由于每天是24小时，地球一周被分为了24个区域，所以每个区域的时长是1小时，且相邻区域的时间差值也是1小时。</p>
+<p>因此我们可以从两个方面来理解时区，一是用区域来表示时间，即时间的区域，二是每个区域是1小时，相邻区域相差也是1小时。</p>
+<p>现实中时区并不是严格按经线来划分的，而是按自然条件来划分的。因为实际上，常常1个国家或1个省份同时跨着2个或更多时区，为了照顾到行政上的方便，常将1个国家或1个省份划在一起。</p>
+<p><img src="http://mkstatic.lianbian.net/640-20210804094112741.jpeg" alt="图片"></p>
+<p>和纬度、经度有起点一样，时区也有起点，而且这个起点应该和某条经线有关。没错，答案和你想的是一样的。</p>
+<p>同样是在1884年的那个会议上，不仅把经过英国伦敦东南格林威治的经线作为计算地理的起点，同时也作为世界时区的起点。</p>
+<p>该时区称为0时区，自此向东称为东时区，向西称为西时区，0时区是东时区和西时区的分界线，也可以认为被东西时区共用。</p>
+<p>东边从东1时区到东11时区，西边从西1时区到西11时区，这样还剩一个时区，就是12时区，它同样是东时区和西时区交界处的分界线。</p>
+<p>也可以认为被东西时区共用，因此既可以称为东12时区，也可以称为西12时区，其实是一样的。</p>
+<p>因此，东时区和西时区从0时区开始，向东和向西延伸，到12时区处相交。0时区是起点，12时区是终点。</p>
+<h2 id="时间系统"><a href="#时间系统" class="headerlink" title="时间系统"></a>时间系统</h2><p>本初子午线又叫格林威治子午线，它也曾经被用作时间的标准，称为格林威治时间，缩写是GMT。程序员都应该很熟悉了。</p>
+<p>即以格林威治当地的时间作为一个标准时间，然后其它地方的时间根据地球的自转推算出来，所以格林威治时间在天文领域应用广泛。</p>
+<p>可以说格林威治时间是以地球自转为基础的时间计量系统，可是后来人们认识到地球自转速度并不规则，因此格林威治时间已由协调世界时取代。</p>
+<p>协调世界时，又称世界统一时间、世界标准时间、国际协调时间。是以原子时秒长为基础的一种时间计量系统。</p>
+<p>协调世界时是由格林威治时间演化而来，格林威治时间因为本初子午线经过英国伦敦的格林威治而得名，但是本初子午线除了经过英国外还经过了法国等共8个国家。</p>
+<p>协调世界时在英文中的缩写是CUT，在法文中的缩写是TUC，它们是不相同的，为了照顾多方，最后做出妥协，缩写定为UTC，因此也称UTC时间。</p>
+<p>按照格林威治时间系统的定义，格林威治时间是标准时间，即GMT。由于地球自西向东转，所以东边先看到太阳，因此格林威治东边的时间比格林威治早（提前到来），西边的则比格林威治晚（滞后到来）。</p>
+<p>又由于一个时区就是一个小时，因此，东1时区的时间就是格林威治时间加上1小时，即GMT+1，中国采用东8时区时间，即GMT+8。西1时区的时间就是格林威治时间减去1小时，即GMT-1。</p>
+<p>这种写法我们都见过，除了这里说的用来表示时间之外，它也可以用来表示时区。GMT就是0时区，GMT+1就是东1时区，GMT-1就是西1时区。</p>
+<p>后来改为世界协调时间之后就成UTC了，于是就变成UTC+1，UTC+8，UTC-1，基本含义还是保持不变的。</p>
+<p>可以看到，时间系统的定义就是由一个基准时间加上偏移量组成，偏移量是正的表示向较早（东边或未来）的时间偏移，偏移量是负的表示向较晚（西边或过去）的时间偏移。</p>
+<p>为了降低复杂度，偏移量都是按整小时来算的，不考虑分钟和秒等，所以全世界的时间里的分钟和秒都是一样的，只要小时是不同的，因此全世界只有24种不同的时间。</p>
+<p><strong>“时间的起点”</strong></p>
+<p>对于一个环形物体，其实是没有严格意义的开始位置和结束位置的，同样也没有严格意义的前后，除非人为指定一个特殊位置作为起点。</p>
+<p>比如两个人在操场的环形跑道上跑步，假设你第一次看到时，这两人已经跑了一会儿了，此时根本无法分出谁在前谁在后。</p>
+<p>就像地球的自西向东转动一样，根本无法分出谁在东方、谁在西方，因为往东走和往西走都能到达目的地。自然也不知道谁靠前、谁靠后。很多人认为中国在东方，美国在西方。</p>
+<p>理由是中国是中午时，美国还是半夜呢，因此中国先看到太阳，所以比美国早，因此中国在东方。这种逻辑是不对的，因为美国是中午时，中国也是半夜啊。</p>
+<p>因此我们需要一个特殊的位置作为“时间的起点”，没错，这个特殊的位置就是0度经线，即本初子午线，也称格林威治子午线，也是0时区，就在英国伦敦。</p>
+<p>时间起点的位置找到了，那么时间的起点应该是几点呢？按照正常人的思维，时间的起点应该是凌晨0点。那到底对不对呢，来检测下便知。</p>
+<p>把伦敦的0时区当作凌晨0点，向东走，到中国时应该是上午8点，继续向东，到美国时应该是下午18点，这样一来美国的时间就比中国的还早了，这是错误的，可以在网上查一下，美国的时间是比中国晚的。</p>
+<p>我们的逻辑并没有错，错就错在时间的起点假设错了，不应该是凌晨0点。站在古人的角度，凌晨0点是三更半夜，黑灯瞎火的，没有什么意思啊。</p>
+<p>古人渴望的是太阳，它们需要的是阳光，看到阳光就看到了希望。再说了，大家都是崇拜光明的，崇拜黑暗的是黑暗圣骑士，是邪恶的，哈哈。</p>
+<p>而且0度经线又叫本初子午线，子代表子夜，也可以理解为子时，即晚上23点到次日凌晨1点这个时辰。午代表正午，也可以理解为午时，即中午11点到下午1点这个时辰。</p>
+<p>而且理论上来说，格林威治标准时间的正午是指当太阳横穿格林威治子午线时的时间。因此把正午12点作为时间的起点，再来检测一下。</p>
+<p>把伦敦的0时区当作正午12点，向东走，到中国时应该是晚上20点，由于中国是东8时区，再向东走4个时区就到了12时区，此时是凌晨24点（或0点），正好位于白令海峡附近。</p>
+<p>再往东走就该变更日期了，由于12时区的中点就是180度经线的位置，1884年国际经度会议规定把它作为地球上“今天”和“昨天”的分界线，因此把这条经线称为国际日期变更线，它主要位于太平洋中。</p>
+<p>按照规定，凡是越过这条变更线时，日期都要发生变化，从东向西越过这条界线时，日期要加上1天（到了未来），从西向东越过这条界线时，日期要减去1天（到了过去）。这条线又叫“人为日界线”。</p>
+<p><img src="http://mkstatic.lianbian.net/640-20210804094119430.jpeg" alt="图片"></p>
+<p>关于日期加1天还是减1天，可以这样理解，当正午（12点）的阳光照射在伦敦的本初子午线上时，紧挨着国际日期变更线左侧（西边）的时间是晚上23点59分，这个时间已经从中午12点经过，所以靠前。也就是说伦敦是中午的时候，这里已经是半夜了。</p>
+<p>紧挨着国际日期变更线右侧（东边）的时间是凌晨0点01分，这个时间还未到中午12点，所以靠后。也就是说伦敦是中午的时候，这里还是凌晨，天还没亮呢。</p>
+<p>因此，从东向西越线要加1天，可以认为是从今天到明天，即到了未来的时间，从西向东越线要减1天，可以认为是从今天到昨天，即到了过去的时间。</p>
+<p>再回到刚才有关“时间的起点是几点”的检测，我们是从西往东走的，所以在白令海峡这里要减1天，即回到了昨天凌晨0点，再往东走6个时区就到了美国，所以美国此时是早上6点，而且应该是昨天早上。</p>
+<p>我们来算一下时间差，中国是晚上20点，美国是早上6点，正好相差14个小时，即中国比美国早14个小时，这是对的，但是美国应该是今天早上6点，而不是昨天早上6点。</p>
+<p>这主要是我们举得例子比较特殊，此时中国和美国都在国际日期变更线的右侧，也可以认为两国都已经从国际日期变更线上转过去了，所以日期是同一天。</p>
+<p>由于一天是24小时，中国比美国早14小时，所以中国和美国能够拥有相同日期的时长是每天只有10小时。且从中国北京时间的下午2点到晚上23点59分，对应的美国时间是从凌晨0点0分到上午10点。这段时间内，两国的日期是同一天，</p>
+<p>剩下的时间段内，中国日期比美国早1天。即中国已经进入新的一天了，美国需要在14个小时后才能进入新的一天。即中国北京时间的今天凌晨0点到下午2点，对应美国昨天的上午10点到晚上23点59分。在这个14小时内，中国日期比美国早1天。</p>
+<h2 id="早晚、前后"><a href="#早晚、前后" class="headerlink" title="早晚、前后"></a>早晚、前后</h2><p>相信有些读者的大脑已出现“脑力不足”的信号，因为这里讲的时间和我们日常生活中的时间是不一样的，主要是角度不同，这里讲的是世界时间，日常生活中指的是当地时间。且当地时间只有一个，世界时间有24个呢。</p>
+<p>先说当地时间，无论什么时候，一个地方的当地时间只有一个，比如你在3月2日买了一个笔记本电脑，他在3月3日买了一个，那么你比他买的早，他比你买的晚。</p>
+<p>所以在当地时间这个上下文中，指的是事件发生的早晚问题，且日期越小发生的越早，日期越大发生的越晚。再如80后比90后出生的早，00后比90后出生的晚。</p>
+<p>再说世界时间，在世界上不同的地方（时区），同一时刻的时间是不一样的，一个时区一个时间，共24个不同的时间。既然时间是不同的，那就一定是有的时间靠前，有的时间靠后。</p>
+<p>以地球的自转来说，先看到太阳的地方的时间靠前，后看到太阳的地方的时间靠后。由于地球是自西向东转，所以东边的地方先看到太阳，西边的地方后看到太阳，因此东边的时间靠前，西边的时间靠后。</p>
+<p>同样太阳下山时，也是东边先看不到，然后是西边再看不到，在中国，当东北已经进入黑夜了，新疆那里还艳阳高照呢，因为中国横跨了5个时区，从东5时区到东9时区，为什么中国采用东8区时间呢，因为北京在严格意义的东8区，上海也在。</p>
+<p><img src="http://mkstatic.lianbian.net/640-20210804094125647.jpeg" alt="图片"></p>
+<p>这样只是分出了时间的（超/靠）前（滞/靠）后，但是我们不能说10点就一定比9点靠前，因为可能是昨天的10点和今天的9点，因此这里还有一个日期的问题，必须要进行日期的分界。</p>
+<p>由于地球是圆球状，没有明显的分割线，所以只能人为的指定一条线作为分割线，它就是180度经线，也称对向子午线。根据地球自转方向来规定，分割线左侧（西边）为新一（明）天的开始，分割线右侧（东边）为当下这一（今）天的结束。</p>
+<p>由于这一条线对应着国际日期的变更，因此被称为国际日期变更线。因此从东向西越线要加1天，等于来到了新的一天（next day），从西向东越线要减1天，等于回到了过去的一天（prev day）。</p>
+<p>最后举个示例，假设现在是当地时间2020-03-02 14:00:00，你从变更线的左侧（西边）跳到右侧（东边），然后站着不动，由于地球自西向东转，且24小时才转一圈，所以24小时后才转回到你起跳之前的位置，说明你跳到了24小时之前，即穿越到了昨天（过去）。</p>
+<p>即跳起的一瞬间，落地点的当地时间比起跳点的当地时间晚了24个小时，正好晚了1天，所以要减1天。等于穿越到了过去。因此落地的时间是2020-03-01 14:00:00，所以就是从西向东跳过国际日期变更线要减1天，相反从东向西跳过要加1天。</p>
+
+                
+            </div>
+            <hr/>
+
+            
+
+    <div class="reprint" id="reprint-statement">
+        
+            <div class="reprint__author">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-user">
+                        文章作者:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="/about" rel="external nofollow noreferrer">连边</a>
+                </span>
+            </div>
+            <div class="reprint__type">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-link">
+                        文章链接:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://www.lianbian.net/2021/08/04/%E7%BC%96%E7%A8%8B%E6%80%9D%E6%83%B3/%E3%80%8C%E4%B8%96%E7%95%8C%E6%97%B6%E9%97%B4%E7%B3%BB%E7%BB%9F%E3%80%8D%E6%9E%84%E6%88%90%E5%8E%9F%E7%90%86/">https://www.lianbian.net/2021/08/04/%E7%BC%96%E7%A8%8B%E6%80%9D%E6%83%B3/%E3%80%8C%E4%B8%96%E7%95%8C%E6%97%B6%E9%97%B4%E7%B3%BB%E7%BB%9F%E3%80%8D%E6%9E%84%E6%88%90%E5%8E%9F%E7%90%86/</a>
+                </span>
+            </div>
+            <div class="reprint__notice">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-copyright">
+                        版权声明:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    本博客所有文章除特別声明外，均采用
+                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
+                    许可协议。转载请注明来源
+                    <a href="/about" target="_blank">连边</a>
+                    !
+                </span>
+            </div>
+        
+    </div>
+
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>复制成功，请遵循本文的转载规则</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">查看</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/tags/%E5%85%B6%E4%BB%96/">
+                                    <span class="chip bg-color">其他</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css">
+<div id="article-share">
+
+    
+    <div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+            <div class="card">
+                <a href="/2021/08/09/%E5%90%8E%E7%AB%AF/java/%E6%BA%90%E7%A0%81/ArrayList%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/5.jpg" class="responsive-img" alt="ArrayList源码解析">
+                        
+                        <span class="card-title">ArrayList源码解析</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2021-08-09
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/java/" class="post-category">
+                                    java
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/java/">
+                        <span class="chip bg-color">java</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2021/08/02/%E5%90%8E%E7%AB%AF/java/%E5%9F%BA%E7%A1%80/java%E6%B3%A8%E8%A7%A3%E7%B1%BB%E5%9E%8B%E4%BD%BF%E7%94%A8%E4%B8%8E%E5%8E%9F%E7%90%86/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/9.jpg" class="responsive-img" alt="java注解类型使用与原理">
+                        
+                        <span class="card-title">java注解类型使用与原理</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-08-02
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/java%E5%9F%BA%E7%A1%80/" class="post-category">
+                                    java基础
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/java%E5%9F%BA%E7%A1%80/">
+                        <span class="chip bg-color">java基础</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script>
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeShrink.js"></script>
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget card" style="background-color: white;">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('0'),
+            headingSelector: 'h2, h3, h4'
+        });
+
+        // modify the toc link href to support Chinese.
+        let i = 0;
+        let tocHeading = 'toc-heading-';
+        $('#toc-content a').each(function () {
+            $(this).attr('href', '#' + tocHeading + (++i));
+        });
+
+        // modify the heading title id to support Chinese.
+        i = 0;
+        $('#articleContent').children('h2, h3, h4').each(function () {
+            $(this).attr('id', tocHeading + (++i));
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
+    
+
+</main>
+
+
+
+
+    <footer class="page-footer bg-color">
+    
+
+    <div class="container row center-align"
+         style="margin-bottom: 0px !important;">
+        <div class="col s12 m8 l8 copy-right">
+            Copyright&nbsp;&copy;
+            
+                <span id="year">2021-2022</span>
+            
+            <span id="year">2021</span>
+            <a href="/about" target="_blank">连边</a>
+            |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
+            |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a>
+            <br>
+            
+                &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
+                        class="white-color">80.7k</span>
+            
+            
+            
+            
+            
+            <br>
+
+            <!-- 运行天数提醒. -->
+            
+            <br>
+            
+                <span id="icp"><img src="/medias/icp.png"
+                                    style="vertical-align: text-bottom;"/>
+                <a href="http://www.miitbeian.gov.cn/" target="_blank">湘ICP备1900865号-3</a>
+            </span>
+            
+        </div>
+        <div class="col s12 m4 l4 social-link ">
+    <a href="https://mp.weixin.qq.com/s/o0XBK8sNEnEqMVSE5P6XoQ" class="tooltipped" target="_blank" data-tooltip="关注我的微信公众号" data-position="top" data-delay="50">
+        <i class="fab fa-wechat"></i>
+    </a>
+
+
+
+    <a href="https://github.com/lianbian" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fab fa-github"></i>
+    </a>
+
+
+
+    <a href="mailto:ilianbian@163.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fas fa-envelope-open"></i>
+    </a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+$(function () {
+    var searchFunc = function (path, search_id, content_id) {
+        'use strict';
+        $.ajax({
+            url: path,
+            dataType: "xml",
+            success: function (xmlResponse) {
+                // get the contents from search data
+                var datas = $("entry", xmlResponse).map(function () {
+                    return {
+                        title: $("title", this).text(),
+                        content: $("content", this).text(),
+                        url: $("url", this).text()
+                    };
+                }).get();
+                var $input = document.getElementById(search_id);
+                var $resultContent = document.getElementById(content_id);
+                $input.addEventListener('input', function () {
+                    var str = '<ul class=\"search-result-list\">';
+                    var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                    $resultContent.innerHTML = "";
+                    if (this.value.trim().length <= 0) {
+                        return;
+                    }
+                    // perform local searching
+                    datas.forEach(function (data) {
+                        var isMatch = true;
+                        var data_title = data.title.trim().toLowerCase();
+                        var data_content = data.content.trim().replace(/<[^>]+>/g, "").toLowerCase();
+                        var data_url = data.url;
+                        data_url = data_url.indexOf('/') === 0 ? data.url : '/' + data_url;
+                        var index_title = -1;
+                        var index_content = -1;
+                        var first_occur = -1;
+                        // only match artiles with not empty titles and contents
+                        if (data_title !== '' && data_content !== '') {
+                            keywords.forEach(function (keyword, i) {
+                                index_title = data_title.indexOf(keyword);
+                                index_content = data_content.indexOf(keyword);
+                                if (index_title < 0 && index_content < 0) {
+                                    isMatch = false;
+                                } else {
+                                    if (index_content < 0) {
+                                        index_content = 0;
+                                    }
+                                    if (i === 0) {
+                                        first_occur = index_content;
+                                    }
+                                }
+                            });
+                        }
+                        // show search results
+                        if (isMatch) {
+                            str += "<li><a href='" + data_url + "' class='search-result-title'>" + data_title + "</a>";
+                            var content = data.content.trim().replace(/<[^>]+>/g, "");
+                            if (first_occur >= 0) {
+                                // cut out 100 characters
+                                var start = first_occur - 20;
+                                var end = first_occur + 80;
+                                if (start < 0) {
+                                    start = 0;
+                                }
+                                if (start === 0) {
+                                    end = 100;
+                                }
+                                if (end > content.length) {
+                                    end = content.length;
+                                }
+                                var match_content = content.substr(start, end);
+                                // highlight all keywords
+                                keywords.forEach(function (keyword) {
+                                    var regS = new RegExp(keyword, "gi");
+                                    match_content = match_content.replace(regS, "<em class=\"search-keyword\">" + keyword + "</em>");
+                                });
+
+                                str += "<p class=\"search-result\">" + match_content + "...</p>"
+                            }
+                            str += "</li>";
+                        }
+                    });
+                    str += "</ul>";
+                    $resultContent.innerHTML = str;
+                });
+            }
+        });
+    };
+
+    searchFunc('/search.xml', 'searchInput', 'searchResult');
+});
+</script>
+
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <script src="/libs/materialize/materialize.min.js"></script>
+    <script src="/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="/libs/aos/aos.js"></script>
+    <script src="/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="/js/matery.js"></script>
+
+    <!-- Baidu Analytics -->
+
+    <!-- Baidu Push -->
+
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        } else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+    
+    
+
+    
+
+    
+
+    <!--腾讯兔小巢-->
+    
+    
+
+    
+
+    
+
+    
+    <script src="/libs/instantpage/instantpage.js" type="module"></script>
+    
+
+</body>
+
+</html>

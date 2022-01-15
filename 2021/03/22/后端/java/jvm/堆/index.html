@@ -1,0 +1,1154 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="堆, 连边, Java, 架构">
+    <meta name="description" content="连边，专注于Java和架构领域，坚持撰写有原理，有实战，有体系的技术文章。">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+    <title>堆 | 连边</title>
+    <link rel="icon" type="image/png" href="/favicon.png">
+
+    <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
+    <link rel="stylesheet" type="text/css" href="/libs/materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/aos/aos.css">
+    <link rel="stylesheet" type="text/css" href="/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/lightGallery/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="/css/my.css">
+
+    <script src="/libs/jquery/jquery.min.js"></script>
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+
+
+<body>
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <img src="/medias/logo.png" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">连边</span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>首页</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/tags" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>标签</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/categories" class="waves-effect waves-light">
+      
+      <i class="fas fa-bookmark" style="zoom: 0.6;"></i>
+      
+      <span>分类</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives" class="waves-effect waves-light">
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>归档</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/about" class="waves-effect waves-light">
+      
+      <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
+      
+      <span>关于</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="搜索" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+</ul>
+
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="/medias/logo.png" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">连边</div>
+        <div class="logo-desc">
+            
+            连边，专注于Java和架构领域，坚持撰写有原理，有实战，有体系的技术文章。
+            
+        </div>
+    </div>
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			首页
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/tags" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			标签
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/categories" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-bookmark"></i>
+			
+			分类
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/archives" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-archive"></i>
+			
+			归档
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/about" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-user-circle"></i>
+			
+			关于
+		</a>
+          
+        </li>
+        
+        
+    </ul>
+</div>
+
+
+        </div>
+
+        
+    </nav>
+
+</header>
+
+    
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/22.jpg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">堆</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="post-container content">
+
+    
+    <link rel="stylesheet" href="/libs/tocbot/tocbot.css">
+<style>
+    #articleContent h1::before,
+    #articleContent h2::before,
+    #articleContent h3::before,
+    #articleContent h4::before,
+    #articleContent h5::before,
+    #articleContent h6::before {
+        display: block;
+        content: " ";
+        height: 100px;
+        margin-top: -100px;
+        visibility: hidden;
+    }
+
+    #articleContent :focus {
+        outline: none;
+    }
+
+    .toc-fixed {
+        position: fixed;
+        top: 64px;
+    }
+
+    .toc-widget {
+        width: 345px;
+        padding-left: 20px;
+    }
+
+    .toc-widget .toc-title {
+        padding: 35px 0 15px 17px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    .toc-widget ol {
+        padding: 0;
+        list-style: none;
+    }
+
+    #toc-content {
+        padding-bottom: 30px;
+        overflow: auto;
+    }
+
+    #toc-content ol {
+        padding-left: 10px;
+    }
+
+    #toc-content ol li {
+        padding-left: 10px;
+    }
+
+    #toc-content .toc-link:hover {
+        color: #42b983;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    #toc-content .toc-link::before {
+        background-color: transparent;
+        max-height: 25px;
+
+        position: absolute;
+        right: 23.5vw;
+        display: block;
+    }
+
+    #toc-content .is-active-link {
+        color: #42b983;
+    }
+
+    #floating-toc-btn {
+        position: fixed;
+        right: 15px;
+        bottom: 76px;
+        padding-top: 15px;
+        margin-bottom: 0;
+        z-index: 998;
+    }
+
+    #floating-toc-btn .btn-floating {
+        width: 48px;
+        height: 48px;
+    }
+
+    #floating-toc-btn .btn-floating i {
+        line-height: 48px;
+        font-size: 1.4rem;
+    }
+</style>
+<div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/jvm/">
+                                <span class="chip bg-color">jvm</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/jvm/" class="post-category">
+                                jvm
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2021-03-22
+                </div>
+                
+
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
+                    3.3k
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
+                    11 分
+                </div>
+                
+
+                
+            </div>
+        </div>
+        <hr class="clearfix">
+
+        
+        <!-- 是否加载使用自带的 prismjs. -->
+        <link rel="stylesheet" href="/libs/prism/prism.css">
+        
+
+        
+
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <p>堆的核心概述</p>
+<h2 id="核心概述"><a href="#核心概述" class="headerlink" title="核心概述"></a>核心概述</h2><ol>
+<li>一个JVM实例只存在一个堆内存，堆也是Java内存管理的核心区域；</li>
+<li>Java堆区在JVM启动的时候即被创建，其空间大小也就确定了，是JVM管理的最大一块内存空间<ol>
+<li>堆内存的大小是可以调节的</li>
+</ol>
+</li>
+<li>《Java虚拟机规范》规定，堆可以处于物理上不连续的内存空间中，但在逻辑上它应该被视为连续的。</li>
+<li>所有的线程共享Java堆，在这里还可以划分线程私有的缓冲区（Thread Local Allocation Buffer, TLAB）</li>
+<li>《Java虚拟机规范》中对Java堆的描述是：所有的对象实例以及数组都应当在运行时分配在堆上。（The heap is the run-time data area from which memory for all class instances and arrays is allocated）<ol>
+<li>我要说的是：“几乎”所有的对象实例都在这里分配内存。 - 从实际使用的角度看的</li>
+</ol>
+</li>
+<li>数组和对象可能永远不会存储在栈上，因为栈帧中保存引用，这个引用指向对象或者数组在堆中的位置；</li>
+<li>在方法结束后，堆中的对象不会马上被移除，仅仅在垃圾收集的时候才会被移除；</li>
+<li>堆，是GC（Garbage Collection，垃圾收集器）执行垃圾回收的重点区域；</li>
+</ol>
+<h3 id="内存细分"><a href="#内存细分" class="headerlink" title="内存细分"></a>内存细分</h3><p>现代垃圾收集器大部分都基于分代收集理论设计，堆空间细分为：</p>
+<ol>
+<li><p>Java7及以前堆内存逻辑上分为三部分：新生区 + 养老区 + 永久区</p>
+<ol>
+<li>Young Generation Space 新生区 Young/New<ol>
+<li>又被划分为Eden区和Survivor区</li>
+</ol>
+</li>
+<li>Tenure generation space 养老区 Old/Tenure</li>
+<li>Permanent Space 永久区 Perm</li>
+</ol>
+</li>
+<li><p>Java8及之后堆内存逻辑上分为三部分：新生区 + 养老区 + 元空间</p>
+<ol>
+<li>Young Generation Space 新生区 Young/New<ol>
+<li>又被划分为Eden区和Survivor区</li>
+</ol>
+</li>
+<li>Tenure generation space 养老区 Old/Tenure<ol>
+<li>Meta Space    元空间 Meta</li>
+</ol>
+</li>
+</ol>
+<p><strong>约定：</strong></p>
+<p><strong>新生区 - 新生代 - 年轻代</strong></p>
+<p><strong>养老区 - 老年区 - 老年代</strong></p>
+<p><strong>永久区 - 永久代</strong></p>
+</li>
+</ol>
+<h2 id="堆空间内部结构（JDK7）"><a href="#堆空间内部结构（JDK7）" class="headerlink" title="堆空间内部结构（JDK7）"></a>堆空间内部结构（JDK7）</h2><p><img src="http://mkstatic.lianbian.net/%E7%AC%AC08%E7%AB%A0_%E5%A0%86%E7%A9%BA%E9%97%B4-java7.jpg" alt="第08章_堆空间-java7"></p>
+<h2 id="堆空间内部结构（JDK8）"><a href="#堆空间内部结构（JDK8）" class="headerlink" title="堆空间内部结构（JDK8）"></a>堆空间内部结构（JDK8）</h2><p><img src="http://mkstatic.lianbian.net/%E7%AC%AC08%E7%AB%A0_%E5%A0%86%E7%A9%BA%E9%97%B4-java8.jpg" alt="第08章_堆空间-java8"></p>
+<p><img src="http://mkstatic.lianbian.net/image-20210321213619404.png" alt="image-20210321213619404"></p>
+<h1 id="设置堆内存大小与OOM"><a href="#设置堆内存大小与OOM" class="headerlink" title="设置堆内存大小与OOM"></a>设置堆内存大小与OOM</h1><h2 id="堆空间大小的设置"><a href="#堆空间大小的设置" class="headerlink" title="堆空间大小的设置"></a>堆空间大小的设置</h2><ol>
+<li>Java堆区用于存储Java对象实例，那么堆的大小在JVM启动时就已经设定好了，大家可以通过选项 ‘-Xmx’ 和 ‘-Xms’ 来进行设置；<ol>
+<li>-Xms 用户表示堆区的起始内存，等价于-XX:InitialHeapSize</li>
+<li>-Xmx 则用于表示堆区的最大内存，等价于 -XX:MaxHeapSize</li>
+</ol>
+</li>
+<li>一旦堆区中的内存大小超过 -Xmx 所指定的最大内存时，将会抛出 OutOfMemoryError 异常；</li>
+<li>通常会将 -Xms 和 -Xmx两个参数配置相同的值，其目的是为了能够在Java垃圾回收机制清理完堆区后不需要重新分隔计算堆区的大小，从而提高性能。</li>
+<li>默认情况下，<ol>
+<li>初始化内存大小：物理电脑内存大小 / 64</li>
+<li>最大内存大小：物理电脑内存大小 / 4</li>
+</ol>
+</li>
+</ol>
+<h1 id="年轻代和老年代"><a href="#年轻代和老年代" class="headerlink" title="年轻代和老年代"></a>年轻代和老年代</h1><h2 id="XX-NewRatio"><a href="#XX-NewRatio" class="headerlink" title="-XX:NewRatio"></a>-XX:NewRatio</h2><p>配置新生代与老年代在堆结构的占比。</p>
+<ol>
+<li>默认 -XX:NewRatio=2，表示新生代占1，老年代占2，新生代占整个堆的1/3；可以修改 -XX:NewRatio=4，表示新生代占1，老年代占4，新生代占整个堆的1/5；</li>
+</ol>
+<h2 id="XX-SurvivorRatio"><a href="#XX-SurvivorRatio" class="headerlink" title="-XX:SurvivorRatio"></a>-XX:SurvivorRatio</h2><ol>
+<li>在HotSpot中，Eden空间和另外两个Survivor空间缺省（默认）所占的比例是8:1:1</li>
+<li>当然开发人员可以通过选项 -XX:SurvivorRatio 调整这个空间比例。比如 -XX:SurvivorRatio=8</li>
+<li>几乎所有的Java对象都是在Eden区被new出来的；</li>
+<li>绝大部分的Java对象的销毁都在新生代进行了<ol>
+<li>IBM公司的专门研究表明，新生代中80%的对象都是“朝生夕死”的；</li>
+</ol>
+</li>
+<li>可以使用选项 -Xmn 设置新生代最大内存大小<ol>
+<li>这个参数一般使用默认值就可以了</li>
+</ol>
+</li>
+</ol>
+<p><img src="http://mkstatic.lianbian.net/image-20210321215348302.png" alt="image-20210321215348302"></p>
+<h1 id="图解对象分配过程"><a href="#图解对象分配过程" class="headerlink" title="图解对象分配过程"></a>图解对象分配过程</h1><h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>为新对象分配的内存是一种非常严谨和复杂的任务，JVM的设计者们不仅需要考虑内存如何分配，在哪里分配的问题，并且由于内存分配算法与内存回收算法密切相关，所以还需要考虑GC执行完成内存回收后是否会在内存空间中产生内存碎片。</p>
+<ol>
+<li>new的对象先放在Eden区，此区有带下限制；</li>
+<li>当Eden区的空间填满时，程序又需要创建对象，JVM的垃圾回收器将对Eden进行垃圾回收（Minor GC），将Eden区中的不再被其他对象所引用的对象进行销毁。再加载新的对象放到Eden区；</li>
+<li>然后将Eden中的剩余对象移动到幸存者0区；</li>
+<li>如果再次触发垃圾回收，此时上次幸存下来的放到幸存者0区的，如果没有回收，就会放到幸存者1区；</li>
+<li>如果再次经历垃圾回收，此时会重新放回幸存者0区，接着再去幸存者1区；</li>
+<li>啥时候能去养老区呢？可以设置次数，默认是15次。<ol>
+<li>可以设置参数：-XX：MaxTenuringThreshold=&lt;N&gt;进行设置</li>
+</ol>
+</li>
+<li>在养老区，相对悠闲。当养老区内存不足时，再次触发GC:Major GC，进行养老区的内存清理；</li>
+<li>若养老区执行了Major GC之后发现依然无法进行对象的保存，就会产生OOM异常；</li>
+</ol>
+<p><img src="http://mkstatic.lianbian.net/%E7%AC%AC08%E7%AB%A0_%E6%96%B0%E7%94%9F%E4%BB%A3%E5%AF%B9%E8%B1%A1%E5%88%86%E9%85%8D%E4%B8%8E%E5%9B%9E%E6%94%B6%E8%BF%87%E7%A8%8B.jpg" alt="第08章_新生代对象分配与回收过程"></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ol>
+<li>针对幸存者s0,s1区总结：复制之后有交换，谁空谁是to；</li>
+<li>关于垃圾回收：频繁在新生区收集，很少在养老区收集，几乎不再永久区/元空间收集；</li>
+</ol>
+<h2 id="流程图"><a href="#流程图" class="headerlink" title="流程图"></a>流程图</h2><p><img src="http://mkstatic.lianbian.net/image-20210321221325759.png" alt="image-20210321221325759"></p>
+<h1 id="Minor-GC、Major-GC、Full-GC"><a href="#Minor-GC、Major-GC、Full-GC" class="headerlink" title="Minor GC、Major GC、Full GC"></a>Minor GC、Major GC、Full GC</h1><p>JVM在进行GC时，并非每次都对上面三个内存区域一起回收的，大部分时候回收的都是指新生代。</p>
+<p>针对HotSpot VM的实现，它里面的GC按照回收区域又分为两大种类型：一种是部分收集（Partial GC），一种是整堆收集（Full GC）</p>
+<ol>
+<li>部分收集：不是完整收集整个Java堆的垃圾收集。其中又分为：<ol>
+<li>新生代收集（Minor GC/Young GC）：只是新生代的垃圾收集</li>
+<li>老年代收集（Major GC / Old GC）：只是老年代的垃圾收集<ol>
+<li>目前，只有CMS GC会有单独收集老年代的行为；</li>
+<li>注意：很多时候Major GC会和Full GC混淆使用，需要具体分辨是老年代回收还是整堆回收；</li>
+</ol>
+</li>
+<li>混合收集（Mixed GC）：收集整个新生代以及部分老年代的垃圾收集。<ol>
+<li>目前，只有G1 GC会有这种行为；</li>
+</ol>
+</li>
+</ol>
+</li>
+<li>整堆收集（Full GC）：收集整个java堆和方法区的垃圾收集；</li>
+</ol>
+<h2 id="最简单的分布式GC策略的触发条件"><a href="#最简单的分布式GC策略的触发条件" class="headerlink" title="最简单的分布式GC策略的触发条件"></a>最简单的分布式GC策略的触发条件</h2><h3 id="年轻代GC（Minor-GC）触发机制："><a href="#年轻代GC（Minor-GC）触发机制：" class="headerlink" title="年轻代GC（Minor GC）触发机制："></a>年轻代GC（Minor GC）触发机制：</h3><ol>
+<li>当年轻代空间不足时，就会触发Minor GC，这里的年轻代满指的是Eden代满，Survivor满不会引起GC。（每次Minor GC会清理年轻代的内存。）</li>
+<li>因为 Java对象大多都具备朝生夕灭的特性，所以 Minor GC 非常频繁，一般回收速度也比较快，这一定义既清晰又易于理解。</li>
+<li>Minor GC会引发STW，暂停其他用户的线程，等垃圾回收结束，用户线程才恢复运行；</li>
+</ol>
+<p><img src="http://mkstatic.lianbian.net/image-20210321222553936.png" alt="image-20210321222553936"></p>
+<h3 id="老年代GC（Major-GC-Full-GC）触发机制："><a href="#老年代GC（Major-GC-Full-GC）触发机制：" class="headerlink" title="老年代GC（Major GC/Full GC）触发机制："></a>老年代GC（Major GC/Full GC）触发机制：</h3><ol>
+<li>指发生在老年代的GC，对象从过年老年代消失时，我们说“Major GC”或“Full GC” 发生了；</li>
+<li>出现了 Major GC，经常会伴随至少一次的Minor GC；<ol>
+<li>也就是老年代空间不足时，会先尝试触发Minor GC。如果之后空间还是不足，则触发Major GC</li>
+</ol>
+</li>
+<li>Major GC的速度一般会比Minor GC慢10倍以上，STW的时间更长；</li>
+<li>如果Major GC后，内存还不足，就报OOM了；</li>
+</ol>
+<h3 id="Full-GC触发机制："><a href="#Full-GC触发机制：" class="headerlink" title="Full GC触发机制："></a>Full GC触发机制：</h3><ol>
+<li>调用system.gc()时，系统建议执行Full GC，但是不必然执行</li>
+<li>老年代空间不足</li>
+<li>方法区空间不足</li>
+<li>通过Minor GC后进入老年代的平均大小大于老年代的可用内存；</li>
+<li>由Eden区、survivor space0（from space） 区向survivor space1(to space)区复制时，对象大小小于 to space可用内存，则把该对象转存到老年代，且老年代的可用内存小于该对象大小</li>
+</ol>
+<p>说明：full gc是开发或调优中尽量要避免的，这种暂时时间会短一些 - STW stop the world。</p>
+<h1 id="堆空间分代思想"><a href="#堆空间分代思想" class="headerlink" title="堆空间分代思想"></a>堆空间分代思想</h1><p>为什么需要把Java堆分代？不分代就不能正常工作了吗？</p>
+<p>经研究，不同对象的生命周期不同，70%-99%的对象是临时对象</p>
+<ol>
+<li>新生代：有Eden、两块大小相同的Survivor(又称为from/to s0/s1)构成，to总为空；</li>
+<li>老年代：存放新生代中经历多次GC仍然存活的对象；</li>
+</ol>
+<p>其实不分代完全可以，分代的唯一理由就是优化GC性能。如果没有分代，那所有的对象都在一块，就如同把一个学校的人都关在一个教室。GC的时候要找到哪些对象没用，这样就会对堆所有区域进行扫描。而很多对象都是朝生夕死的，如果没有分代的话，把新创建的对象放到某一地方，当GC的时候先把这块存储“朝生夕死”对象的区域进行回收，这样就会腾出很大的空间来。</p>
+<p><img src="http://mkstatic.lianbian.net/image-20210321224448871.png" alt="image-20210321224448871"></p>
+<h1 id="内存分配策略（对象提升规则）"><a href="#内存分配策略（对象提升规则）" class="headerlink" title="内存分配策略（对象提升规则）"></a>内存分配策略（对象提升规则）</h1><p>如果对象在Ede出生并经过第一次MinorGC后仍然存活，并且能被Survivor容纳的话，将被移动到Survivor空间中，并将对象年龄设为1。对象在Survivor区中每熬过一次MinorGC，年龄就增加1岁，当它的年龄增加到一定的程度（默认为15岁，其实每个JVM、每个GC都有所不同）时，就会被晋升到老年代中。</p>
+<p>对象晋升老年代的年龄阈值，可以通过选项 -XX:MaxTenuringThreshold来设置；</p>
+<p>针对不同年龄段的对象分配原则如下所示：</p>
+<ol>
+<li>优先分配到Eden</li>
+<li>大对象直接分配到老年代<ol>
+<li>尽量避免程序中出现过多的大对象</li>
+</ol>
+</li>
+<li>长期存活的对象分配到老年代</li>
+<li>动态对象年龄判断<ol>
+<li>如果survivor区中相同年龄的所有对象大小的总和大于survivor空间的一半，年龄大于或等于该年龄的对象可以直接进入老年代，无须等到MaxTenuringThreshold中要求的年龄；</li>
+</ol>
+</li>
+<li>空间分配担保<ol>
+<li>-XX：HandlePromotionFailure</li>
+</ol>
+</li>
+</ol>
+<h1 id="为对象分配内存：TLAB"><a href="#为对象分配内存：TLAB" class="headerlink" title="为对象分配内存：TLAB"></a>为对象分配内存：TLAB</h1><h2 id="为什么有TLAB（Thread-Local-Allocation-Buffer）"><a href="#为什么有TLAB（Thread-Local-Allocation-Buffer）" class="headerlink" title="为什么有TLAB（Thread Local Allocation Buffer）?"></a>为什么有TLAB（Thread Local Allocation Buffer）?</h2><ol>
+<li>堆区的线程共享区域，任何线程都可以访问到堆区中的共享数据</li>
+<li>由于对象实例的创建在JVM中非常频繁，因此在并发环境下从堆区中划分内存空间是线程不安全的；</li>
+<li>为避免多个线程操作同一个地址，需要使用加锁，进而影响分配速度；</li>
+<li>从内存模型而不是垃圾收集的角度，对Eden区域继续进行划分，JVM为每个线程分配了一个私有缓存区域，它包含在Eden空间内；</li>
+<li>多线程同时分配内存时，使用TLAB可以避免一系列的非线程安全问题，同时还能够提升内存分配的吞吐量，因此我们可以将这种内存分配方式称之为<strong>快速分配策略</strong>；</li>
+<li>据我所知所有的OpenJDK衍生出来的JVM都提供了TLAB的设计；</li>
+</ol>
+<p><img src="http://mkstatic.lianbian.net/%E7%AC%AC08%E7%AB%A0_TLAB.jpg" alt="第08章_TLAB"></p>
+<h2 id="TLAB的再说明"><a href="#TLAB的再说明" class="headerlink" title="TLAB的再说明"></a>TLAB的再说明</h2><ol>
+<li>尽管不是所有的实例对象都能够哎TLAB中成功分配内存，但JVM确实是将TLAB作为分配内存的首选；</li>
+<li>在程序中，开发人员可以通过 -XX:UseTLAB 设置是否开启TLAB空间；</li>
+<li>默认情况下，TLAB空间的内存非常小，仅占有整个Eden空间的1%，可以通过选项 -XX:TLABWasteTargetPercent 设置TLAB空间所占用Eden空间的百分比大小；</li>
+<li>一旦对象在TLAB空间分配内存失败时，JVM就会尝试着通过使用加锁机制确保数据操作的原子性，从而直接在Eden空间中分配内存；</li>
+</ol>
+<p><img src="http://mkstatic.lianbian.net/image-20210322061754700.png" alt="image-20210322061754700"></p>
+<h1 id="小结堆空间的参数设置"><a href="#小结堆空间的参数设置" class="headerlink" title="小结堆空间的参数设置"></a>小结堆空间的参数设置</h1><ol>
+<li>-XX:SurvivorRation</li>
+<li>-XX:MaxTenuringThreshold</li>
+<li>-XX:+PringGCDetails</li>
+<li>-XX:HandlePromotionFailure</li>
+</ol>
+<p>在发生Minor GC之前，虚拟机会检查老年代最大可用的连续空间是否大于新生代所有对象的总空间。</p>
+<ol>
+<li>如果大于，则此次Minor GC是安全的；</li>
+<li>如果小于，则虚拟机会查看 HandlePromotionFailure=ture，那么会继续检查老年代最大可用连续空间是否大于历次晋升到老年代的对象的平均大小；<ol>
+<li>如果大于，则尝试进行一次Minor GC,但这次Minor GC依然是有风险的；</li>
+<li>如果小于，则改完进行一次Full GC;</li>
+</ol>
+</li>
+<li>如果HandlePromotionFailure = false,则改为进行一次Full GC;</li>
+</ol>
+<p><img src="http://mkstatic.lianbian.net/image-20210322062403142.png" alt="image-20210322062403142"></p>
+<h1 id="堆是分配对象的唯一选择吗"><a href="#堆是分配对象的唯一选择吗" class="headerlink" title="堆是分配对象的唯一选择吗"></a>堆是分配对象的唯一选择吗</h1><h2 id="逃逸分析"><a href="#逃逸分析" class="headerlink" title="逃逸分析"></a>逃逸分析</h2><ol>
+<li>栈上分配</li>
+<li>同步省略/锁清除</li>
+<li>标量替换</li>
+</ol>
+
+                
+            </div>
+            <hr/>
+
+            
+
+    <div class="reprint" id="reprint-statement">
+        
+            <div class="reprint__author">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-user">
+                        文章作者:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="/about" rel="external nofollow noreferrer">连边</a>
+                </span>
+            </div>
+            <div class="reprint__type">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-link">
+                        文章链接:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://www.lianbian.net/2021/03/22/%E5%90%8E%E7%AB%AF/java/jvm/%E5%A0%86/">https://www.lianbian.net/2021/03/22/%E5%90%8E%E7%AB%AF/java/jvm/%E5%A0%86/</a>
+                </span>
+            </div>
+            <div class="reprint__notice">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-copyright">
+                        版权声明:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    本博客所有文章除特別声明外，均采用
+                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
+                    许可协议。转载请注明来源
+                    <a href="/about" target="_blank">连边</a>
+                    !
+                </span>
+            </div>
+        
+    </div>
+
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>复制成功，请遵循本文的转载规则</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">查看</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/tags/jvm/">
+                                    <span class="chip bg-color">jvm</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css">
+<div id="article-share">
+
+    
+    <div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+            <div class="card">
+                <a href="/2021/03/25/%E5%90%8E%E7%AB%AF/java/jvm/%E6%89%A7%E8%A1%8C%E5%BC%95%E6%93%8E/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/22.jpg" class="responsive-img" alt="执行引擎">
+                        
+                        <span class="card-title">执行引擎</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2021-03-25
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/jvm/" class="post-category">
+                                    jvm
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/jvm/">
+                        <span class="chip bg-color">jvm</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2021/03/21/%E5%90%8E%E7%AB%AF/java/jvm/%E6%9C%AC%E5%9C%B0%E6%96%B9%E6%B3%95%E6%8E%A5%E5%8F%A3/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/22.jpg" class="responsive-img" alt="本地方法接口">
+                        
+                        <span class="card-title">本地方法接口</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-03-21
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/jvm/" class="post-category">
+                                    jvm
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/jvm/">
+                        <span class="chip bg-color">jvm</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script>
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeShrink.js"></script>
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget card" style="background-color: white;">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('0'),
+            headingSelector: 'h2, h3, h4'
+        });
+
+        // modify the toc link href to support Chinese.
+        let i = 0;
+        let tocHeading = 'toc-heading-';
+        $('#toc-content a').each(function () {
+            $(this).attr('href', '#' + tocHeading + (++i));
+        });
+
+        // modify the heading title id to support Chinese.
+        i = 0;
+        $('#articleContent').children('h2, h3, h4').each(function () {
+            $(this).attr('id', tocHeading + (++i));
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
+    
+
+</main>
+
+
+
+
+    <footer class="page-footer bg-color">
+    
+
+    <div class="container row center-align"
+         style="margin-bottom: 0px !important;">
+        <div class="col s12 m8 l8 copy-right">
+            Copyright&nbsp;&copy;
+            
+                <span id="year">2021-2022</span>
+            
+            <span id="year">2021</span>
+            <a href="/about" target="_blank">连边</a>
+            |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
+            |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a>
+            <br>
+            
+                &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
+                        class="white-color">80.7k</span>
+            
+            
+            
+            
+            
+            <br>
+
+            <!-- 运行天数提醒. -->
+            
+            <br>
+            
+                <span id="icp"><img src="/medias/icp.png"
+                                    style="vertical-align: text-bottom;"/>
+                <a href="http://www.miitbeian.gov.cn/" target="_blank">湘ICP备1900865号-3</a>
+            </span>
+            
+        </div>
+        <div class="col s12 m4 l4 social-link ">
+    <a href="https://mp.weixin.qq.com/s/o0XBK8sNEnEqMVSE5P6XoQ" class="tooltipped" target="_blank" data-tooltip="关注我的微信公众号" data-position="top" data-delay="50">
+        <i class="fab fa-wechat"></i>
+    </a>
+
+
+
+    <a href="https://github.com/lianbian" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fab fa-github"></i>
+    </a>
+
+
+
+    <a href="mailto:ilianbian@163.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fas fa-envelope-open"></i>
+    </a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+$(function () {
+    var searchFunc = function (path, search_id, content_id) {
+        'use strict';
+        $.ajax({
+            url: path,
+            dataType: "xml",
+            success: function (xmlResponse) {
+                // get the contents from search data
+                var datas = $("entry", xmlResponse).map(function () {
+                    return {
+                        title: $("title", this).text(),
+                        content: $("content", this).text(),
+                        url: $("url", this).text()
+                    };
+                }).get();
+                var $input = document.getElementById(search_id);
+                var $resultContent = document.getElementById(content_id);
+                $input.addEventListener('input', function () {
+                    var str = '<ul class=\"search-result-list\">';
+                    var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                    $resultContent.innerHTML = "";
+                    if (this.value.trim().length <= 0) {
+                        return;
+                    }
+                    // perform local searching
+                    datas.forEach(function (data) {
+                        var isMatch = true;
+                        var data_title = data.title.trim().toLowerCase();
+                        var data_content = data.content.trim().replace(/<[^>]+>/g, "").toLowerCase();
+                        var data_url = data.url;
+                        data_url = data_url.indexOf('/') === 0 ? data.url : '/' + data_url;
+                        var index_title = -1;
+                        var index_content = -1;
+                        var first_occur = -1;
+                        // only match artiles with not empty titles and contents
+                        if (data_title !== '' && data_content !== '') {
+                            keywords.forEach(function (keyword, i) {
+                                index_title = data_title.indexOf(keyword);
+                                index_content = data_content.indexOf(keyword);
+                                if (index_title < 0 && index_content < 0) {
+                                    isMatch = false;
+                                } else {
+                                    if (index_content < 0) {
+                                        index_content = 0;
+                                    }
+                                    if (i === 0) {
+                                        first_occur = index_content;
+                                    }
+                                }
+                            });
+                        }
+                        // show search results
+                        if (isMatch) {
+                            str += "<li><a href='" + data_url + "' class='search-result-title'>" + data_title + "</a>";
+                            var content = data.content.trim().replace(/<[^>]+>/g, "");
+                            if (first_occur >= 0) {
+                                // cut out 100 characters
+                                var start = first_occur - 20;
+                                var end = first_occur + 80;
+                                if (start < 0) {
+                                    start = 0;
+                                }
+                                if (start === 0) {
+                                    end = 100;
+                                }
+                                if (end > content.length) {
+                                    end = content.length;
+                                }
+                                var match_content = content.substr(start, end);
+                                // highlight all keywords
+                                keywords.forEach(function (keyword) {
+                                    var regS = new RegExp(keyword, "gi");
+                                    match_content = match_content.replace(regS, "<em class=\"search-keyword\">" + keyword + "</em>");
+                                });
+
+                                str += "<p class=\"search-result\">" + match_content + "...</p>"
+                            }
+                            str += "</li>";
+                        }
+                    });
+                    str += "</ul>";
+                    $resultContent.innerHTML = str;
+                });
+            }
+        });
+    };
+
+    searchFunc('/search.xml', 'searchInput', 'searchResult');
+});
+</script>
+
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <script src="/libs/materialize/materialize.min.js"></script>
+    <script src="/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="/libs/aos/aos.js"></script>
+    <script src="/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="/js/matery.js"></script>
+
+    <!-- Baidu Analytics -->
+
+    <!-- Baidu Push -->
+
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        } else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+    
+    
+
+    
+
+    
+
+    <!--腾讯兔小巢-->
+    
+    
+
+    
+
+    
+
+    
+    <script src="/libs/instantpage/instantpage.js" type="module"></script>
+    
+
+</body>
+
+</html>

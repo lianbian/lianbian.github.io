@@ -1,0 +1,974 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="项目中兴, 连边, Java, 架构">
+    <meta name="description" content="连边，专注于Java和架构领域，坚持撰写有原理，有实战，有体系的技术文章。">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+    <title>项目中兴 | 连边</title>
+    <link rel="icon" type="image/png" href="/favicon.png">
+
+    <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
+    <link rel="stylesheet" type="text/css" href="/libs/materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/aos/aos.css">
+    <link rel="stylesheet" type="text/css" href="/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/lightGallery/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="/css/my.css">
+
+    <script src="/libs/jquery/jquery.min.js"></script>
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+
+
+<body>
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <img src="/medias/logo.png" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">连边</span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>首页</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/tags" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>标签</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/categories" class="waves-effect waves-light">
+      
+      <i class="fas fa-bookmark" style="zoom: 0.6;"></i>
+      
+      <span>分类</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives" class="waves-effect waves-light">
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>归档</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/about" class="waves-effect waves-light">
+      
+      <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
+      
+      <span>关于</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="搜索" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+</ul>
+
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="/medias/logo.png" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">连边</div>
+        <div class="logo-desc">
+            
+            连边，专注于Java和架构领域，坚持撰写有原理，有实战，有体系的技术文章。
+            
+        </div>
+    </div>
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			首页
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/tags" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			标签
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/categories" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-bookmark"></i>
+			
+			分类
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/archives" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-archive"></i>
+			
+			归档
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/about" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-user-circle"></i>
+			
+			关于
+		</a>
+          
+        </li>
+        
+        
+    </ul>
+</div>
+
+
+        </div>
+
+        
+    </nav>
+
+</header>
+
+    
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/4.jpg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">项目中兴</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="post-container content">
+
+    
+    <link rel="stylesheet" href="/libs/tocbot/tocbot.css">
+<style>
+    #articleContent h1::before,
+    #articleContent h2::before,
+    #articleContent h3::before,
+    #articleContent h4::before,
+    #articleContent h5::before,
+    #articleContent h6::before {
+        display: block;
+        content: " ";
+        height: 100px;
+        margin-top: -100px;
+        visibility: hidden;
+    }
+
+    #articleContent :focus {
+        outline: none;
+    }
+
+    .toc-fixed {
+        position: fixed;
+        top: 64px;
+    }
+
+    .toc-widget {
+        width: 345px;
+        padding-left: 20px;
+    }
+
+    .toc-widget .toc-title {
+        padding: 35px 0 15px 17px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    .toc-widget ol {
+        padding: 0;
+        list-style: none;
+    }
+
+    #toc-content {
+        padding-bottom: 30px;
+        overflow: auto;
+    }
+
+    #toc-content ol {
+        padding-left: 10px;
+    }
+
+    #toc-content ol li {
+        padding-left: 10px;
+    }
+
+    #toc-content .toc-link:hover {
+        color: #42b983;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    #toc-content .toc-link::before {
+        background-color: transparent;
+        max-height: 25px;
+
+        position: absolute;
+        right: 23.5vw;
+        display: block;
+    }
+
+    #toc-content .is-active-link {
+        color: #42b983;
+    }
+
+    #floating-toc-btn {
+        position: fixed;
+        right: 15px;
+        bottom: 76px;
+        padding-top: 15px;
+        margin-bottom: 0;
+        z-index: 998;
+    }
+
+    #floating-toc-btn .btn-floating {
+        width: 48px;
+        height: 48px;
+    }
+
+    #floating-toc-btn .btn-floating i {
+        line-height: 48px;
+        font-size: 1.4rem;
+    }
+</style>
+<div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                          <div class="article-tag">
+                            <span class="chip bg-color">无标签</span>
+                          </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2021-10-03
+                </div>
+                
+
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
+                    2.5k
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
+                    8 分
+                </div>
+                
+
+                
+            </div>
+        </div>
+        <hr class="clearfix">
+
+        
+        <!-- 是否加载使用自带的 prismjs. -->
+        <link rel="stylesheet" href="/libs/prism/prism.css">
+        
+
+        
+
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <p>大家好，我是连边。</p>
+<p>这是我的第 <code>24</code> 篇原创文章；</p>
+<p>这次不写技术文章，写一篇偏<strong>团队管理</strong>的文章。</p>
+<p>阅读本篇文章大约需要<strong>5分钟</strong>。</p>
+<h2 id="文章导读"><a href="#文章导读" class="headerlink" title="文章导读"></a>文章导读</h2><p>做技术还是做管理，是程序员这个职业的两个发展方向，但是我认为，这两个方向是不冲突的。做为程序员，懂管理能有效的向上管理，在我的职业生涯中，第一次做管理是从半路上接手一个团队（项目），这应该也是大多数程序员的实际过程，一般是由于上一任领导的升迁或者离职，职位空缺出来后从内部提升管理者。</p>
+<p>整篇文章是以一个<strong>中层管理人员</strong>的角色进行，希望这篇文章能给读者带来帮助。</p>
+<p><img src="http://mkstatic.lianbian.net/202110051133670.png" alt="项目中兴"></p>
+<h2 id="分析团队"><a href="#分析团队" class="headerlink" title="分析团队"></a>分析团队</h2><p>在公司技术团队“低迷”的时候接管的团队，举个实际事例来解析低迷，其他部门可以随便甩锅给技术部门，最后不管是不是技术问题，最后技术团队总会把锅“勇敢”的背下来，也不多做争辩，但也不过多的去解决实际生产问题，总存在一种“这个问题技术真的不能解决的”的状态。</p>
+<p>整个团队就没有活力，来了锅就背一背，来了问题就听一听，来了任务做一做，不做过多的沟通，不关心结果。</p>
+<p>最后整个团队的士气与战斗力可想而已。</p>
+<h2 id="培养士气"><a href="#培养士气" class="headerlink" title="培养士气"></a>培养士气</h2><p>不管是团队还是个人，低迷的状态下，战斗力是无从说起的。所以我要着手解决的第一个问题就是，<strong>怎么去提升团队士气</strong>这个问题。</p>
+<p>低迷不是一下就低迷下去的，而是慢慢养成的，要培养士气也不是一朝一夕的。</p>
+<p>我从两方面来解决这个问题：</p>
+<h3 id="重视小事情"><a href="#重视小事情" class="headerlink" title="重视小事情"></a>重视小事情</h3><p>从小的事情里边积累成就感和士气。</p>
+<p>这里的小事情，具体就是客服部门给技术部门提出的BUG和产品优化。要端正态度，对BUG不能不管不问，一定要找到原因，是技术的原因，还是产品设计的原因，能立即解决的，就立即解决；</p>
+<p>同时安排技术轮岗值班，做法也很简单，注册一个专门的值班QQ号，然后每天技术值班人员登录那个账号进行值班，客服人员有技术方面的问题，可以直接对接技术值班，然后由技术值班人员转交到团队内部来解决问题，给出答复。其实这种做法，挺程序员的，设计直接、简单、高效。</p>
+<p>通过执行一段时间，慢慢的也会感受到客服部门同事对技术部门的改观，问题也能慢慢的解决，内部人员的业务能力也慢慢的提升。</p>
+<p><strong>战斗力和士气是在小事情里边积累起来的。</strong></p>
+<h3 id="知耻而后勇"><a href="#知耻而后勇" class="headerlink" title="知耻而后勇"></a>知耻而后勇</h3><p>对一个技术人员来说，技术不能解决问题，让别的团队任意甩锅又不能硬气的顶回去，是很憋屈（耻）的一件事情。是技术上的问题，就大胆的承认，以最积极的行动和态度来解决问题，而不是那种不了了之的状态，想必大家都想呆在<strong>有底气又硬气的团队</strong>（这里请和怼人理智的区分开来）。</p>
+<p><strong>软绵绵的团队谁都不想呆，想呆硬气的团队。</strong></p>
+<h2 id="利益得失"><a href="#利益得失" class="headerlink" title="利益得失"></a>利益得失</h2><p>利益，做为管理者，一定不要避讳这个词。</p>
+<p>因为只有领导拿到好的结果，团队成员拿到好的报酬，才是你这个中层管理者最应该做的事情，也是衡量中层管理者的管理水平的标准。</p>
+<p>利益这个词可以很广，这里我不直接讲解什么是利益，因为直接讲解什么是利益也没有太多的意思，反而感觉很功利化，我从三层（领导、中层、员工）的角色想法来分析。</p>
+<h3 id="领导想什么"><a href="#领导想什么" class="headerlink" title="领导想什么"></a>领导想什么</h3><p>领导想做一个商城，你的第一概念是什么？淘宝？京东？</p>
+<p>你的概念不重要，因为领导有领导层次的出发点，这个时候，你就一定要把握准<strong>领导需要一个什么样子的结果。</strong>然后再去具体的事情，具体沟通，比如：工期、功能、福利 …</p>
+<p><strong>领导利益：拿到一个好的结果（产品）。</strong></p>
+<h3 id="要你做什么"><a href="#要你做什么" class="headerlink" title="要你做什么"></a>要你做什么</h3><p>当领导提出做一个商城的需求的时候，要继续和他沟通。</p>
+<ol>
+<li>具体是要做成什么样子，做这个商城的目的是做什么？</li>
+<li><strong>什么时候要上线？</strong></li>
+<li>理性分析当前团队的情况，<strong>切记不能瞎承诺</strong>；</li>
+<li><strong>做成MVP版本（最小运行版本，一般拿着去试探市场）行不行？</strong></li>
+<li><strong>和团队商量之后，给出时间安排</strong>；</li>
+<li>记得维持平衡，<strong>领导与中层与团队成员的平衡</strong>；</li>
+<li>项目奖金的协商</li>
+<li>…</li>
+</ol>
+<p><strong>中层利益：把握当前的团队到底能做成什么样子的结果（产品），不要让项目后期陷入被动。</strong></p>
+<h3 id="员工想什么"><a href="#员工想什么" class="headerlink" title="员工想什么"></a>员工想什么</h3><p>员工想的什么？<strong>事少钱多离家近。</strong></p>
+<p>就是这几个字，其中最重要的两个字就是<strong>事、钱</strong>。</p>
+<p>做的事情，对于喜欢挑战的同事，能不能带来成长，能不能对以后有帮助；</p>
+<p>工资待遇，值不值得员工心流的付出。</p>
+<p><strong>尽自己的最大能力，给予和你一起并肩作战的兄弟们争取最好的利益（工资、假期、好的项目）</strong></p>
+<p><strong>员工利益：有认同感的付出，不委屈的付出。</strong></p>
+<p>围绕以上三个角色的利益，中层管理者慢慢去消化，最后权衡把“利益”最大化。</p>
+<h2 id="团队目标"><a href="#团队目标" class="headerlink" title="团队目标"></a>团队目标</h2><p>前边是讲我们慢慢的怎么样把一个低迷的团队慢慢的培养起来，接下来我们就是有一支团队准备好了，你作为中层管理人员，怎么样去指挥这个团队来做好我们的项目。</p>
+<h3 id="目标阶段化"><a href="#目标阶段化" class="headerlink" title="目标阶段化"></a>目标阶段化</h3><p>大到一个项目，小到一个需求，如果真是时间紧，任务重的情况，可以使用<strong>目标阶段化</strong>的方式，一个项目分成N个阶段，先把最核心，最紧急的需求与功能、放在第一个阶段里边来完成，因为<strong>精力是有限的</strong>，分段之后，阶段内可以专注于本阶段的目标。</p>
+<h3 id="必须让领导知道团队目标与任务"><a href="#必须让领导知道团队目标与任务" class="headerlink" title="必须让领导知道团队目标与任务"></a>必须让领导知道团队目标与任务</h3><p>不知道大家有没有呆过这种团队，加班、各种忙碌得起飞，但是上边的领导一直团队不满意。</p>
+<p>两个原因：</p>
+<ol>
+<li>短期的话，就是团队的产出不是他想要的；</li>
+<li>长期的话，就是不知道团队在忙啥；</li>
+</ol>
+<p>怎么样让领导知道团队目标与阶段任务，我的建议是 <strong>最终会议领导要到</strong> 并 <strong>邮件说清楚团队现阶段目标</strong>。</p>
+<h3 id="团队成员必须知道自己的目标与任务"><a href="#团队成员必须知道自己的目标与任务" class="headerlink" title="团队成员必须知道自己的目标与任务"></a>团队成员必须知道自己的目标与任务</h3><p>今天要做什么？要完成什么功能？</p>
+<p>那么，明天呢？</p>
+<p>团队成员这点必须要知道这一点，不然整天都是浑浑噩噩的，可以找合适的项目管理软件来协助，我们那时候使用的禅道。然后，在开部门会议的时候，反复强调，如果部门人员少，中层管理应该知道团队成员该阶段是在忙什么。</p>
+<p><strong>有目标才能前进，不管是领导，还是团队成员都要有清晰目标。</strong></p>
+<h2 id="知人善用"><a href="#知人善用" class="headerlink" title="知人善用"></a>知人善用</h2><h3 id="分析团队成员特长"><a href="#分析团队成员特长" class="headerlink" title="分析团队成员特长"></a>分析团队成员特长</h3><p>团队的每个成员都有其特色、特长，有的胆子大，有的心细，有的擅长写SQL，有的擅长利用中间件。</p>
+<p>在项目紧急的时候，一定要找到团队成员熟悉做什么，擅长做什么，这样才能有效提升团队效率。</p>
+<p>而在团队不忙的时候，需要相互学习，相互取经。</p>
+<h3 id="责任到人"><a href="#责任到人" class="headerlink" title="责任到人"></a>责任到人</h3><p>比如重要营销活动的模块，就需要专门的团队或者个人来负责。在当时，我们团队我就专门找了一个细心的人，专门负责月度营销活动功能开发。从产品需求会议到活动的产出，都有该同事整体跟进与负责。</p>
+<h3 id="砍掉老鼠屎"><a href="#砍掉老鼠屎" class="headerlink" title="砍掉老鼠屎"></a>砍掉老鼠屎</h3><p>花成本砍掉那些搞崩心态的员工，给予机会，并加以说明，如果最后还是没有无效果，可以选择优化掉，不要低估一个人对团队的破坏能力。</p>
+<p><strong>事情不是一个人能做好的， 根据团队成员来扬长避短，团队效率才会蹭蹭的上去。</strong></p>
+<h2 id="一起抗"><a href="#一起抗" class="headerlink" title="一起抗"></a>一起抗</h2><p>最后的最后，也是最重要的，遇到事情，一定要和兄弟们一起抗。</p>
+<p>不要领导说什么什么问题，你就很干脆利落的直接甩锅给你的团队成员，我见过不少这样子的中层领导，他只管自己在领导眼中印象，而不管自己兄弟的利益，还是那句话，<strong>中层的能力就是掌握平衡的能力（正确的废话）</strong>。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>​    这篇文章到这里就写完了，这篇文章中心思想就是<strong>以自己的亲生经历总结的中层管理者的那些心法与做法</strong>，希望对你有帮助，如果觉得哪里不合理的地方，也可以留言告诉我。</p>
+<p>​    衷心感谢每一位认真读文章的人，我是连边，专注于Java和架构领域，坚持撰写有原理，有实战，有体系的技术文章。</p>
+
+                
+            </div>
+            <hr/>
+
+            
+
+    <div class="reprint" id="reprint-statement">
+        
+            <div class="reprint__author">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-user">
+                        文章作者:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="/about" rel="external nofollow noreferrer">连边</a>
+                </span>
+            </div>
+            <div class="reprint__type">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-link">
+                        文章链接:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://www.lianbian.net/2021/10/03/%E7%AE%A1%E7%90%86/%E9%A1%B9%E7%9B%AE%E4%B8%AD%E5%85%B4/">https://www.lianbian.net/2021/10/03/%E7%AE%A1%E7%90%86/%E9%A1%B9%E7%9B%AE%E4%B8%AD%E5%85%B4/</a>
+                </span>
+            </div>
+            <div class="reprint__notice">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-copyright">
+                        版权声明:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    本博客所有文章除特別声明外，均采用
+                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
+                    许可协议。转载请注明来源
+                    <a href="/about" target="_blank">连边</a>
+                    !
+                </span>
+            </div>
+        
+    </div>
+
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>复制成功，请遵循本文的转载规则</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">查看</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            <span class="chip bg-color">无标签</span>
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css">
+<div id="article-share">
+
+    
+    <div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+            <div class="card">
+                <a href="/2021/10/03/%E6%95%B0%E6%8D%AE%E5%BA%93/MySQL%E7%9A%84undo%E6%97%A5%E5%BF%97/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/16.jpg" class="responsive-img" alt="MySQL的undo日志">
+                        
+                        <span class="card-title">MySQL的undo日志</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2021-10-03
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-user fa-fw"></i>
+                            连边
+                            
+                        </span>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2021/10/01/%E5%90%8E%E7%AB%AF/java/jvm/CMS%E5%9B%9E%E6%94%B6%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%81%9C%E9%A1%BF%E4%B8%A4%E6%AC%A1/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/23.jpg" class="responsive-img" alt="cms回收为什么要停顿两次？">
+                        
+                        <span class="card-title">cms回收为什么要停顿两次？</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-10-01
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-user fa-fw"></i>
+                            连边
+                            
+                        </span>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script>
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeShrink.js"></script>
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget card" style="background-color: white;">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('0'),
+            headingSelector: 'h2, h3, h4'
+        });
+
+        // modify the toc link href to support Chinese.
+        let i = 0;
+        let tocHeading = 'toc-heading-';
+        $('#toc-content a').each(function () {
+            $(this).attr('href', '#' + tocHeading + (++i));
+        });
+
+        // modify the heading title id to support Chinese.
+        i = 0;
+        $('#articleContent').children('h2, h3, h4').each(function () {
+            $(this).attr('id', tocHeading + (++i));
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
+    
+
+</main>
+
+
+
+
+    <footer class="page-footer bg-color">
+    
+
+    <div class="container row center-align"
+         style="margin-bottom: 0px !important;">
+        <div class="col s12 m8 l8 copy-right">
+            Copyright&nbsp;&copy;
+            
+                <span id="year">2021-2022</span>
+            
+            <span id="year">2021</span>
+            <a href="/about" target="_blank">连边</a>
+            |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
+            |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a>
+            <br>
+            
+                &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
+                        class="white-color">80.7k</span>
+            
+            
+            
+            
+            
+            <br>
+
+            <!-- 运行天数提醒. -->
+            
+            <br>
+            
+                <span id="icp"><img src="/medias/icp.png"
+                                    style="vertical-align: text-bottom;"/>
+                <a href="http://www.miitbeian.gov.cn/" target="_blank">湘ICP备1900865号-3</a>
+            </span>
+            
+        </div>
+        <div class="col s12 m4 l4 social-link ">
+    <a href="https://mp.weixin.qq.com/s/o0XBK8sNEnEqMVSE5P6XoQ" class="tooltipped" target="_blank" data-tooltip="关注我的微信公众号" data-position="top" data-delay="50">
+        <i class="fab fa-wechat"></i>
+    </a>
+
+
+
+    <a href="https://github.com/lianbian" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fab fa-github"></i>
+    </a>
+
+
+
+    <a href="mailto:ilianbian@163.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fas fa-envelope-open"></i>
+    </a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+$(function () {
+    var searchFunc = function (path, search_id, content_id) {
+        'use strict';
+        $.ajax({
+            url: path,
+            dataType: "xml",
+            success: function (xmlResponse) {
+                // get the contents from search data
+                var datas = $("entry", xmlResponse).map(function () {
+                    return {
+                        title: $("title", this).text(),
+                        content: $("content", this).text(),
+                        url: $("url", this).text()
+                    };
+                }).get();
+                var $input = document.getElementById(search_id);
+                var $resultContent = document.getElementById(content_id);
+                $input.addEventListener('input', function () {
+                    var str = '<ul class=\"search-result-list\">';
+                    var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                    $resultContent.innerHTML = "";
+                    if (this.value.trim().length <= 0) {
+                        return;
+                    }
+                    // perform local searching
+                    datas.forEach(function (data) {
+                        var isMatch = true;
+                        var data_title = data.title.trim().toLowerCase();
+                        var data_content = data.content.trim().replace(/<[^>]+>/g, "").toLowerCase();
+                        var data_url = data.url;
+                        data_url = data_url.indexOf('/') === 0 ? data.url : '/' + data_url;
+                        var index_title = -1;
+                        var index_content = -1;
+                        var first_occur = -1;
+                        // only match artiles with not empty titles and contents
+                        if (data_title !== '' && data_content !== '') {
+                            keywords.forEach(function (keyword, i) {
+                                index_title = data_title.indexOf(keyword);
+                                index_content = data_content.indexOf(keyword);
+                                if (index_title < 0 && index_content < 0) {
+                                    isMatch = false;
+                                } else {
+                                    if (index_content < 0) {
+                                        index_content = 0;
+                                    }
+                                    if (i === 0) {
+                                        first_occur = index_content;
+                                    }
+                                }
+                            });
+                        }
+                        // show search results
+                        if (isMatch) {
+                            str += "<li><a href='" + data_url + "' class='search-result-title'>" + data_title + "</a>";
+                            var content = data.content.trim().replace(/<[^>]+>/g, "");
+                            if (first_occur >= 0) {
+                                // cut out 100 characters
+                                var start = first_occur - 20;
+                                var end = first_occur + 80;
+                                if (start < 0) {
+                                    start = 0;
+                                }
+                                if (start === 0) {
+                                    end = 100;
+                                }
+                                if (end > content.length) {
+                                    end = content.length;
+                                }
+                                var match_content = content.substr(start, end);
+                                // highlight all keywords
+                                keywords.forEach(function (keyword) {
+                                    var regS = new RegExp(keyword, "gi");
+                                    match_content = match_content.replace(regS, "<em class=\"search-keyword\">" + keyword + "</em>");
+                                });
+
+                                str += "<p class=\"search-result\">" + match_content + "...</p>"
+                            }
+                            str += "</li>";
+                        }
+                    });
+                    str += "</ul>";
+                    $resultContent.innerHTML = str;
+                });
+            }
+        });
+    };
+
+    searchFunc('/search.xml', 'searchInput', 'searchResult');
+});
+</script>
+
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <script src="/libs/materialize/materialize.min.js"></script>
+    <script src="/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="/libs/aos/aos.js"></script>
+    <script src="/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="/js/matery.js"></script>
+
+    <!-- Baidu Analytics -->
+
+    <!-- Baidu Push -->
+
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        } else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+    
+    
+
+    
+
+    
+
+    <!--腾讯兔小巢-->
+    
+    
+
+    
+
+    
+
+    
+    <script src="/libs/instantpage/instantpage.js" type="module"></script>
+    
+
+</body>
+
+</html>
