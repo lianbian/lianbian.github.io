@@ -104,6 +104,7 @@ deploy:
   repo: https://github.com/lianbian/lianbian.github.io.git
   # example, https://github.com/hexojs/hexojs.github.io
   branch: main
+- type: baidu_url_submitter                         # 这是新加的主动推送
 
 
 search:
@@ -123,3 +124,9 @@ feed:
   content_limit: 140
   content_limit_delim: ' '
   order_by: -date
+
+baidu_url_submit:
+  count: 1               # 提交最新的多少个链接
+  host: www.lianbian.net    # 在百度站长平台中添加的域名
+  token: qrt0ct8hhTWG9pnP      # 秘钥
+  path: baidu_urls.txt   # 文本文档的地址， 新链接会保存在此文本文档里

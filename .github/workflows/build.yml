@@ -42,6 +42,8 @@ jobs:
         run: |
           hexo clean
           hexo generate
+          npm install hexo-generator-sitemap --save
+          npm install hexo-generator-baidu-sitemap --save
 
       - name: Sync to Gitee
         uses: wearerequired/git-mirror-action@master
