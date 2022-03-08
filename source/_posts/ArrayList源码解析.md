@@ -60,9 +60,7 @@ String[] arrayRefVar = new String[arraySize];
 String[] arrayRefVar = {"A", "B", "C"};
 ```
 
-
-
-`ArrayList`是一种以数组实现的`List`，与数组相比，具有动态扩展的能力，因此也可称之为```动态数组```。
+ArrayList是一种以数组实现的`List`，与数组相比，具有动态扩展的能力，因此也可称之为```动态数组```。
 
 ### 增删改查和扩容
 
