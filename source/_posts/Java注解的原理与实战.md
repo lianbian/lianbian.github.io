@@ -3,7 +3,7 @@ img: http://mkstatic.lianbian.net/202203032332940.png
 title: Java注解的原理与实战
 keywords: java 注解
 categories: java
-summary: 注解，是Java中最重要的，但是却最容易被人***遗忘***的知识点。
+summary: 注解，是Java中最重要的，但是却最容易被人遗忘的知识点。
 author: 连边
 date: 2021-08-02
 tags:
