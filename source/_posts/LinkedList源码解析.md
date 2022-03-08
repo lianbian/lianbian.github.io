@@ -3,7 +3,7 @@ img: http://mkstatic.lianbian.net/20210814155418.png
 title: LinkedList源码解析
 keywords: java linkedlist
 categories: java
-summary: 通过地铁站实例，来理解LinkedList源码。
+summary: 让自己的另一半了解自己的职业，还是挺重要的，朋友眼中的我：修电脑的。
 author: 连边
 date: 2021-08-12
 tags:
@@ -50,7 +50,7 @@ tags:
 
 培元桥站的图示：
 
-![image-20210814155418743](http://mkstatic.lianbian.net/20210814155418.png)
+![站点图片](http://mkstatic.lianbian.net/20210814155418.png)
 
 ```抽象```一下的站点示意图：
 
@@ -76,7 +76,7 @@ class Station<E> {
 
 通过上边的车站节点，我们画出其他站点示意图（画出4个，不全部画出。）
 
-<img src="http://mkstatic.lianbian.net/20210814101424.png" alt="image-20210814101424586"  />
+<img src="http://mkstatic.lianbian.net/20210814101424.png" alt="站点图片"  />
 
 如果要让车站信息更实用，使之富有动态感，对乘客的提示性更强，我们就需要把它们链接起来，成为实用的数据结构，像一号线交通站点图那样。
 

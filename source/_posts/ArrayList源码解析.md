@@ -3,7 +3,7 @@ img: http://mkstatic.lianbian.net/Java%E9%9B%86%E5%90%88.png
 title: ArrayList源码解析
 keywords: java arraylist
 categories: java
-summary: 动态图来图解ArrayList源码
+summary: 动态图来图解ArrayList源码，图解分析原理，实战面试题检测，阅读JDK源码进一步巩固理解。
 author: 连边
 date: 2021-08-09
 tags:
@@ -13,10 +13,6 @@ tags:
 
 
 大家好，我是连边。
-
-## 目录
-
-[toc]
 
 ## 前言
 
@@ -64,7 +60,9 @@ String[] arrayRefVar = new String[arraySize];
 String[] arrayRefVar = {"A", "B", "C"};
 ```
 
-```ArrayList```是一种以数组实现的```List```，与数组相比，具有动态扩展的能力，因此也可称之为```动态数组```。
+
+
+`ArrayList`是一种以数组实现的`List`，与数组相比，具有动态扩展的能力，因此也可称之为```动态数组```。
 
 ### 增删改查和扩容
 
