@@ -3,7 +3,7 @@ img: http://mkstatic.lianbian.net/20210913155000.png
 title: cms回收为什么要停顿两次？
 keywords: java jvm stw
 categories: java
-summary: cms回收为什么要停顿两次？
+summary: 这是好朋友问我的一个问题，你能答出来吗？cms回收为什么要停顿两次？
 author: 连边
 date: 2021-09-31
 tags:
