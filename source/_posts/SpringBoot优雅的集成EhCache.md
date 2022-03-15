@@ -3,7 +3,7 @@ img: https://mkstatic.lianbian.net/202203152253555.png
 title: SpringBoot优雅的集成EhCache
 keywords: java EhCache
 categories: java
-summary: 在SpringBoot下，优雅的使用EhCache
+summary: 在SpringBoot下，优雅的使用EhCache，有讲解、有源码，点击进来吧。
 author: 连边
 date: 2022-03-15
 tags:
