@@ -1,4 +1,5 @@
 ---
+img: https://mkstatic.lianbian.net/202203152253555.png
 title: SpringBoot优雅的集成EhCache
 keywords: java EhCache
 categories: java
@@ -19,20 +20,22 @@ tags:
 
 `EhCache` 是一个纯Java的`进程内`缓存框架，具有快速、精干等特点。
 
-上边的概念注意关键词`进程内`，他其实传递了两个关键点：
+注意概念中的关键词`进程内`，他传递了两个`关键点`：
 
 1. 速度快（进程内剔除了各种切换资源的损耗）；
-2. 不跨进程。
+2. 单机适用；
 
-现在我们说到缓存，很多人会不暇思索的使用`Redis`，其实在Java生态下，有很多场景我们用`EhCache`更合理。
+现在我们说缓存，很多人会不暇思索的使用`Redis`，其实在Java生态下，有很多场景我们用`EhCache`更合理。
 
-简单的区分一下什么时候使用`Redis`，什么时候使用`EhCache`呢？
+我这里简单的区分一下什么时候使用`Redis`，什么时候使用`EhCache`。
 
 当我们的缓存需要多个进程（分布式）共享的时候，使用`Redis`，如果只是单机、单应用内的常见缓存，使用`EhCache`。
 
+这篇文章不介绍太多的概念与配置，比较偏实战，老规矩，上导读图，直接进入实战环节。
 
+![优雅的集成EhCache](https://mkstatic.lianbian.net/202203152253555.png)
 
-## SpringBoot集成EhCache
+## SpringBoot集成实战
 
 ### 创建项目
 
@@ -183,9 +186,13 @@ ehcache.xml定义一个缓存模块，指定key和value的类型，指定过期�
 
 注意有一个过期的事件。
 
-## 总结
 
-好了，`EhCache`简单的实战就到这里结束了，源码可以从 https://github.com/lianbian/EhCache 
+
+## 源代码地址
+
+好了，`EhCache`简单的实战就到这里结束了，源码可以从 [ https://github.com/lianbian/EhCache]( https://github.com/lianbian/EhCache) 查看，微信公众号读者可以点击阅读原文。
+
+
 
 我是连边，专注于Java和架构领域，坚持撰写有原理，有实战，有体系的技术文章。
 
