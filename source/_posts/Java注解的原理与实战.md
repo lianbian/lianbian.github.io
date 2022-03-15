@@ -1,5 +1,4 @@
 ---
-img: http://mkstatic.lianbian.net/202203032332940.png
 title: Java注解的原理与实战
 keywords: java 注解
 categories: java
