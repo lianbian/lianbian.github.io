@@ -1,5 +1,13 @@
-# Robots.txt file from https://www.lianbian.net
-# All robots will spider the domain
-
+# welcome to : www.lianbian.net
 User-agent: *
-Disallow:
+Allow: /
+Allow: /archives/
+Allow: /categories/
+Allow: /about/
+
+Disallow: /js/
+Disallow: /css/
+Disallow: /fonts/
+Disallow: /vendors/
+Disallow: /lib/
+Sitemap: https://www.lianbian.net/sitemap.xml
