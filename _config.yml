@@ -9,12 +9,12 @@ description: 连边，专注于Java和架构领域，坚持撰写有原理，有
 keywords: 连边, Java, 架构
 author: 连边
 language: zh-CN
-timezone: ''
+timezone: 'Asia/Shanghai'
 
 # URL
 ## Set your site url here. For example, if you use GitHub Page, set url as 'https://username.github.io/project'
 url: https://www.lianbian.net
-permalink: :title/
+permalink: :hash.html
 permalink_defaults:
 pretty_urls:
   trailing_index: true # Set to false to remove trailing 'index.html' from permalinks
