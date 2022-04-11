@@ -22,6 +22,8 @@ tags:
 
 也还是老规矩，先上导读图。
 
+![搞定Redis Stream](https://mkstatic.lianbian.net/202204112322351.png)
+
 
 
 ## 概念
@@ -402,6 +404,14 @@ public class RedisStreamConsumerListener implements StreamListener<String, MapRe
 完整代码放在github上了，需要的可以自取：
 
 https://github.com/lianbian/ReidsStreamDemo
+
+
+
+我是连边，专注于Java和架构领域，坚持撰写有原理，有实战，有体系的技术文章。
+
+关注 `订阅号@连边` 不错过精彩文章
+
+![订阅号@连边](https://mkstatic.lianbian.net/202204112323509.jpg)
 
 
 
