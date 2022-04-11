@@ -1,5 +1,5 @@
 ---
-img: https://mkstatic.lianbian.net/202204010756622.png
+img: https://mkstatic.lianbian.net/202204112322351.png
 title: 一篇文章搞定Redis Stream
 keywords: redis stream
 categories: redis
