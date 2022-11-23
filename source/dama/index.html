@@ -1,0 +1,63 @@
+
+    <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="utf-8">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <meta name="viewport" content="width=device-width,initial-scale=1.0">
+            <meta http-equiv="pragrma" content="no-cache" />
+            <meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate" />
+            <meta http-equiv="expires" content="0" />
+            <title>DAMA题库</title>
+            <style>
+                body{
+                    margin:20px 24px 24px;
+                    padding:0;
+                    color:#4C576D;
+                    font-size: 10px;
+                }
+                .content{
+                    display:flex;
+                    flex-direction:column;
+                }
+                h2{
+                    padding-left:10px;
+                    cursor: pointer;
+                }
+                h3{
+                    padding-left: 20px;
+                }
+                a{
+                    font-size:16px;
+                    line-height:2;
+                }
+                p{
+                    padding-left:40px;
+                }
+                .answer{
+                    opacity: 0;
+                    padding:0 30px;
+                    color:red;
+                }
+                .btn{
+                    margin-left:20px;
+                }
+            </style>
+        </head>
+        <body>
+        
+            <!-- 标题 -->
+            <h1>章节目录</h1>
+        
+            <div class="content">
+                <a href='./DAMA-1章.html'>1、DAMA-1章</a><a href='./DAMA-3章.html'>2、DAMA-3章</a><a href='./DAMA-4章.html'>3、DAMA-4章</a><a href='./DAMA-5章.html'>4、DAMA-5章</a><a href='./DAMA-6章.html'>5、DAMA-6章</a><a href='./DAMA-8章.html'>6、DAMA-8章</a><a href='./DAMA-9章.html'>7、DAMA-9章</a><a href='./DAMA-10章.html'>8、DAMA-10章</a><a href='./DAMA-11章.html'>9、DAMA-11章</a><a href='./DAMA-12章.html'>10、DAMA-12章</a><a href='./DAMA-13章.html'>11、DAMA-13章</a><a href='./DAMA-14章.html'>12、DAMA-14章</a><a href='./DAMA-15章.html'>13、DAMA-15章</a><a href='./DAMA-16章.html'>14、DAMA-16章</a><a href='./DAMA-17章.html'>15、DAMA-17章</a>
+            </div>
+            <script>
+                function jump(e){
+                    console.log(e.target.dataset.url)
+                    window.open(e.target.dataset.url)
+                }
+            </script>
+        </body>
+    </html>
+    
