@@ -3,10 +3,10 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: 连边的Java技术博客
+title: 连边技术博客
 subtitle: 连边的Java技术博客
 description: 连边，专注于Java和架构领域，坚持撰写有原理，有实战，有体系的技术文章。
-keywords: 连边, Java, 架构
+keywords: 连边技术, Java技术, 软件架构师
 author: 连边
 language: zh-CN
 timezone: 'Asia/Shanghai'
