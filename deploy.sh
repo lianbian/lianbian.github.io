@@ -1,1 +1,1 @@
-Hexo g && curl -H 'Content-Type:text/plain' --data-binary @public/urls.txt "http://data.zz.baidu.com/urls?site=https://www.lianbian.net&token=qrt0ct8hhTWG9pnP" && git add . && git commit -m "博客文章发布" && git push origin && ./qshell qupload2 --src-dir=./public --bucket=2www
+Hexo g && curl -H 'Content-Type:text/plain' --data-binary @public/urls.txt "http://data.zz.baidu.com/urls?site=https://www.lianbian.net&token=qrt0ct8hhTWG9pnP" && git add . && git commit -m "博客文章发布" && git push origin && ./qshell qupload2 --check-hash --src-dir=./public --bucket=2www
