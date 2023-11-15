@@ -1,3 +1,3 @@
 # lianbian.github.io
-博客@连边
+连边的博客
 https://www.lianbian.net
