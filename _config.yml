@@ -98,8 +98,8 @@ ignore:
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
 # theme: hexo-theme-matery
-# theme: fluid
-theme: cactus
+theme: fluid
+# theme: cactus
 
 deploy:
 - type: git
