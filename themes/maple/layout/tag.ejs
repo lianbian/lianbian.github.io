@@ -1,81 +1,34 @@
-<%- partial('_partial/bg-cover') %>
-
-<main class="content">
-
-    <%- partial('_widget/tag-cloud') %>
-
-    <%
-    var hashCode = function (str) {
-        if (!str && str.length === 0) {
-            return 0;
-        }
-
-        var hash = 0;
-        for (var i = 0, len = str.length; i < len; i++) {
-            hash = ((hash << 5) - hash) + str.charCodeAt(i);
-            hash |= 0;
-        }
-        return hash;
-    };
-    %>
-
-    <article id="articles" class="container articles">
-        <div class="row tags-posts">
-            <% page.posts.sort('date').reverse().forEach(post => { %>
-            <%
-                var tagArr = [];
-                if (post.tags && post.tags.length > 0) {
-                    post.tags.forEach(tag => {
-                        tagArr.push(tag.name);
-                    });
-                }
-                var tags = tagArr.join(', ');
-            %>
-            <div class="article tag-post col s12 m6 l4" data-tags="<%- tags %>" data-aos="fade-up">
-                <div class="card">
-                    <a href="<%- url_for(post.path) %>">
-                        <div class="card-image tag-image">
-                            <% if (post.img) { %>
-                            <img src="<%- url_for(post.img) %>" class="responsive-img" alt="<%= post.title %>">
-                            <% } else { %>
-                            <%
-                                var featureimg = theme.featureImages[Math.abs(hashCode(post.title) % theme.featureImages.length)];
-                            %>
-                            <img src="<%- theme.jsDelivr.url %><%- url_for(featureimg) %>" class="responsive-img" alt="<%= post.title %>">
-                            <% } %>
-                            <span class="card-title"><%= post.title %></span>
-                        </div>
-                    </a>
-                    <div class="card-content article-content">
-                        <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i><%= date(post.date, config.date_format) %>
-                            </span>
-                            <span class="publish-author">
-                                <% if (post.categories && post.categories.length > 0) { %>
-                                <i class="fas fa-bookmark fa-fw icon-category"></i>
-                                <% post.categories.forEach(category => { %>
-                                <a href="<%- url_for(category.path) %>" class="post-category">
-                                <%- category.name %>
-                                </a>
-                                <% }); %>
-                                <% } else if (post.author && post.author.length > 0) { %>
-                                <i class="fas fa-user fa-fw"></i>
-                                <%- post.author %>
-                                <% } else { %>
-                                <i class="fas fa-user fa-fw"></i>
-                                <%- config.author %>
-                                <% } %>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <% }); %>
-        </div>
-    </article>
-</main>
-
-<% if (page.total > 1) { %>
-<%- partial('_partial/paging') %>
+<%#
+this page will judge whether current page is 'tag.'
+url:'http://localhost:4000/tag/' return false.
+url:'http://localhost:4000/tags/test/' return true.
+if you enter 'tag' page by click link will show all tags.
+otherwise if you enter 'tags' by click post header link will show the single tag of this post.
+how to add a tag page:
+    1. hexo new page "tag"
+    2. cd source/tag/index.md
+    3. add layout pattern like this:
+    ---
+    title: '''tag'''
+    date: 2019-06-09 09:56:49
+    layout: tag
+    ---
+ %>
+<% if(is_tag()){ %>
+  <div>
+    <h2>Tag - <%-page.tag%></h2>
+  </div>
+  <%- partial('archive', {pagination: config.tag, index: true}) %>
+<% } else { %>
+  <div class="px-6 max-w-prose mx-auto md:px-0 mt-6">
+    <h2 class="font-bold text-2xl">Tags</h2>
+    <ul class="mt2">
+      <% site.tags.forEach(item => { %>
+        <li class="mt-2">
+          <a href="<%-url_for(item.path)%>"><%- item.name%></a>
+          <span >(<%-item.length%>)</span>
+        </li>
+      <% }) %>
+    </ul>
+  </div>
 <% } %>

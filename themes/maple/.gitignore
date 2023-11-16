@@ -1,2 +1,8 @@
 .DS_Store
-.idea
+Thumbs.db
+db.json
+*.log
+node_modules/
+public/
+.deploy*/
+_multiconfig.yml
