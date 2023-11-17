@@ -1,3 +1,16 @@
+---
+title: jvm问题故障分析
+keywords: jvm
+categories: java
+summary: 系统就会变得缓慢，需要重启服务才能恢复访问
+author: 连边
+date: 2021-08-02
+tags:
+  - java jam
+---
+
+
+
 ## 问题现象
 
 jar能正常启动，但是到下午四点的时候，系统就会变得缓慢，需要重启服务才能恢复访问，cpu和内存占用都不高。

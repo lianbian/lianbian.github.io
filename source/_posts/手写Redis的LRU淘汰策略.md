@@ -1,5 +1,5 @@
 ---
-img: http://mkstatic.lianbian.net/202110291439151.png
+index_img: http://mkstatic.lianbian.net/202110291439151.png
 title: 手写Redis的LRU淘汰策略
 keywords: redis
 categories: redis

@@ -1,5 +1,5 @@
 ---
-img: http://mkstatic.lianbian.net/202112062123673.png
+index_img: http://mkstatic.lianbian.net/202112062123673.png
 title: Win下部署多个MySQL数据库实例
 keywords: mysql
 categories: mysql

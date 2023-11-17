@@ -1,5 +1,5 @@
 ---
-img: http://mkstatic.lianbian.net/20210907221107.png
+index_img: http://mkstatic.lianbian.net/20210907221107.png
 title: 不重启JVM替换掉已经加载的类
 keywords: java
 categories: java

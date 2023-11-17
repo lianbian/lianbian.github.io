@@ -1,5 +1,5 @@
 ---
-img: https://mkstatic.lianbian.net/202204010756622.png
+index_img: https://mkstatic.lianbian.net/202204010756622.png
 title: ClickHouse数据类型
 keywords: clickhouse
 categories: clickhouse

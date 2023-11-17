@@ -1,3 +1,15 @@
+---
+title: 解决Maven同一依赖多版本共存
+keywords: java Maven
+categories: Maven
+author: 连边
+date: 2021-10-28
+tags:
+  - java
+---
+
+
+
 ## 问题现状
 
 由于是一个迭代比较久的项目，项目中已经存在poi-tl 1.5.x的依赖，poi-tl v1.5.x是构建在Apache poi3.16上的版本，而我们现在要使用到easyexcel来处理导出，而easyexcel最低的Apache poi版本要求是4.1.2，将项目中已有poi的3.16升级到4.12时，旧代码出错，但是不升级就无法使用easyexcel。

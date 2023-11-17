@@ -1,5 +1,5 @@
 ---
-img: https://mkstatic.lianbian.net/202204201300400.png
+index_img: https://mkstatic.lianbian.net/202204201300400.png
 title: 真的有必要定义VO，BO，PO，DO，DTO吗？
 keywords: VO BO PO DO DTO
 categories: redis

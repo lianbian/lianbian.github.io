@@ -1,5 +1,5 @@
 ---
-img: http://mkstatic.lianbian.net/20210814155418.png
+index_img: http://mkstatic.lianbian.net/20210814155418.png
 title: LinkedList源码解析
 keywords: java linkedlist
 categories: java

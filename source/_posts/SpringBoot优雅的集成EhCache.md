@@ -1,5 +1,5 @@
 ---
-img: https://mkstatic.lianbian.net/202203152253555.png
+index_img: https://mkstatic.lianbian.net/202203152253555.png
 title: SpringBoot优雅的集成EhCache
 keywords: java EhCache
 categories: java
