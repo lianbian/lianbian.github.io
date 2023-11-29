@@ -1,5 +1,4 @@
 ---
-index_img: http://mkstatic.lianbian.net/202110141040653.png
 title: MySQL的undo日志
 keywords: mysql undo log
 categories: mysql

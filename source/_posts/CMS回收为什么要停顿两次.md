@@ -1,5 +1,4 @@
 ---
-index_img: http://mkstatic.lianbian.net/20210913155000.png
 title: cms回收为什么要停顿两次？
 keywords: java jvm stw
 categories: java

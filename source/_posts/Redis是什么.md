@@ -1,5 +1,4 @@
 ---
-index_img: https://mkstatic.lianbian.net/202204290656695.png
 title: Redis是什么？
 keywords: redis概念
 categories: redis

@@ -1,5 +1,4 @@
 ---
-index_img: http://mkstatic.lianbian.net/202112282331074.png
 title: 为什么填入pom依赖后，我们就能使用其类对象
 keywords: java 面试
 categories: java

@@ -1,5 +1,4 @@
 ---
-index_img: http://mkstatic.lianbian.net/202201242321108.png
 title: MyBatis 插件原理与实战
 keywords: java mybatis
 categories: java

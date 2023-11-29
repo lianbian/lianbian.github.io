@@ -1,5 +1,4 @@
 ---
-index_img: http://mkstatic.lianbian.net/202203082153007.png
 title: ClickHouse介绍与特点
 keywords: clickhouse
 categories: clickhouse

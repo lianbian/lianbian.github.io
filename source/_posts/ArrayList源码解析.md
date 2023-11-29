@@ -1,5 +1,4 @@
 ---
-index_img: http://mkstatic.lianbian.net/Java%E9%9B%86%E5%90%88.png
 title: ArrayList源码解析
 keywords: java arraylist
 categories: java
