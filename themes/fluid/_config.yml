@@ -470,7 +470,7 @@ index:
   # 首页副标题的独立设置
   # Independent config of home page subtitle
   slogan:
-    enable: true
+    enable: false
 
     # 为空则按 hexo config.subtitle 显示
     # If empty, text based on `subtitle` in hexo config
@@ -501,7 +501,7 @@ index:
   # 自动截取文章摘要
   # Auto extract post
   auto_excerpt:
-    enable: true
+    enable: false
 
   # 打开文章的标签方式
   # The browser tag to open the post
