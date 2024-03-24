@@ -14,6 +14,10 @@
 </head>
 
 <style>
+    .container {
+        padding: 0px;
+    }
+
     .spancell {
         display: inline-block;
         padding-left: 20px;
@@ -22,8 +26,8 @@
 
     .check-box {
         border: 10px solid red;
-        /* width: 50px;
-        height: 50px; */
+        width: 50px;
+        height: 50px;
     }
 </style>
 
@@ -106,7 +110,7 @@
         if(index!=0 && index%10 == 0) {
             itemHtml+="</br>";
         }
-        itemHtml += '<span class="spancell"><input type="checkbox" id="studentNo'+ item.no +'" /><label for="studentNo'+ item.no +'" class="check-box">' + item.no +":" +item.name +'</label></span>';
+        itemHtml += '<span class="spancell"><input type="checkbox" id="studentNo'+ item.no +'" /><label for="studentNo'+ item.no +'" class="check-box">' + item.no +'</label></span>';
         studentHtml+=itemHtml;
     });
 

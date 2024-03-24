@@ -108,7 +108,7 @@ input[type=checkbox] {
   cursor: pointer;
 }
 .check-box::before, .check-box::after {
-  -moz-box-sizing: border-box;
+  /* -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
   position: absolute;
@@ -125,7 +125,7 @@ input[type=checkbox] {
   content: ' ';
   -webkit-transition: opacity ease .5;
   -moz-transition: opacity ease .5;
-  transition: opacity ease .5;
+  transition: opacity ease .5; */
 }
 .check-box::before {
   top: 72px;
