@@ -20,14 +20,15 @@
 
     .spancell {
         display: inline-block;
-        padding-left: 20px;
-        margin-bottom: 10px;
+        padding-left: 5px;
+        margin-bottom: 5px;
     }
 
     .check-box {
-        border: 10px solid red;
-        width: 50px;
-        height: 50px;
+        border: 2px solid red;
+        font-size: 12px;
+        width: 60px;
+        height: 60px;
     }
 </style>
 
@@ -110,7 +111,7 @@
         if(index!=0 && index%10 == 0) {
             itemHtml+="</br>";
         }
-        itemHtml += '<span class="spancell"><input type="checkbox" id="studentNo'+ item.no +'" /><label for="studentNo'+ item.no +'" class="check-box">' + item.no +'</label></span>';
+        itemHtml += '<span class="spancell"><input type="checkbox" id="studentNo'+ item.no +'" /><label for="studentNo'+ item.no +'" class="check-box">' + item.no +':'+item.name+'</label></span>';
         studentHtml+=itemHtml;
     });
 
