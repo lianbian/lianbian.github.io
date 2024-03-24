@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=2.0, user-scalable=yes" /> 
+
+
+  <title>检查作业工具</title>
+
+    <link rel="stylesheet" href="css/style.css" media="screen" type="text/css" />
+
+</head>
+
+<style>
+    .studentsDiv {
+        display: block;
+        font-size: 1.5em;
+        margin-block-start: 0.83em;
+        margin-block-end: 0.83em;
+        margin-inline-start: 0px;
+        margin-inline-end: 0px;
+        font-weight: bold
+    }
+
+    .studentsDiv input {
+        width: 240px;
+        height: 30px;
+    }
+</style>
+<body>
+
+<div class="container">
+    <h2>
+
+    </h2>
+    <div class="studentsDiv">
+        <table>
+            <tr>
+                <td>
+                    日期： <input id="tjDate" type="text" value="">
+                </td>
+            </tr>
+
+            <tr class="subject">
+                <td>
+                    科目： <input id="tjSubject" type="text" value="练写本">
+                </td>
+                <td>
+                     <a href="#" data-subject="练写本">练写本</a>
+                     <a href="#" data-subject="写话本">写话本</a>
+                     <a href="#" data-subject="听写本">听写本</a>
+                     <a href="#" data-subject="上本">上本</a>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <a id="toTj" href="#">去统计</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+</div>
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.7.1/jquery.js"></script>
+<script type="text/javascript">
+    var start = new Date();
+    start.setMonth(start.getMonth());
+    day = ("0" + start.getDate()).slice(-2);
+    month = ("0" + (start.getMonth() + 1)).slice(-2);
+    today = start.getFullYear()+"-"+(month)+"-"+(day) ;
+    $('#tjDate').val(today);
+
+    $('.subject a').on('click', function(){
+        var dataSubject = $(this).attr('data-subject');
+        $('#tjSubject').val(dataSubject);
+    });
+
+    $('#toTj').on('click', function(){
+        var tjSubject = $('#tjSubject').val();
+        var tjDate = $('#tjDate').val();
+        var tjTitle = tjSubject + "收作业情况" + "["+tjDate+"]";
+        var codeTitle = encodeURI(tjTitle);
+        window.location.href='subject.html?tjTitle=' + codeTitle;
+    })
+</script>
+</body>
+
+</html>
