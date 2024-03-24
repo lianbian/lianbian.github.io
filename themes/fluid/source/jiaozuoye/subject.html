@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=2.0, user-scalable=yes" /> 
 
 
-  <title>作业交了吗？</title>
+  <title>检查作业工具</title>
 
     <link rel="stylesheet" href="css/style.css" media="screen" type="text/css" />
 
@@ -35,8 +35,8 @@
 <body>
 
 <div class="container">
-    <h2>
-        程老师检查作业工具
+    <h2 id="tjTitle">
+        收作业情况
     </h2>
     <div class="studentsDiv">
     </div>
@@ -44,7 +44,7 @@
 
 </div>
 </div>
-
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.7.1/jquery.js"></script>
 <script type="text/javascript">
     var students = [
         {"no":"1", "name":"陈佳美"}, 
@@ -116,6 +116,19 @@
     });
 
     studentsDivItem.insertAdjacentHTML("afterbegin", studentHtml);
+
+    $('#tjTitle').html(decodeURI(getQueryVariable('tjTitle')));
+
+    function getQueryVariable(variable)
+    {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i=0;i<vars.length;i++) {
+                var pair = vars[i].split("=");
+                if(pair[0] == variable){return pair[1];}
+        }
+        return(false);
+    }
 </script>
 </body>
 
