@@ -26,9 +26,9 @@
 
     .check-box {
         border: 2px solid red;
-        font-size: 10px;
+        font-size: 12px;
         width: 50px;
-        height: 25px;
+        height: 50px;
     }
 </style>
 
@@ -108,7 +108,7 @@
     var itemHtml = '';
     students.forEach(function(item, index) {
         itemHtml = '';
-        if(index!=0 && index%10 == 0) {
+        if(index!=0 && index%5 == 0) {
             itemHtml+="</br>";
         }
         itemHtml += '<span class="spancell"><input type="checkbox" id="studentNo'+ item.no +'" /><label for="studentNo'+ item.no +'" class="check-box">' + item.no +':'+item.name+'</label></span>';
