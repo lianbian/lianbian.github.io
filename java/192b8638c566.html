@@ -1,0 +1,793 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="连边">
+  <meta name="keywords" content="并发编程 newFixedThreadPool">
+  
+    <meta name="description" content="大家好，我是连边。 今天给大家带来一宗热乎乎的“5.1惨案“。 场景领导给我打电话，反馈同事系统无法登录了。 当下第一反应就是：我没改代码啊，怎么会有问题。 抱怨归抱怨，身体还是很诚实，立马乖乖的下载日志，查看日志～ 给大家看看报错信息，看大家能不能定位个大概问题。 1API处理错误：Handler dispatch failed; nested exception is java.lang.Ou">
+<meta property="og:type" content="article">
+<meta property="og:title" content="少一行代码，把线上环境搞崩了">
+<meta property="og:url" content="https://www.lianbian.net/java/192b8638c566.html">
+<meta property="og:site_name" content="连边">
+<meta property="og:description" content="大家好，我是连边。 今天给大家带来一宗热乎乎的“5.1惨案“。 场景领导给我打电话，反馈同事系统无法登录了。 当下第一反应就是：我没改代码啊，怎么会有问题。 抱怨归抱怨，身体还是很诚实，立马乖乖的下载日志，查看日志～ 给大家看看报错信息，看大家能不能定位个大概问题。 1API处理错误：Handler dispatch failed; nested exception is java.lang.Ou">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://mkstatic.lianbian.net/202205051739855.png">
+<meta property="og:image" content="https://mkstatic.lianbian.net/202205052006774.png">
+<meta property="og:image" content="https://mkstatic.lianbian.net/202205052238651.png">
+<meta property="og:image" content="https://mkstatic.lianbian.net/202205052033040.png">
+<meta property="og:image" content="https://mkstatic.lianbian.net/202205052050749.png">
+<meta property="og:image" content="https://mkstatic.lianbian.net/202205052102473.png">
+<meta property="og:image" content="https://mkstatic.lianbian.net/202205052154518.png">
+<meta property="og:image" content="https://mkstatic.lianbian.net/202205052155862.png">
+<meta property="og:image" content="https://mkstatic.lianbian.net/202205052236859.png">
+<meta property="og:image" content="https://mkstatic.lianbian.net/202205052207133.png">
+<meta property="og:image" content="https://mkstatic.lianbian.net/202205052208099.png">
+<meta property="og:image" content="https://mkstatic.lianbian.net/202205052235364.png">
+<meta property="og:image" content="https://mkstatic.lianbian.net/202205052219629.jpg">
+<meta property="article:published_time" content="2022-05-04T16:00:00.000Z">
+<meta property="article:modified_time" content="2023-11-15T15:36:24.758Z">
+<meta property="article:author" content="连边">
+<meta property="article:tag" content="java">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://mkstatic.lianbian.net/202205051739855.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>少一行代码，把线上环境搞崩了 - 连边</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"www.lianbian.net","root":"/","version":"1.9.5","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>连边的技术博客</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="少一行代码，把线上环境搞崩了"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-05-05 00:00" pubdate>
+          2022年5月5日 凌晨
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.6k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          22 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">少一行代码，把线上环境搞崩了</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>大家好，我是连边。</p>
+<p>今天给大家带来一宗热乎乎的<strong>“5.1惨案“</strong>。</p>
+<h2 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h2><p>领导给我打电话，反馈同事系统无法登录了。</p>
+<p>当下第一反应就是：我没改代码啊，怎么会有问题。</p>
+<p>抱怨归抱怨，身体还是很诚实，立马乖乖的下载日志，查看日志～</p>
+<p>给大家看看报错信息，看大家能不能定位个大概问题。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java">API处理错误：Handler dispatch failed; nested exception is java.lang.OutOfMemoryError: unable to create <span class="hljs-keyword">new</span> <span class="hljs-title class_">native</span> thread<br></code></pre></td></tr></table></figure>
+
+<p>OOM了，无法再创建新的处理线程。</p>
+<p>收到领导反馈问题的时间是上午10:48分，而我开始查问题的时候已经是中午12:15左右了，这个时候系统已经自动恢复功能了，这说明释放出了空间能够让代码继续运行；</p>
+<p>最开始我是导出的当天的运行日志，没有查看出端倪，继续找前一天的，我们需要找到第一次发生错误的日志。</p>
+<p><img src="https://mkstatic.lianbian.net/202205051739855.png" srcset="/img/loading.gif" lazyload alt="报错日志"></p>
+<p>找到上边这段日志，基本上也知道触发OOM的原因是什么了。</p>
+<p><strong>业务场景：</strong></p>
+<p>在我的任务（禅道）系统里面，每天早上9点，有一个未完成任务任务的微信推送，因为推送的内容与每个同事信息相关，所以不能采取批量推送的方式，就循环了需要推送的用户（用户总数为183个），调用推送系统的推送消息接口。</p>
+<p>理论上是没有一点压力的，本质就是调用微信的推送接口183次，微信这点推送还是能扛住的。</p>
+<p>但是看这个日志，就是这个推送把JVM给弄OOM了。</p>
+<p><img src="https://mkstatic.lianbian.net/202205052006774.png" srcset="/img/loading.gif" lazyload alt="推送系统示意图"></p>
+<p>找到触发OOM的原因，就继续跟踪业务代码，从禅道任务系统跟踪到微信推送系统（不是连边写的代码，但是秉承的解决问题的初衷，屎山也要看。）。首先脑海里进行一波分析，禅道任务系统是用PHP写的，他没有做任何的操作，就是发送一个http请求，出问题的概率应该不大，把重点的心思放在微信推送系统里边。</p>
+<p>直到看到这段代码，我内心都崩溃了，我不知道是哪个想秀技术的程序员，秀出来的代码。</p>
+<h2 id="看一段代码"><a href="#看一段代码" class="headerlink" title="看一段代码"></a>看一段代码</h2><p><img src="https://mkstatic.lianbian.net/202205052238651.png" srcset="/img/loading.gif" lazyload alt="被秀的代码"></p>
+<p>大家看出什么问题了吗？</p>
+<p>我们看一段代码，首先不要陷入到细枝末节里面去看，要看这段代码、这个函数是要解决一个什么问题。</p>
+<p><strong>异步批量发送微信消息模版</strong>是这个函数要解决的问题。</p>
+<p>看到了2个引起警觉的代码<code>newFixedThreadPool</code>和<code>CompletableFuture.supplyAsync</code>。</p>
+<p><strong>从上面这段代码，大家看出什么问题了吗？欢迎在留言区和我谈论。</strong></p>
+<p>没看出问题的也没事，我们接着来补充并发编程的基础。</p>
+<h2 id="补充基础"><a href="#补充基础" class="headerlink" title="补充基础"></a>补充基础</h2><h3 id="newFixedThreadPool"><a href="#newFixedThreadPool" class="headerlink" title="newFixedThreadPool"></a>newFixedThreadPool</h3><p>创建固定数量的线程池。</p>
+<p><strong>其实在阿里手册里边就有一条，不要使用封装好的这些创建线程池的方法。</strong></p>
+<p>我们来看它具体的实现</p>
+<p><img src="https://mkstatic.lianbian.net/202205052033040.png" srcset="/img/loading.gif" lazyload alt="newFixedThreadPool的具体实现"></p>
+<p>这里面又夹杂了一道常见面试题。</p>
+<p><strong>创建线程池ThreadPoolExecutor有几个参数，你是怎么理解这几个参数的？在工作中，你是怎么设置的？</strong></p>
+<p>这里先不散开来讲了，还是针对性的讲newFixedThreadPool。</p>
+<p><code>ThreadPoolExecutor</code>继承自<code>AbstractExecutorService</code>，而<code>AbstractExecutorService</code>实现了<code>ExecutorService</code>接口。</p>
+<p><img src="https://mkstatic.lianbian.net/202205052050749.png" srcset="/img/loading.gif" lazyload alt="ThreadPoolExecutor方法"></p>
+<p>7个参数：</p>
+<ol>
+<li><code>corePoolSize</code> ：线程池中核心线程数的最大值；</li>
+<li><code>maximumPoolSize</code> ：线程池中能拥有最多线程数；</li>
+<li><code>keepAliveTime</code> ：表示空闲线程的存活时间；</li>
+<li><code>TimeUnit unit</code> ：表示keepAliveTime的单位；</li>
+<li><code>workQueue</code> ：它决定了缓存任务的排队策略。对于不同的应用场景我们可能会采取不同的排队策略，这就需要不同类型的队列。这个队列需要一个实现了BlockingQueue接口的任务等待队列；</li>
+<li><code>threadFactory</code> ：指定创建线程的工厂；</li>
+<li><code>handler</code> ：表示当 <code>workQueue</code> 已满，且池中的线程数达到 <code>maximumPoolSize</code> 时，线程池拒绝添加新任务时采取的策略。</li>
+</ol>
+<p>回顾<code>newFixedThreadPool</code>的具体实现：</p>
+<p><img src="https://mkstatic.lianbian.net/202205052102473.png" srcset="/img/loading.gif" lazyload alt="newFixedThreadPool的具体实现"></p>
+<p>它的核心线程数和最大线程数是一样，都是nThreads的变量的值，该变量由用户自己决定，所以说是固定大小线程池。此外，它每隔0毫秒回收一次线程，换句话说就是不回收线程，因为它的核心线程和最大线程数是一样，回收没有任何意义，此外，使用了<code>LinkedBlockingQueue</code>队列，该队列其实是有界队列，很多人误解了，只是它的初始值比较大，是Interger的最大值，Integer.MAX_VALUE。</p>
+<p>回到最开始，我被秀的那段代码中，其实就是我调用一次微信模版推送方法，就会创建包含2个线程的线程池。</p>
+<p>先继续补充第二个知识点。</p>
+<h3 id="CompletableFuture-supplyAsync"><a href="#CompletableFuture-supplyAsync" class="headerlink" title="CompletableFuture.supplyAsync"></a>CompletableFuture.supplyAsync</h3><p>用某个线程池，去异步执行我的业务代码。</p>
+<p><img src="https://mkstatic.lianbian.net/202205052154518.png" srcset="/img/loading.gif" lazyload alt="模拟实现"></p>
+<p>输出：</p>
+<p><img src="https://mkstatic.lianbian.net/202205052155862.png" srcset="/img/loading.gif" lazyload alt="输出效果"></p>
+<p>因为没有调用<code>ExecutorService</code>的<code>shutdown</code>方法，启动的方法不会停止，会一直在运行状态。</p>
+<h2 id="复现问题"><a href="#复现问题" class="headerlink" title="复现问题"></a>复现问题</h2><p>通过上面的讲解，其实我们已经知道了问题所在，就是创建线程没有调用线程池的<code>shutdown</code>，导致线程池一直等待任务，而这个任务永远不会到来了，等到达一个临界值之后，就会把系统拉垮。</p>
+<p>为了证实这个理论，我们来写一段代码来验证下。</p>
+<p><img src="https://mkstatic.lianbian.net/202205052236859.png" srcset="/img/loading.gif" lazyload alt="伪代码验证问题"></p>
+<p>输出：</p>
+<p><img src="https://mkstatic.lianbian.net/202205052207133.png" srcset="/img/loading.gif" lazyload alt="输出"></p>
+<p>增加<code>shutdown</code>方法：</p>
+<p><img src="https://mkstatic.lianbian.net/202205052208099.png" srcset="/img/loading.gif" lazyload alt="增加shutdown方法"></p>
+<p>结合前面的文章，这里留给大家一个思考题，加了shutdown方法的代码，真的能一直跑吗？pool到多少，会停止呢？</p>
+<h2 id="最后我的解决方案"><a href="#最后我的解决方案" class="headerlink" title="最后我的解决方案"></a>最后我的解决方案</h2><p>可能大家都会以为我会直接增加shutdown方法来解决这个问题，但是我最后没有用shutdown来直接处理，而是把代码直接改成了</p>
+<p><img src="https://mkstatic.lianbian.net/202205052235364.png" srcset="/img/loading.gif" lazyload alt="直接for循环"></p>
+<p>没有用线程池，没有用多线程的玩意儿，直接改成了for循环来修复了这个问题，因为从具体的业务出发，userIdList最多不过300个，我们是内部系统；还有就是充分相信微信的处理能力，如果这点有担忧的同学，可以改成异步的方法，我想着最后的结果反正就是推送不出去，就不去用复杂的异步调度了。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ol>
+<li>问题在你这里来了，不管是不是你的问题，先要解决问题，owner精神；</li>
+<li>这里说一点题外话，恢复系统正常使用永远是第一要务，遇到问题，首先第一时间要预估恢复系统的时间，然后果断的做出判断，重启应用能够解决问题，就先重启应用，恢复系统之后，再去排查问题；</li>
+<li>能用简单的技术解决问题，就用简单的技术，不要动不动就用牛刀杀鸡；</li>
+<li>理解并注意前人提出的那些规范原理，有时候真的少些一行代码，能把线上服务器搞崩；</li>
+</ol>
+<p>我是连边，简化你的求知路径。</p>
+<p>欢迎关注连边，不错过精彩内容。</p>
+<p><img src="https://mkstatic.lianbian.net/202205052219629.jpg" srcset="/img/loading.gif" lazyload alt="订阅号@连边"></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/java/" class="category-chain-item">java</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/java/" class="print-no-link">#java</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>少一行代码，把线上环境搞崩了</div>
+      <div>https://www.lianbian.net/java/192b8638c566.html</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>连边</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年5月5日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/%E6%9E%B6%E6%9E%84/f4d10d285dea.html" title="软件系统稳定的策略">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">软件系统稳定的策略</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/redis/365360b38cf0.html" title="Redis是什么？">
+                        <span class="hidden-mobile">Redis是什么？</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+    <!-- 备案信息 ICP for China -->
+    <div class="beian">
+  <span>
+    <a href="http://beian.miit.gov.cn/" target="_blank" rel="nofollow noopener">
+      湘ICP备1900865号-3
+    </a>
+  </span>
+  
+    
+      <span>
+        <a
+          href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=湘ICP备1900865号-3"
+          rel="nofollow noopener"
+          class="beian-police"
+          target="_blank"
+        >
+          
+            <span style="visibility: hidden; width: 0">|</span>
+            <img src="/img/police_beian.png" srcset="/img/loading.gif" lazyload alt="police-icon"/>
+          
+          <span>湘ICP备1900865号-3</span>
+        </a>
+      </span>
+    
+  
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

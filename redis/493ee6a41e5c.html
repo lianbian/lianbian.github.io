@@ -1,0 +1,928 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="连边">
+  <meta name="keywords" content="redis stream">
+  
+    <meta name="description" content="前言大家好，我是连边。 今天给大家带来一篇关于Redis Stream的文章，文章会从消息队列的基本概念、然后基于Redis Stream基本操作，顺带着会讲Redis Stream的存储结构，最后配合在Spring Boot框架来讲解实战。阅读完这篇文章以后，基本上就能把Redis Stream拿捏住。 话不多说，开始～ 也还是老规矩，先上导读图。  概念Redis Stream 是Redis5">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一篇文章搞定Redis Stream">
+<meta property="og:url" content="https://www.lianbian.net/redis/493ee6a41e5c.html">
+<meta property="og:site_name" content="连边">
+<meta property="og:description" content="前言大家好，我是连边。 今天给大家带来一篇关于Redis Stream的文章，文章会从消息队列的基本概念、然后基于Redis Stream基本操作，顺带着会讲Redis Stream的存储结构，最后配合在Spring Boot框架来讲解实战。阅读完这篇文章以后，基本上就能把Redis Stream拿捏住。 话不多说，开始～ 也还是老规矩，先上导读图。  概念Redis Stream 是Redis5">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://mkstatic.lianbian.net/202204112322351.png">
+<meta property="og:image" content="https://mkstatic.lianbian.net/202204070735521.png">
+<meta property="og:image" content="https://mkstatic.lianbian.net/202204041252508.png">
+<meta property="og:image" content="https://mkstatic.lianbian.net/202204041252375.png">
+<meta property="og:image" content="https://mkstatic.lianbian.net/202204052136097.png">
+<meta property="og:image" content="https://mkstatic.lianbian.net/202204052143572.png">
+<meta property="og:image" content="https://mkstatic.lianbian.net/202204052146648.png">
+<meta property="og:image" content="https://mkstatic.lianbian.net/202204052155202.png">
+<meta property="og:image" content="https://mkstatic.lianbian.net/202204052201508.jpg">
+<meta property="og:image" content="https://mkstatic.lianbian.net/202204070745630.png">
+<meta property="og:image" content="https://mkstatic.lianbian.net/202204052208819.png">
+<meta property="og:image" content="https://mkstatic.lianbian.net/202204052211840.png">
+<meta property="og:image" content="https://mkstatic.lianbian.net/202204052215363.png">
+<meta property="og:image" content="https://mkstatic.lianbian.net/202204052242986.png">
+<meta property="og:image" content="https://mkstatic.lianbian.net/202204052244639.png">
+<meta property="og:image" content="https://mkstatic.lianbian.net/202204052249394.png">
+<meta property="og:image" content="https://mkstatic.lianbian.net/202204082236528.png">
+<meta property="og:image" content="https://mkstatic.lianbian.net/202204082329393.png">
+<meta property="og:image" content="https://mkstatic.lianbian.net/202204082338305.png">
+<meta property="og:image" content="https://mkstatic.lianbian.net/202204082339586.png">
+<meta property="og:image" content="https://mkstatic.lianbian.net/202204082340480.png">
+<meta property="og:image" content="https://mkstatic.lianbian.net/202204082345023.png">
+<meta property="og:image" content="https://mkstatic.lianbian.net/202204082348833.png">
+<meta property="og:image" content="https://mkstatic.lianbian.net/202204082349405.png">
+<meta property="og:image" content="https://mkstatic.lianbian.net/202204112311256.png">
+<meta property="og:image" content="https://mkstatic.lianbian.net/202204112311670.png">
+<meta property="og:image" content="https://mkstatic.lianbian.net/202204112323509.jpg">
+<meta property="article:published_time" content="2022-04-03T16:00:00.000Z">
+<meta property="article:modified_time" content="2023-11-29T22:09:30.285Z">
+<meta property="article:author" content="连边">
+<meta property="article:tag" content="redis">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://mkstatic.lianbian.net/202204112322351.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>一篇文章搞定Redis Stream - 连边</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"www.lianbian.net","root":"/","version":"1.9.5","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>连边的技术博客</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="一篇文章搞定Redis Stream"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-04-04 00:00" pubdate>
+          2022年4月4日 凌晨
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          7.2k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          61 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">一篇文章搞定Redis Stream</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>大家好，我是连边。</p>
+<p>今天给大家带来一篇关于<code>Redis Stream</code>的文章，文章会从消息队列的基本概念、然后基于Redis Stream基本操作，顺带着会讲Redis Stream的存储结构，最后配合在<code>Spring Boot</code>框架来讲解实战。阅读完这篇文章以后，基本上就能把Redis Stream拿捏住。</p>
+<p>话不多说，开始～</p>
+<p>也还是老规矩，先上导读图。</p>
+<p><img src="https://mkstatic.lianbian.net/202204112322351.png" srcset="/img/loading.gif" lazyload alt="搞定Redis Stream"></p>
+<h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><p><code>Redis Stream</code> 是<code>Redis5.0</code>推出的一种专门用来处理<code>消息队列</code>场景的高级数据结构，是Redis下消息队列的最佳实现。</p>
+<p><img src="https://mkstatic.lianbian.net/202204070735521.png" srcset="/img/loading.gif" lazyload alt="stream全局图-不是我画的"></p>
+<p>这是一个很好的Redis Stream知识体系图，现在看着看不懂这个图也没有关系，我会由浅入深的给大家剖析该体系图。</p>
+<h2 id="什么是消息队列"><a href="#什么是消息队列" class="headerlink" title="什么是消息队列"></a>什么是消息队列</h2><p><code>队列</code>是一种数据结构，对应到我们生活中的例子，就是排队。讲究着<strong>先来先处理的原则</strong>，目的是为了避免混乱与系统瘫痪。</p>
+<p><strong>消息队列把我们具体的业务，都抽象成为“消息”。排队做核酸，也可以叫做“核酸”队列。</strong></p>
+<p>刚说了队列是为了避免混乱与系统瘫痪，它还有一些其他的作用：</p>
+<ol>
+<li>消峰填谷</li>
+</ol>
+<p>这点表现最明显的就是我们常说的秒杀系统，访问量在某一个刻，到达巅峰，然后又断崖式下跌。</p>
+<p>根据具体的业务场景，把业务处理的压力压入到消息队列中，以时间轴为水平线，来处理业务。</p>
+<p><img src="https://mkstatic.lianbian.net/202204041252508.png" srcset="/img/loading.gif" lazyload alt="消峰填谷"></p>
+<ol start="2">
+<li>异步解耦</li>
+</ol>
+<p>假如有一个电商系统，在商品下单后，需要通知客服小二核对地址，需要通知物流仓储系统发货，需要营销中心发放优惠券 等等一些业务。</p>
+<p><img src="https://mkstatic.lianbian.net/202204041252375.png" srcset="/img/loading.gif" lazyload alt="异步解耦"></p>
+<p>消息队列还有一些其他的作用，以上两个是比较典型的。</p>
+<p>在<code>Reids</code>没有推出<code>Stream</code>数据类型的时候，我们也可以用<code>Redis</code>来做消息队列。分别是利用<code>Reids</code>的<code>list</code>和<code>订阅/发布</code>两种数据类型。</p>
+<ol>
+<li>list</li>
+</ol>
+<p>用push命令压入队列，用pop命令来拿出队列里边的消息。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment"># 在 lianbianKey 里边压入2个消息，messageContent1、messageContent2</span></span><br>lpush lianbianKey messageContent1<br>lpush lianbianKey messageContent2<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment"># 在另外一端，lpop命令取出元素</span></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment"># lpop移除并获取第一个元素</span></span><br>lpop lianbainKey<br></code></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>订阅/发布</li>
+</ol>
+<p>这个模式，和我们平常看电视频道类似，把电视台切换到湖南卫视，你就能自然看到当前电视台播放的节目（快乐大本营、天天向上 …），就相当于你订阅了湖南卫视频道，在湖南卫视电视台发布节目的时候，你就能够很自然的接收到。但是这种模式有一个弊端，就是错过了就是错过了，错过了19:00的新闻联播，就是错过了。</p>
+<p>都能实现消息队列，为什么<code>Redis</code>在5.0的版本里，还推出<code>Stream</code>数据类型呢？与<code>list</code>和<code>订阅/发布</code>又有什么异同呢？</p>
+<h2 id="为什么要Redis-Stream"><a href="#为什么要Redis-Stream" class="headerlink" title="为什么要Redis Stream"></a>为什么要Redis Stream</h2><ol>
+<li><strong>标准化操作</strong></li>
+</ol>
+<p>在没有<code>Redis Stream</code>推出的时候，我们知道利用<code>Reids</code>能够实现队列功能，但是大家实现得五花八门，没有一个统一的、标准的实现方式。最后导致的就是<code>Redis队列生态</code>显得乱，在推出Stream之后，后续实现队列都会使用该新的数据类型，利于标准化。</p>
+<ol start="2">
+<li><strong>取长补短</strong></li>
+</ol>
+<p>不管是<code>list</code>还是<code>订阅/发布</code>模式，都有其弊端，比如list不能友好的重复消费，需要重复消费的话，需要程序代码去控制；而<code>订阅/发布模式</code>是一种转发消息的模式，只有订阅者在线的时候才能接收到消息，订阅者不在线期间产生的消息，就丢掉了。而Stream，有借鉴Kafka一些市面上成熟的消息队列的思想，可以消费失败重复消费，消息是持久化的。</p>
+<ol start="3">
+<li><strong>降低门槛</strong></li>
+</ol>
+<p>不管是之前的<code>list</code>还是<code>订阅/发布</code>模式，其实就不能说是严谨的消息队列，它只能说是我们实现消息列队的基本数据结构，而<code>Stream</code>可以说是降低了我们在<code>Redis</code>中使用消息队列的门槛，封装了一些消费者常见的角色（生产者、主题、元素、消费者、消费组）。</p>
+<h2 id="消息队列的几个重要元素"><a href="#消息队列的几个重要元素" class="headerlink" title="消息队列的几个重要元素"></a>消息队列的几个重要元素</h2><p>从上面的讲解，我们把消息队列中的几个概念再着重讲一下，如果熟悉其他的消息队列的，还是很容易理解。</p>
+<ol>
+<li>生产者</li>
+</ol>
+<p>生产消息的服务或者项目，比如上边例子中的<strong>商品下单</strong>。</p>
+<ol start="2">
+<li>主题</li>
+</ol>
+<p>主题就相当于我们电视台的频道，生产者负责把消息往主题里边塞，塞进消息之后，监听了该主题的消费者会从该主题里边拿出消息。在Redis Stream里边，主题名称就是我们的stream key键值。现在不懂也没关系，在后边直观体验环节能够直观感受到。</p>
+<ol start="3">
+<li>元素</li>
+</ol>
+<p>也可以叫做消息，就是我们生产者往主题里边塞的内容，都可以称之为<strong>消息</strong>、<strong>元素</strong>。</p>
+<ol start="4">
+<li>消费者</li>
+</ol>
+<p>监听主题拿出消息，对消息进行处理的，叫做消费者。如最上边例子中的拿订单号的仓库系统、物流系统、营销系统。</p>
+<p>讲完了基本理论，我们用命令行的方式直观感受一下<code>Redis Stream</code>。</p>
+<h2 id="直观体验Redis-Stream"><a href="#直观体验Redis-Stream" class="headerlink" title="直观体验Redis Stream"></a>直观体验Redis Stream</h2><p><strong>安装</strong></p>
+<p>windows下，很多开发的时候，还是使用3.0+的版本redis（微软编译的安装包，但是一直没更新了。），但是<code>Stream</code>是Redis5.0的新特性，在github上找到了大牛的编译版本：</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/tporadowski/redis/releases">https://github.com/tporadowski/redis/releases</a></p>
+<p>也可以关注我的公众号回复<code>redis5</code>获取百度网盘下载地址。</p>
+<p>在安装好之后，就可以进行命令行的玩转了。</p>
+<h3 id="进入redis命令行"><a href="#进入redis命令行" class="headerlink" title="进入redis命令行"></a>进入redis命令行</h3><p><img src="https://mkstatic.lianbian.net/202204052136097.png" srcset="/img/loading.gif" lazyload alt="redis命令行"></p>
+<h3 id="创建主题并创建消息"><a href="#创建主题并创建消息" class="headerlink" title="创建主题并创建消息"></a>创建主题并创建消息</h3><p>创建<code>lianbianKey</code>主题，追加 <code>nickName LianBian</code>。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">XADD key ID field string [field string ...]<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://mkstatic.lianbian.net/202204052143572.png" srcset="/img/loading.gif" lazyload alt="xadd追加和创建主题"></p>
+<p>可视化工具查看：</p>
+<p><img src="https://mkstatic.lianbian.net/202204052146648.png" srcset="/img/loading.gif" lazyload alt="可视化工具查看"></p>
+<h3 id="独立消费"><a href="#独立消费" class="headerlink" title="独立消费"></a>独立消费</h3><p>消费在<code>lianbianKey</code>主题中刚追加 <code>nickName LianBian</code>消息。</p>
+<p>语法：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">XREAD [COUNT count] [BLOCK milliseconds] STREAMS key [key ...] ID [ID ...]<br></code></pre></td></tr></table></figure>
+
+<p>其中：</p>
+<ol>
+<li>[COUNT count]，用于限定获取的消息数量；</li>
+<li>[BLOCK milliseconds]，用于设置XREAD为阻塞模式，默认为非阻塞模式；</li>
+<li>ID，用于设置由哪个消息ID开始读取。使用0表示从第一条消息开始。（本例中就是使用0）此处需要注意，消息队列ID是单调递增的，所以通过设置起点，可以向后读取。在阻塞模式中，可以使用$，表示最新的消息ID。（在非阻塞模式下$无意义）。</li>
+</ol>
+<p>XRED读消息时分为阻塞和非阻塞模式，使用BLOCK选项可以表示阻塞模式，需要设置阻塞时长。非阻塞模式下，读取完毕（即使没有任何消息）立即返回，而在阻塞模式下，若读取不到内容，则阻塞等待。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">xread block 10000 streams lianbianKey $<br></code></pre></td></tr></table></figure>
+
+<p>阻塞读取lianbianKey主题的消息，最长阻塞10s，读到内容之后，立即返回。</p>
+<p><img src="https://mkstatic.lianbian.net/202204052155202.png" srcset="/img/loading.gif" lazyload alt="阻塞消费"></p>
+<p>典型的队列就是 XADD 配合 XREAD Block 完成。XADD负责生成消息，XREAD负责消费消息。</p>
+<h3 id="消费组模式"><a href="#消费组模式" class="headerlink" title="消费组模式"></a>消费组模式</h3><p>上边讲解的是一个消费者的模式，也是独立消费模式；Redis Stream也支持消费组模式，这点是借鉴了kafka的思想。当我们的生产者生产的消息过快，单个消费者的消费处理速度不能满足业务，我们就可以考虑使用消费组模式，来加快消息的处理。</p>
+<p>多个消费者配合协作来消费同一个消息队列，比如消息队列中有10条消息，三个消费者分别消费其中的某些消息，比如消费者A消费消息1、2、5、8，消费者B消费消息4、9、10，而消费者C消费消息3、6、7。</p>
+<p><img src="https://mkstatic.lianbian.net/202204052201508.jpg" srcset="/img/loading.gif" lazyload alt="文字对应的消费组模型-不是我画的"></p>
+<p>如果觉得上图有一些乱，可以看下边的结构图，来加深理解。</p>
+<p><img src="https://mkstatic.lianbian.net/202204070745630.png" srcset="/img/loading.gif" lazyload alt="消费组结构图-不是我画的"></p>
+<p>消费者组模式的支持主要由两个命令实现：</p>
+<ol>
+<li>XGROUP，用于管理消费者组，提供创建组，销毁组，更新组起始消息ID等操作</li>
+<li>XREADGROUP，分组消费消息操作</li>
+</ol>
+<p>消费组演示：</p>
+<ol>
+<li>创建消费组</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">XGROUP create lianbianKey lianbianGroup 0<br></code></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>创建消息</li>
+</ol>
+<p><img src="https://mkstatic.lianbian.net/202204052208819.png" srcset="/img/loading.gif" lazyload alt="创建消息"></p>
+<ol start="3">
+<li>消费组模式消费消息</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">XREADGROUP group lianbianGroup consumerA count 1 streams lianbianKey &gt;<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://mkstatic.lianbian.net/202204052211840.png" srcset="/img/loading.gif" lazyload alt="消费组模式第一条消息"></p>
+<p>注意对比和压入时候的消息ID；</p>
+<p>依次分配给<code>consumerB</code>、<code>consumerC</code>来消费：</p>
+<p><img src="https://mkstatic.lianbian.net/202204052215363.png" srcset="/img/loading.gif" lazyload alt="依次消费"></p>
+<p><strong>可以进行组内消费的基本原理是，STREAM类型会为每个组记录一个最后处理（交付）的消息ID（last_delivered_id），这样在组内消费时，就可以从这个值后面开始读取，保证不重复消费。</strong></p>
+<p>讲完了独立消费、消费组消费，接下来继续讲<strong>消费确认</strong>。</p>
+<h3 id="ACK（消息确认）"><a href="#ACK（消息确认）" class="headerlink" title="ACK（消息确认）"></a>ACK（消息确认）</h3><p>在消费消息之后，我们是要给消息队列一个反馈，Redis Stream是用的<code>xack</code>来完成这部分工作的。</p>
+<p><img src="https://mkstatic.lianbian.net/202204052242986.png" srcset="/img/loading.gif" lazyload alt="消费确认示意简图"></p>
+<p>前面我们消费了几条消息，但是我们并没有消费确认，我们借助<code>xpending</code>命令来查看下：</p>
+<p><img src="https://mkstatic.lianbian.net/202204052244639.png" srcset="/img/loading.gif" lazyload alt="未确认消息统计"></p>
+<p>表示有哪些消息没有确认，我们来操作下消息确认</p>
+<p><img src="https://mkstatic.lianbian.net/202204052249394.png" srcset="/img/loading.gif" lazyload alt="xack消费确认"></p>
+<p>在我们操作了ack命令之后，挂载在consumerA的数量减少了1（回顾最开始的那个体系图，挂载在消费组图中的pending_ids[]吗？就是记录的这个）。</p>
+<p>基本操作讲完了，我们稍微总结一下。</p>
+<p>xadd命令创建主题和消息，然后可以采取两种模式来消费消息，分别是<strong>独立消费</strong>和<strong>消费组消费</strong>，在消费消息之后，我们要使用ack来确认消费，至此，一条消息才算被处理完毕。</p>
+<p><img src="https://mkstatic.lianbian.net/202204082236528.png" srcset="/img/loading.gif" lazyload alt="stream全局图-不是我画的"></p>
+<p>现在再看这张图，是不是有很多东西已经理解了。</p>
+<p>上边讲的都是消息的正常情况，但是在我们的实际场景中，难免有一些异常情况，接下来，我继续给大家讲解Redis Stream是怎么应对那些实际场景中的异常情况的。</p>
+<h3 id="PEL（等待列表）"><a href="#PEL（等待列表）" class="headerlink" title="PEL（等待列表）"></a>PEL（等待列表）</h3><p>某个消费者，读取了某条消息之后进程就宕机了，这条消息可能会丢失，因为其他消费者不能再次消费到该消息了，这种情况下，Redis Stream是怎么样保证这条消息不丢失的呢？</p>
+<p>看到数据丢失，我们第一个想到的应该是要想到备份。对，就是备份。</p>
+<p>在消息读取的时候，同时会在pending列表中存入一个消息ID，当客户端重新连上之后，可以再次收到PEL中的消息ID列表。这也是我们<code>xpending</code>命令的基本底层原理。</p>
+<p>xpending命令</p>
+<p><img src="https://mkstatic.lianbian.net/202204082329393.png" srcset="/img/loading.gif" lazyload alt="PEL详情"></p>
+<p>xpending命令有4个属性：</p>
+<ol>
+<li>消息ID</li>
+<li>所属消费者</li>
+<li>IDLE，已读取时长</li>
+<li>消息被读取次数</li>
+</ol>
+<p>有了这样一个Pending机制，就意味着在某个消费者读取消息但未处理后，消息是不会丢失的。</p>
+<p>此时还有一个问题，就是若某个消费者宕机之后，没有办法再上线了，那么就需要将该消费者Pending的消息，转移给其他的消费者处理，就是消息转移。</p>
+<h3 id="消息转移"><a href="#消息转移" class="headerlink" title="消息转移"></a>消息转移</h3><p>消息转移的操作时将某个消息转移到自己的Pending列表中。使用语法<code>XCLAIM</code>来实现，需要设置组、转移的目标消费者和消息ID，同时需要提供IDLE（已被读取时长），只有超过这个时长，才能被转移。演示如下：</p>
+<p><img src="https://mkstatic.lianbian.net/202204082338305.png" srcset="/img/loading.gif" lazyload alt="待转移的消息"></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">XCLAIM lianbianKey lianbianGroup consumerB 3600000 1649166116013-0<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://mkstatic.lianbian.net/202204082339586.png" srcset="/img/loading.gif" lazyload alt="转移结果"></p>
+<p>以上代码，完成了一次消息转移。转移除了要指定ID外，还需要指定IDLE，保证是长时间未处理的才被转移。被转移的消息的IDLE会被重置，用以保证不会被重复转移，以为可能会出现将过期的消息同时转移给多个消费者的并发操作，设置了IDLE，则可以避免后面的转移不会成功，因为IDLE不满足条件。例如下面的连续两条转移，第二条不会成功。</p>
+<p><img src="https://mkstatic.lianbian.net/202204082340480.png" srcset="/img/loading.gif" lazyload alt="重复转移"></p>
+<p>上边的命令因为时间没到，重复转移失败，还是归属于消费者B。</p>
+<p>这就是消息转移。至此我们使用了一个Pending消息的ID，所属消费者和IDLE的属性，还有一个属性就是消息被读取次数，该属性的作用由于统计消息被读取的次数，包括被转移也算。这个属性主要用在判定是否为错误数据上。</p>
+<h3 id="坏消息问题，Dead-Letter，死信问题"><a href="#坏消息问题，Dead-Letter，死信问题" class="headerlink" title="坏消息问题，Dead Letter，死信问题"></a>坏消息问题，Dead Letter，死信问题</h3><p>正如上面所说，如果某个消息，不能被消费者处理，也就是不能被XACK，这是要长时间处于Pending列表中，即使被反复的转移给各个消费者也是如此。此时该消息的被读取次数就会累加（上一节的例子可以看到），当累加到某个我们预设的临界值时，我们就认为是坏消息（也叫死信，DeadLetter，无法投递的消息），由于有了判定条件，我们将坏消息处理掉即可，删除即可。删除一个消息，使用<code>XDEL</code>语法。（这里是说被读取次数是我们在做业务的时候判断是否需要删除的依据，而xdel就是stream的一个普通的命令，删除队列中的某个消息。）</p>
+<p><img src="https://mkstatic.lianbian.net/202204082345023.png" srcset="/img/loading.gif" lazyload alt="xdel"></p>
+<p><img src="https://mkstatic.lianbian.net/202204082348833.png" srcset="/img/loading.gif" lazyload alt="在pending中还存在"></p>
+<p>是普通命令，就记得xack</p>
+<p><img src="https://mkstatic.lianbian.net/202204082349405.png" srcset="/img/loading.gif" lazyload alt="xack后，PEL中无数据"></p>
+<p>至此，Redis Stream的直观体验告一段落，大家是否熟悉了呢？</p>
+<p>赶紧实践一番吧。</p>
+<h2 id="SpringBoot案例实战"><a href="#SpringBoot案例实战" class="headerlink" title="SpringBoot案例实战"></a>SpringBoot案例实战</h2><p>在实际编码之前， 我们稍微整理下思路。</p>
+<p>首先我们需要有生产者和消费者两个角色。生产者不断产生消息，消费者不断处理消息。</p>
+<p>生产者我们直接用命令行替代，编码实现实时消费的模块。</p>
+<p>最后达到的效果就是，命令行往指定的Key插入消息，在代码的命令行输出能看到消费的消息。</p>
+<p><strong>引入依赖</strong></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.boot<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-boot-starter-data-redis<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>2.5.6<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+
+
+<p><strong>创建监听</strong></p>
+<p>监听需要继承<code>StreamListener</code>类，重写<code>onMessage</code>方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Component</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">RedisStreamConsumerListener</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">StreamListener</span>&lt;String, MapRecord&lt;String ,String, String&gt;&gt; &#123;<br>    <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">Logger</span> <span class="hljs-variable">logger</span> <span class="hljs-operator">=</span> LoggerFactory.getLogger(RedisStreamConsumerListener.class);<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">onMessage</span><span class="hljs-params">(MapRecord&lt;String, String, String&gt; message)</span> &#123;<br>        logger.info(<span class="hljs-string">&quot;message:: id=&#123;&#125;, body=&#123;&#125;&quot;</span>, message.getId(), message.getValue());<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<p><strong>注册Bean</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Bean</span><br>    <span class="hljs-keyword">public</span> StreamMessageListenerContainer <span class="hljs-title function_">streamMessageListenerContainer</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-type">AtomicInteger</span> <span class="hljs-variable">index</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">AtomicInteger</span>(<span class="hljs-number">1</span>);<br>        <span class="hljs-type">int</span> <span class="hljs-variable">processors</span> <span class="hljs-operator">=</span> Runtime.getRuntime().availableProcessors();<br>        <span class="hljs-type">ThreadPoolExecutor</span> <span class="hljs-variable">executor</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ThreadPoolExecutor</span>(processors, processors, <span class="hljs-number">0</span>, TimeUnit.SECONDS, <span class="hljs-keyword">new</span> <span class="hljs-title class_">LinkedBlockingDeque</span>&lt;&gt;(), r -&gt; &#123;<br>            <span class="hljs-type">Thread</span> <span class="hljs-variable">thread</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Thread</span>(r);<br>            thread.setName(<span class="hljs-string">&quot;async-stream-comsumer-&quot;</span> + index.getAndDecrement());<br>            thread.setDaemon(<span class="hljs-literal">true</span>);<br>            <span class="hljs-keyword">return</span> thread;<br>        &#125;);<br><br>        StreamMessageListenerContainer.<span class="hljs-type">StreamMessageListenerContainerOptions</span> <span class="hljs-variable">streamMessageListenerContainerOptions</span> <span class="hljs-operator">=</span> StreamMessageListenerContainer.StreamMessageListenerContainerOptions.builder().batchSize(<span class="hljs-number">10</span>).executor(executor).errorHandler(<span class="hljs-keyword">new</span> <span class="hljs-title class_">ErrorHandler</span>() &#123;<br>            <span class="hljs-meta">@Override</span><br>            <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">handleError</span><span class="hljs-params">(Throwable t)</span> &#123;<br>                t.printStackTrace();<br>            &#125;<br>        &#125;).pollTimeout(Duration.ZERO).serializer(<span class="hljs-keyword">new</span> <span class="hljs-title class_">StringRedisSerializer</span>()).build();<br>        <span class="hljs-type">StreamMessageListenerContainer</span> <span class="hljs-variable">streamMessageListenerContainer</span> <span class="hljs-operator">=</span> StreamMessageListenerContainer.create(redisConnectionFactory, streamMessageListenerContainerOptions);<br>        streamMessageListenerContainer.receive(Consumer.from(<span class="hljs-string">&quot;lianbianGroup&quot;</span>, <span class="hljs-string">&quot;consumer-a&quot;</span>), StreamOffset.create(<span class="hljs-string">&quot;lianbianKey&quot;</span>, ReadOffset.lastConsumed()), streamListener);<br>        streamMessageListenerContainer.start();<br>        <span class="hljs-keyword">return</span> streamMessageListenerContainer;<br>    &#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<p><strong>启动看效果</strong></p>
+<p><img src="https://mkstatic.lianbian.net/202204112311256.png" srcset="/img/loading.gif" lazyload alt="命令行生产者"></p>
+<p><img src="https://mkstatic.lianbian.net/202204112311670.png" srcset="/img/loading.gif" lazyload alt="控制台输出结果"></p>
+<h2 id="源代码地址"><a href="#源代码地址" class="headerlink" title="源代码地址"></a>源代码地址</h2><p>完整代码放在github上了，需要的可以自取：</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/lianbian/ReidsStreamDemo">https://github.com/lianbian/ReidsStreamDemo</a></p>
+<p>我是连边，专注于Java和架构领域，坚持撰写有原理，有实战，有体系的技术文章。</p>
+<p>关注 <code>订阅号@连边</code> 不错过精彩文章</p>
+<p><img src="https://mkstatic.lianbian.net/202204112323509.jpg" srcset="/img/loading.gif" lazyload alt="订阅号@连边"></p>
+<p>参看链接：</p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/60501638">https://zhuanlan.zhihu.com/p/60501638</a></p>
+<p><a target="_blank" rel="noopener" href="http://www.redis.cn/topics/streams-intro.html">http://www.redis.cn/topics/streams-intro.html</a></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/redis/" class="category-chain-item">redis</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/redis/" class="print-no-link">#redis</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>一篇文章搞定Redis Stream</div>
+      <div>https://www.lianbian.net/redis/493ee6a41e5c.html</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>连边</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年4月4日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/redis/58c0e3305e12.html" title="真的有必要定义VO，BO，PO，DO，DTO吗？">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">真的有必要定义VO，BO，PO，DO，DTO吗？</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/clickhouse/42572c4acee4.html" title="ClickHouse数据类型">
+                        <span class="hidden-mobile">ClickHouse数据类型</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+    <!-- 备案信息 ICP for China -->
+    <div class="beian">
+  <span>
+    <a href="http://beian.miit.gov.cn/" target="_blank" rel="nofollow noopener">
+      湘ICP备1900865号-3
+    </a>
+  </span>
+  
+    
+      <span>
+        <a
+          href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=湘ICP备1900865号-3"
+          rel="nofollow noopener"
+          class="beian-police"
+          target="_blank"
+        >
+          
+            <span style="visibility: hidden; width: 0">|</span>
+            <img src="/img/police_beian.png" srcset="/img/loading.gif" lazyload alt="police-icon"/>
+          
+          <span>湘ICP备1900865号-3</span>
+        </a>
+      </span>
+    
+  
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
