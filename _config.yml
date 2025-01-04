@@ -4,9 +4,9 @@
 
 # Site
 title: 连边
-subtitle: 连边的Java技术博客
-description: 连边，专注于Java和架构领域，坚持撰写有原理，有实战，有体系的技术文章。
-keywords: 连边技术, Java技术, 软件架构师
+subtitle: 连边的博客
+description: 连边，专注制造业数字化。
+keywords: 连边 制造业 数字化
 author: 连边
 language: zh-CN
 timezone: 'Asia/Shanghai'
@@ -103,7 +103,7 @@ theme: fluid
 
 deploy:
 - type: git
-  repo: https://github.com/lianbian/lianbian.github.io.git
+  repo: git@139.224.69.35:/home/git/hexo.git
   # example, https://github.com/hexojs/hexojs.github.io
   branch: main
 - type: baidu_url_submitter                         # 这是新加的主动推送
