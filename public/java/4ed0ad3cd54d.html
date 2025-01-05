@@ -1,0 +1,753 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="连边">
+  <meta name="keywords" content="java linkedlist">
+  
+    <meta name="description" content="大家好，我是连边。 今天七夕情人节，在这里祝天下有情人终成眷属。 且以深情共白首让自己的另一半了解自己的职业，还是挺重要的。 朋友眼中的我：修电脑的； 爸妈眼中的我：熬夜加班的栋梁材； 岳父岳母眼中的我：没有铁饭碗的不靠谱青年。 亲身经历证明，这些都不重要，身为一名神秘而复杂的程序员，你只需要得到你最在乎的那个人的理解和认可就行了。 靠什么？必须是才华和深情。 狗子们，我们一起来用链表定制一辆幸福">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LinkedList源码解析">
+<meta property="og:url" content="https://www.lianbian.net/java/4ed0ad3cd54d.html">
+<meta property="og:site_name" content="连边">
+<meta property="og:description" content="大家好，我是连边。 今天七夕情人节，在这里祝天下有情人终成眷属。 且以深情共白首让自己的另一半了解自己的职业，还是挺重要的。 朋友眼中的我：修电脑的； 爸妈眼中的我：熬夜加班的栋梁材； 岳父岳母眼中的我：没有铁饭碗的不靠谱青年。 亲身经历证明，这些都不重要，身为一名神秘而复杂的程序员，你只需要得到你最在乎的那个人的理解和认可就行了。 靠什么？必须是才华和深情。 狗子们，我们一起来用链表定制一辆幸福">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://mkstatic.lianbian.net/20210814154739.jpeg">
+<meta property="og:image" content="http://mkstatic.lianbian.net/20210814155418.png">
+<meta property="og:image" content="http://mkstatic.lianbian.net/20210814101424.png">
+<meta property="og:image" content="http://mkstatic.lianbian.net/20210814111856.gif">
+<meta property="og:image" content="http://mkstatic.lianbian.net/202203082224370.jpg">
+<meta property="article:published_time" content="2021-08-11T16:00:00.000Z">
+<meta property="article:modified_time" content="2023-11-29T22:10:09.433Z">
+<meta property="article:author" content="连边">
+<meta property="article:tag" content="java">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://mkstatic.lianbian.net/20210814154739.jpeg">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>LinkedList源码解析 - 连边</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"www.lianbian.net","root":"/","version":"1.9.5","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>连边的技术博客</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="LinkedList源码解析"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2021-08-12 00:00" pubdate>
+          2021年8月12日 凌晨
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.5k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          21 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">LinkedList源码解析</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>大家好，我是连边。</p>
+<p>今天七夕情人节，在这里祝天下有情人终成眷属。</p>
+<h2 id="且以深情共白首"><a href="#且以深情共白首" class="headerlink" title="且以深情共白首"></a>且以深情共白首</h2><p>让自己的另一半了解自己的职业，还是挺重要的。</p>
+<p>朋友眼中的我：修电脑的；</p>
+<p>爸妈眼中的我：熬夜加班的栋梁材；</p>
+<p>岳父岳母眼中的我：没有铁饭碗的不靠谱青年。</p>
+<p>亲身经历证明，这些都不重要，身为一名神秘而复杂的程序员，你只需要得到你最在乎的那个人的理解和认可就行了。</p>
+<p>靠什么？必须是才华和深情。</p>
+<p>狗子们，我们一起来用链表定制一辆幸福号地铁送给心目中的那个她吧，奔赴星辰大海，白首不离。</p>
+<h2 id="地铁站链表"><a href="#地铁站链表" class="headerlink" title="地铁站链表"></a>地铁站链表</h2><p>我们先以长沙地铁一号线的地铁站名来分析链表的制作过程。</p>
+<p><img src="http://mkstatic.lianbian.net/20210814154739.jpeg" srcset="/img/loading.gif" lazyload alt="长沙地铁一号线"></p>
+<p><strong>“培元桥到了，下一站：五一广场，请前往五一广场的乘客做好下车准备。”</strong></p>
+<p>培元桥站的图示：</p>
+<p><img src="http://mkstatic.lianbian.net/20210814155418.png" srcset="/img/loading.gif" lazyload alt="站点图片"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs 抽象```一下的站点示意图："><br>&lt;img src=&quot;http://mkstatic.lianbian.net/20210814095804.png&quot; alt=&quot;image-20210814095804012&quot;/&gt;<br><br>用代码来定义这个车站：<br><br>```java<br>class Station&lt;E&gt; &#123;<br>    // 车站本身<br>    E item;<br>    // 下一站<br>    Node&lt;E&gt; next;<br><br>    public Station(E item, Node&lt;E&gt; next) &#123;<br>      this.item = item;<br>      this.next = next;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>根据这个上边讲解，我们不难总结出其特点：<strong>站点不仅包含了自身的信息，还包含了下一站信息。</strong></p>
+<p>通过上边的车站节点，我们画出其他站点示意图（画出4个，不全部画出。）</p>
+<img src="http://mkstatic.lianbian.net/20210814101424.png" srcset="/img/loading.gif" lazyload alt="站点图片"  />
+
+<p>如果要让车站信息更实用，使之富有动态感，对乘客的提示性更强，我们就需要把它们链接起来，成为实用的数据结构，像一号线交通站点图那样。</p>
+<p><img src="http://mkstatic.lianbian.net/20210814111856.gif" srcset="/img/loading.gif" lazyload alt="站点链表"></p>
+<h3 id="定义地铁链表"><a href="#定义地铁链表" class="headerlink" title="定义地铁链表"></a>定义地铁链表</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">class</span> <span class="hljs-title class_">StationList</span>&lt;E&gt; &#123;<br>    <span class="hljs-comment">// 站点总数</span><br>    <span class="hljs-type">int</span> size;<br>    <span class="hljs-comment">// 第一站</span><br>    Station&lt;E&gt; first;<br>    <span class="hljs-comment">// 最后一站</span><br>    Station&lt;E&gt; last;<br><br>    <span class="hljs-comment">// 车站，就是上边抽象的那个车站结构</span><br>    <span class="hljs-keyword">static</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Station</span>&lt;E&gt; &#123;<br>        <span class="hljs-comment">// 本车站信息</span><br>        E item;<br>        <span class="hljs-comment">// 下一站车站信息</span><br>        Station&lt;E&gt; next;<br><br>        <span class="hljs-keyword">public</span> <span class="hljs-title function_">Station</span><span class="hljs-params">(E item, Station&lt;E&gt; next)</span> &#123;<br>            <span class="hljs-built_in">this</span>.item = item;<br>            <span class="hljs-built_in">this</span>.next = next;<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">add</span><span class="hljs-params">(E e)</span> &#123;<br>        <span class="hljs-keyword">final</span> Station&lt;E&gt; l = last;<br>        <span class="hljs-keyword">final</span> Station&lt;E&gt; newNode = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Station</span>&lt;&gt;(e, <span class="hljs-literal">null</span>);<br>        last = newNode;<br>        <span class="hljs-keyword">if</span> (l == <span class="hljs-literal">null</span>) &#123;<br>            first = newNode;<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            l.next = newNode;<br>        &#125;<br><br>        size++;<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> E <span class="hljs-title function_">get</span><span class="hljs-params">(<span class="hljs-type">int</span> index)</span> &#123;<br>        <span class="hljs-comment">// 循环从头开始找</span><br>        Station&lt;E&gt; x = first;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; index; i++) &#123;<br>            x = x.next;<br>        &#125;<br>        <span class="hljs-keyword">return</span> x.item;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="定制幸福号地铁"><a href="#定制幸福号地铁" class="headerlink" title="定制幸福号地铁"></a>定制幸福号地铁</h2><p>每个人对幸福的定义都不一样，那定制的站名就不一样。说到我的深情，简洁而温暖，温暖而持久。</p>
+<blockquote>
+<p>“我随时都有空。”</p>
+<p>“娶到你像做梦一样。”</p>
+<p>“工资转给你了。”</p>
+<p>“崽睡了，我去买夜宵了。”</p>
+<p>“我去背面试题了。”</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>    StationList&lt;String&gt; stationList = <span class="hljs-keyword">new</span> <span class="hljs-title class_">StationList</span>&lt;&gt;();<br>    <span class="hljs-comment">// 初始化幸福号地铁链表</span><br>    stationList.add(<span class="hljs-string">&quot;我随时都有空。&quot;</span>);<br>    stationList.add(<span class="hljs-string">&quot;娶到你像做梦一样。&quot;</span>);<br>    stationList.add(<span class="hljs-string">&quot;工资转给你了。&quot;</span>);<br>    stationList.add(<span class="hljs-string">&quot;崽睡了，我去买夜宵了。&quot;</span>);<br>    stationList.add(<span class="hljs-string">&quot;我去背面试题了。&quot;</span>);<br><br>    System.out.printf(<span class="hljs-string">&quot;「幸福号地铁」共有 %s 站&quot;</span>, stationList.size);<br>    System.out.println();<br>    System.out.println(<span class="hljs-string">&quot;==========================&quot;</span>);<br>    System.out.printf(<span class="hljs-string">&quot;「幸福号地铁」从「%s」开往「%s」&quot;</span>, stationList.first.item, stationList.last.item);<br>    System.out.println();<br>    System.out.println(<span class="hljs-string">&quot;==========================&quot;</span>);<br>    System.out.printf(<span class="hljs-string">&quot;「幸福号地铁」告诉我们，幸福%d要素：&quot;</span>, stationList.size);<br>    System.out.println();<br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; stationList.size; i++) &#123;<br>      System.out.println(stationList.get(i));<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="琴瑟在御，莫不静好"><a href="#琴瑟在御，莫不静好" class="headerlink" title="琴瑟在御，莫不静好"></a>琴瑟在御，莫不静好</h2><p>每个靠谱的人都值得拥有自己的幸福，用你的才华和深情去定制属于你们的幸福号地铁吧。</p>
+<p>今天就别加班了。</p>
+<p>毕竟，陪伴才是最长情的告白。</p>
+<p>我是连边，专注于Java和架构领域，坚持撰写有原理，有实战，有体系的技术文章。</p>
+<p>关注 <code>订阅号@连边</code> 不错过精彩文章</p>
+<p><img src="http://mkstatic.lianbian.net/202203082224370.jpg" srcset="/img/loading.gif" lazyload alt="订阅号@连边"></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/java/" class="category-chain-item">java</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/java/" class="print-no-link">#java</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>LinkedList源码解析</div>
+      <div>https://www.lianbian.net/java/4ed0ad3cd54d.html</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>连边</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2021年8月12日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/java/8cd76013616c.html" title="不重启JVM替换掉已经加载的类">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">不重启JVM替换掉已经加载的类</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/java/9217b69cbb8b.html" title="ArrayList源码解析">
+                        <span class="hidden-mobile">ArrayList源码解析</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+    <!-- 备案信息 ICP for China -->
+    <div class="beian">
+  <span>
+    <a href="http://beian.miit.gov.cn/" target="_blank" rel="nofollow noopener">
+      湘ICP备1900865号-3
+    </a>
+  </span>
+  
+    
+      <span>
+        <a
+          href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=湘ICP备1900865号-3"
+          rel="nofollow noopener"
+          class="beian-police"
+          target="_blank"
+        >
+          
+            <span style="visibility: hidden; width: 0">|</span>
+            <img src="/img/police_beian.png" srcset="/img/loading.gif" lazyload alt="police-icon"/>
+          
+          <span>湘ICP备1900865号-3</span>
+        </a>
+      </span>
+    
+  
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
