@@ -6,11 +6,13 @@ git commit -m "博客文章发布"
 git push origin
 
 # 为生成页面创建单独分支
-cd ./public && git init -b lianbian-pages && git add .
-git config user.name "lianbian"
-git config user.email "ilianbian@163.com"
+cd ./public
+git remote add deploy root@139.224.69.35:/root/www.lianbian.net.git
+git init -b lianbian-pages
 git add .
 git commit -m "Builder at $(date +'%Y-%m-%d %H:%M:%S')"
-git push deploy lianbian-pages:lianbian-pages
+git push deploy
 
+# 推送主仓库
+cd ..
 git push deploy
