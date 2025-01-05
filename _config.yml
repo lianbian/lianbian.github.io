@@ -103,7 +103,7 @@ theme: fluid
 
 deploy:
 - type: git
-  repo: git@139.224.69.35:/home/git/hexo.git
+  repo: root@139.224.69.35:/home/git/hexo.git
   # example, https://github.com/hexojs/hexojs.github.io
   branch: main
 - type: baidu_url_submitter                         # 这是新加的主动推送
