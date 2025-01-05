@@ -12,7 +12,7 @@ language: zh-CN
 timezone: 'Asia/Shanghai'
 
 # URL
-## Set your site url here. For examplei, if you use GitHub Page, set url as 'https://username.github.io/project'
+## Set your site url here. For example, if you use GitHub Page, set url as 'https://username.github.io/project'
 url: https://www.lianbian.net
 permalink: :category/:hash.html
 permalink_defaults:
