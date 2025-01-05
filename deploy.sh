@@ -8,7 +8,8 @@ git push origin
 # 为生成页面创建单独分支
 cd ./public
 git remote add deploy root@139.224.69.35:/root/www.lianbian.net.git
-git init -b lianbian-pages
+git branch lianbian-pages
+git checkout lianbian-pages
 git add .
 git commit -m "Builder at $(date +'%Y-%m-%d %H:%M:%S')"
 git push deploy
