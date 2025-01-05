@@ -326,7 +326,7 @@
   </url>
   
   <url>
-    <loc>https://www.lianbian.net/friends/index.html</loc>
+    <loc>https://www.lianbian.net/categories/index.html</loc>
     
     <lastmod>2023-11-15</lastmod>
     
@@ -335,7 +335,7 @@
   </url>
   
   <url>
-    <loc>https://www.lianbian.net/categories/index.html</loc>
+    <loc>https://www.lianbian.net/friends/index.html</loc>
     
     <lastmod>2023-11-15</lastmod>
     
@@ -451,14 +451,14 @@
   </url>
   
   <url>
-    <loc>https://www.lianbian.net/tags/redis/</loc>
+    <loc>https://www.lianbian.net/tags/log/</loc>
     <lastmod>2025-01-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://www.lianbian.net/tags/log/</loc>
+    <loc>https://www.lianbian.net/tags/redis/</loc>
     <lastmod>2025-01-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -528,14 +528,14 @@
   </url>
   
   <url>
-    <loc>https://www.lianbian.net/tags/java-%E6%9E%B6%E6%9E%84/</loc>
+    <loc>https://www.lianbian.net/tags/OEE/</loc>
     <lastmod>2025-01-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://www.lianbian.net/tags/OEE/</loc>
+    <loc>https://www.lianbian.net/tags/java-%E6%9E%B6%E6%9E%84/</loc>
     <lastmod>2025-01-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -614,14 +614,14 @@
   </url>
   
   <url>
-    <loc>https://www.lianbian.net/categories/%E6%9E%B6%E6%9E%84/</loc>
+    <loc>https://www.lianbian.net/categories/OEE/</loc>
     <lastmod>2025-01-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://www.lianbian.net/categories/OEE/</loc>
+    <loc>https://www.lianbian.net/categories/%E6%9E%B6%E6%9E%84/</loc>
     <lastmod>2025-01-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
