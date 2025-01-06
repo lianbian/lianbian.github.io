@@ -33,9 +33,9 @@ https://www.lianbian.net/java/44ff81bc6b75.html
 https://www.lianbian.net/Maven/d081ac447099.html
 https://www.lianbian.net/%25E8%25AE%25BE%25E8%25AE%25A1%25E6%25A8%25A1%25E5%25BC%258F/5f304de4d3ee.html
 https://www.lianbian.net/about/index.html
-https://www.lianbian.net/tags/index.html
-https://www.lianbian.net/friends/index.html
 https://www.lianbian.net/categories/index.html
+https://www.lianbian.net/friends/index.html
+https://www.lianbian.net/tags/index.html
 https://www.lianbian.net/redis/c8b89b4766ce.html
 https://www.lianbian.net/%25E7%25AE%25A1%25E7%2590%2586/32f5423cb7f0.html
 https://www.lianbian.net/java/192b8638c566.html
