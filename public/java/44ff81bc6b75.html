@@ -18,15 +18,15 @@
   <meta name="author" content="连边">
   <meta name="keywords" content="jvm">
   
-    <meta name="description" content="问题现象jar能正常启动，但是到下午四点的时候，系统就会变得缓慢，需要重启服务才能恢复访问，cpu和内存占用都不高。 查看日志： 123456789101112131415&#96;&#96;&#96;spring启动注册的bean被销毁了。## 分析问题最近我们系统做了什么改动？原来稳定的系统，为什么会突然变得不稳定。查看代码，看看是否有嫌疑代码，没有找到，再想有什么改动 ... 想到了最近做的服务化部署，经过一番查看">
+    <meta name="description" content="问题现象jar能正常启动，但是到下午四点的时候，系统就会变得缓慢，需要重启服务才能恢复访问，cpu和内存占用都不高。 spring启动注册的bean被销毁了。 分析问题最近我们系统做了什么改动？ 原来稳定的系统，为什么会突然变得不稳定。查看代码，看看是否有嫌疑代码，没有找到，再想有什么改动 … 想到了最近做的服务化部署，经过一番查看，找到了原因。 黑窗口启动：xxx-jar-start.bat 1">
 <meta property="og:type" content="article">
 <meta property="og:title" content="jvm问题故障分析">
 <meta property="og:url" content="https://www.lianbian.net/java/44ff81bc6b75.html">
 <meta property="og:site_name" content="连边">
-<meta property="og:description" content="问题现象jar能正常启动，但是到下午四点的时候，系统就会变得缓慢，需要重启服务才能恢复访问，cpu和内存占用都不高。 查看日志： 123456789101112131415&#96;&#96;&#96;spring启动注册的bean被销毁了。## 分析问题最近我们系统做了什么改动？原来稳定的系统，为什么会突然变得不稳定。查看代码，看看是否有嫌疑代码，没有找到，再想有什么改动 ... 想到了最近做的服务化部署，经过一番查看">
+<meta property="og:description" content="问题现象jar能正常启动，但是到下午四点的时候，系统就会变得缓慢，需要重启服务才能恢复访问，cpu和内存占用都不高。 spring启动注册的bean被销毁了。 分析问题最近我们系统做了什么改动？ 原来稳定的系统，为什么会突然变得不稳定。查看代码，看看是否有嫌疑代码，没有找到，再想有什么改动 … 想到了最近做的服务化部署，经过一番查看，找到了原因。 黑窗口启动：xxx-jar-start.bat 1">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2021-08-01T16:00:00.000Z">
-<meta property="article:modified_time" content="2023-11-17T09:00:52.029Z">
+<meta property="article:modified_time" content="2025-01-06T15:02:40.332Z">
 <meta property="article:author" content="连边">
 <meta property="article:tag" content="java jam">
 <meta name="twitter:card" content="summary_large_image">
@@ -224,7 +224,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          572 字
+          489 字
         
       </span>
     
@@ -278,11 +278,24 @@
               <div class="markdown-body">
                 
                 <h2 id="问题现象"><a href="#问题现象" class="headerlink" title="问题现象"></a>问题现象</h2><p>jar能正常启动，但是到下午四点的时候，系统就会变得缓慢，需要重启服务才能恢复访问，cpu和内存占用都不高。</p>
-<p>查看日志：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs shell">```<br><br>spring启动注册的bean被销毁了。<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment"># 分析问题</span></span><br><br>最近我们系统做了什么改动？<br><br>原来稳定的系统，为什么会突然变得不稳定。查看代码，看看是否有嫌疑代码，没有找到，再想有什么改动 ... 想到了最近做的服务化部署，经过一番查看，找到了原因。<br><br>黑窗口启动：```xxx-jar-start.bat```<br><br>```shell<br></code></pre></td></tr></table></figure>
+<p>spring启动注册的bean被销毁了。</p>
+<h2 id="分析问题"><a href="#分析问题" class="headerlink" title="分析问题"></a>分析问题</h2><p>最近我们系统做了什么改动？</p>
+<p>原来稳定的系统，为什么会突然变得不稳定。查看代码，看看是否有嫌疑代码，没有找到，再想有什么改动 … 想到了最近做的服务化部署，经过一番查看，找到了原因。</p>
+<p>黑窗口启动：<code>xxx-jar-start.bat</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell">```<br><br>服务化后的启动参数xml（粗心导致的）<br><br>```xml<br></code></pre></td></tr></table></figure>
 
-<p>服务化后的启动参数xml（粗心导致的）</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs xml">```<br><br><br><br><br><br>## 原理分析<br><br>1. 虚拟机类型<br>2. 分代收集理论设计<br>3. jvm内存模型<br>4. 搞清楚jvm几个参数含义<br>5. 32位Java默认启动参数<br><br>```shell<br>## 简单参数<br>[root@localhost ~]# java -XX:+PrintCommandLineFlags -version<br>## 详细参数<br>[root@localhost ~]# java -XX:+PrintFlagsFinal -version<br>## 过滤参数<br>[root@localhost ~]# java -XX:+PrintFlagsFinal -version | grep MaxHeapSize<br></code></pre></td></tr></table></figure>
+
+
+
+
+<h2 id="原理分析"><a href="#原理分析" class="headerlink" title="原理分析"></a>原理分析</h2><ol>
+<li>虚拟机类型</li>
+<li>分代收集理论设计</li>
+<li>jvm内存模型</li>
+<li>搞清楚jvm几个参数含义</li>
+<li>32位Java默认启动参数</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment"># 简单参数</span></span><br>[root@localhost ~]# java -XX:+PrintCommandLineFlags -version<br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment"># 详细参数</span></span><br>[root@localhost ~]# java -XX:+PrintFlagsFinal -version<br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment"># 过滤参数</span></span><br>[root@localhost ~]# java -XX:+PrintFlagsFinal -version | grep MaxHeapSize<br></code></pre></td></tr></table></figure>
 
 <ol start="6">
 <li>复现问题</li>
