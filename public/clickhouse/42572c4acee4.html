@@ -1,0 +1,862 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="连边">
+  <meta name="keywords" content="clickhouse">
+  
+    <meta name="description" content="大家好，我是连边。 今天我们继续来学习ClickHouse的数据类型，其实这块资料重要的资料还是看官网。 官网：ClickHouse数据类型 老规矩，还是先上阅读导读：  分类与语法规则ClickHouse与MySQL语法是及其相似的，我们先来看一个创建表语句。 123456CREATE TABLE dt(    &#96;id&#96; UInt32    &#96;name&#96; String,)ENGINE &#x3D; Tin">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ClickHouse数据类型">
+<meta property="og:url" content="https://www.lianbian.net/clickhouse/42572c4acee4.html">
+<meta property="og:site_name" content="连边">
+<meta property="og:description" content="大家好，我是连边。 今天我们继续来学习ClickHouse的数据类型，其实这块资料重要的资料还是看官网。 官网：ClickHouse数据类型 老规矩，还是先上阅读导读：  分类与语法规则ClickHouse与MySQL语法是及其相似的，我们先来看一个创建表语句。 123456CREATE TABLE dt(    &#96;id&#96; UInt32    &#96;name&#96; String,)ENGINE &#x3D; Tin">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://mkstatic.lianbian.net/202204010756622.png">
+<meta property="og:image" content="https://mkstatic.lianbian.net/202204010752600.jpg">
+<meta property="article:published_time" content="2022-03-31T16:00:00.000Z">
+<meta property="article:modified_time" content="2023-11-29T22:09:56.384Z">
+<meta property="article:author" content="连边">
+<meta property="article:tag" content="clickhouse">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://mkstatic.lianbian.net/202204010756622.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>ClickHouse数据类型 - 连边</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"www.lianbian.net","root":"/","version":"1.9.5","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>连边</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="ClickHouse数据类型"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-04-01 00:00" pubdate>
+          2022年4月1日 凌晨
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.5k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          22 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">ClickHouse数据类型</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>大家好，我是连边。</p>
+<p>今天我们继续来学习<code>ClickHouse</code>的数据类型，其实这块资料重要的资料还是看官网。</p>
+<p><a target="_blank" rel="noopener" href="https://clickhouse.com/docs/en/sql-reference/data-types/">官网：ClickHouse数据类型</a></p>
+<p>老规矩，还是先上阅读导读：</p>
+<p><img src="https://mkstatic.lianbian.net/202204010756622.png" srcset="/img/loading.gif" lazyload alt="ClickHouse数据类型"></p>
+<h2 id="分类与语法规则"><a href="#分类与语法规则" class="headerlink" title="分类与语法规则"></a>分类与语法规则</h2><p><code>ClickHouse</code>与<code>MySQL</code>语法是及其相似的，我们先来看一个创建表语句。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> dt<br>(<br>    `id` UInt32<br>    `name` String,<br>)<br>ENGINE <span class="hljs-operator">=</span> TinyLog;<br></code></pre></td></tr></table></figure>
+
+<p><code>id UInt32</code>中，id为字段名称，UInt32是我们的数据类型，就是语法规则，为了方便记忆，我结合语法规则和使用场景把数据类型分成了四种类型：</p>
+<ol>
+<li>基本数据类型</li>
+</ol>
+<p>基本数据类型是指我们Int、String …常见类型。</p>
+<ol start="2">
+<li>函数数据类型</li>
+</ol>
+<p>看如下创建语句：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> lc_t<br>(<br>    `id` UInt16,<br>    `strings` LowCardinality(String)<br>)<br>ENGINE <span class="hljs-operator">=</span> MergeTree()<br><span class="hljs-keyword">ORDER</span> <span class="hljs-keyword">BY</span> id<br></code></pre></td></tr></table></figure>
+
+<p><code>strings LowCardinality(String)</code>的申明部分，带着<code>()</code>与我们的函数调用相似，所以我给他取名叫做<code>函数类型</code>。</p>
+<ol start="3">
+<li>场景类型</li>
+</ol>
+<p>IP地址、经纬度都有固定的存储格式，而且也很常用，很多数据库都为常见的场景做了单独的类型，我们把这一类，归为<code>场景类型</code>。</p>
+<ol start="4">
+<li>其他</li>
+</ol>
+<p>那些实在不好分类的几种数据类型，就把它放在<code>其他类型</code>里。</p>
+<p>做好了分类，我们依次来学习各种数据类型。</p>
+<h2 id="基本数据类型"><a href="#基本数据类型" class="headerlink" title="基本数据类型"></a>基本数据类型</h2><p>与我们变成语言一样，常见的这一些类型。</p>
+<h3 id="Int-amp-Boolean"><a href="#Int-amp-Boolean" class="headerlink" title="Int &amp; Boolean"></a>Int &amp; Boolean</h3><p><code>ClickHouse</code>数据库的<code>Int</code>类型区分有符号与无符号，命名也非常的简单粗暴，用简单直接的命名顶替了其他数据库的<code>Int</code>、<code>BigInt</code>之类的。</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>取值范围</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Int8</td>
+<td>[-128 : 127]</td>
+</tr>
+<tr>
+<td>Int16</td>
+<td>[-32768 : 32767]</td>
+</tr>
+<tr>
+<td>Int32</td>
+<td>[-2147483648 : 2147483647]</td>
+</tr>
+<tr>
+<td>…</td>
+<td></td>
+</tr>
+<tr>
+<td>UInt8</td>
+<td>[0 : 255]</td>
+</tr>
+<tr>
+<td>UInt16</td>
+<td>[0 : 65535]</td>
+</tr>
+<tr>
+<td>UInt32</td>
+<td>[0 : 4294967295]</td>
+</tr>
+</tbody></table>
+<p>U开头的表示无符号，同样的空间，能够存储更大的值。上面表格没有写全，最大可以到<code>Int256、UInt256</code>。</p>
+<p>这里需要单独拎出来说一下的是，在我们的<code>ClickHouse</code>里边，没有单独的<code>Boolean</code>类型，可以用<code>Int8</code>的0和1来表示。</p>
+<h3 id="Float-amp-Decimal"><a href="#Float-amp-Decimal" class="headerlink" title="Float &amp; Decimal"></a>Float &amp; Decimal</h3><p>官方是推荐我们使用<code>Int</code>存储，比如我们存金额的时候，会采取存<code>分</code>为单位，这样子就避免存小数。</p>
+<p>但是业务开发的时候，难免会碰到需要保留小数的后多少位，比如我们熟悉的<code>圆周率</code>。</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>取值范围</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Float32</td>
+<td>-2147483648 - 2147483647</td>
+</tr>
+<tr>
+<td>Float64</td>
+<td>-9223372036854775808 - 9223372036854775807</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Decimal32(S)</td>
+<td>( -1 * 10^(9 - S), 1 * 10^(9 - S) )</td>
+</tr>
+<tr>
+<td>Decimal64(S)</td>
+<td>( -1 * 10^(18 - S), 1 * 10^(18 - S) )</td>
+</tr>
+<tr>
+<td>Decimal128(S)</td>
+<td>( -1 * 10^(38 - S), 1 * 10^(38 - S) )</td>
+</tr>
+<tr>
+<td>Decimal256(S)</td>
+<td>( -1 * 10^(76 - S), 1 * 10^(76 - S) )</td>
+</tr>
+</tbody></table>
+<h3 id="String-amp-FixedString-amp-UUID"><a href="#String-amp-FixedString-amp-UUID" class="headerlink" title="String &amp; FixedString &amp; UUID"></a>String &amp; FixedString &amp; UUID</h3><p>在<code>ClickHouse</code>中，没有<code>varchar</code>这种结构，就是简单直接的提供了<code>String</code>类型，如果我们知道值是固定的长度，就用<code>FixdString</code>类型，它表示定长，与我们语言中的数组一样，申明的时候就固定了长度。比如我们存储MD5用<code>FixedString(16)</code> ，存储SHA256用 <code>FixedString(32)</code> 。</p>
+<p>但是他提供了一种特殊的类型，就是<code>UUID</code>，专门用来存储UUID的值。</p>
+<blockquote>
+<p>UUID：通用唯一标识符 (UUID) 是一个 16 字节的数字，用于标识记录。</p>
+</blockquote>
+<p><code>ClickHouse</code>里边，<a target="_blank" rel="noopener" href="https://clickhouse.com/docs/en/sql-reference/functions/uuid-functions/">generateUUIDv4</a>可以生成UUID</p>
+<h3 id="Date-amp-DateTime"><a href="#Date-amp-DateTime" class="headerlink" title="Date &amp; DateTime"></a>Date &amp; DateTime</h3><p>时间类型，Date与DateTime的区别在于格式不一样，Date里边细分Date和Date32，DateTime细分DateTime64，他们之间的区别在于能存储的范围不一样。</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>格式</th>
+<th>取值范围</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Date</td>
+<td>2022-04-01</td>
+<td>[1970-01-01, 2149-06-06]</td>
+</tr>
+<tr>
+<td>Date32</td>
+<td>2022-04-01</td>
+<td>[1925-01-01, 2283-11-11]</td>
+</tr>
+<tr>
+<td>DateTime</td>
+<td>2022-04-01 00:00:00</td>
+<td>[1970-01-01 00:00:00, 2106-02-07 06:28:15]</td>
+</tr>
+<tr>
+<td>DateTime64</td>
+<td>2022-04-01 00:00:00</td>
+<td>[1925-01-01 00:00:00, 2283-11-11 23:59:59.99999999] (注意: 最大值的精度是8)</td>
+</tr>
+</tbody></table>
+<p><code>DateTime64</code> 类型可以像存储其他数据列一样存储时区信息，时区会影响 <code>DateTime64</code> 类型的值如何以文本格式显示。</p>
+<h3 id="Enum"><a href="#Enum" class="headerlink" title="Enum"></a>Enum</h3><p>这个枚举和我们编程语言中的枚举可以说是一一对应了，分为8bit的枚举和16bit的枚举。</p>
+<p>8 位枚举。它最多可以包含在 [-128, 127] 范围内枚举的 256 个值。 </p>
+<p>16 位枚举。它最多可以包含 [-32768, 32767] 范围内枚举的 65536 个值。</p>
+<p>如果使用基于ClickHouse来实现数据字典，这将是一个值得深入研究的东西。</p>
+<p><a target="_blank" rel="noopener" href="https://clickhouse.com/docs/en/sql-reference/data-types/enum/">https://clickhouse.com/docs/en/sql-reference/data-types/enum/</a></p>
+<p>还有很多类型，我把它简单的归类一下，就不一一详细说明了，可以自行看文档。</p>
+<h2 id="函数数据类型"><a href="#函数数据类型" class="headerlink" title="函数数据类型"></a>函数数据类型</h2><h3 id="Nullable"><a href="#Nullable" class="headerlink" title="Nullable"></a>Nullable</h3><h3 id="LowCardinality"><a href="#LowCardinality" class="headerlink" title="LowCardinality"></a>LowCardinality</h3><h3 id="Array"><a href="#Array" class="headerlink" title="Array"></a>Array</h3><h3 id="AggregateFunction"><a href="#AggregateFunction" class="headerlink" title="AggregateFunction"></a>AggregateFunction</h3><h3 id="Nested"><a href="#Nested" class="headerlink" title="Nested"></a>Nested</h3><h3 id="Tuple"><a href="#Tuple" class="headerlink" title="Tuple"></a>Tuple</h3><h3 id="SimpleAggregateFunction"><a href="#SimpleAggregateFunction" class="headerlink" title="SimpleAggregateFunction"></a>SimpleAggregateFunction</h3><h2 id="场景类型"><a href="#场景类型" class="headerlink" title="场景类型"></a>场景类型</h2><h3 id="Map-Json？"><a href="#Map-Json？" class="headerlink" title="Map | Json？"></a>Map | Json？</h3><h3 id="Geo-保存经纬度"><a href="#Geo-保存经纬度" class="headerlink" title="Geo 保存经纬度"></a>Geo 保存经纬度</h3><h3 id="Domains-域名-IP体系"><a href="#Domains-域名-IP体系" class="headerlink" title="Domains 域名 IP体系"></a>Domains 域名 IP体系</h3><h4 id="IPv4"><a href="#IPv4" class="headerlink" title="IPv4"></a>IPv4</h4><h4 id="IPv6"><a href="#IPv6" class="headerlink" title="IPv6"></a>IPv6</h4><h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><h3 id="未定义-Nothing"><a href="#未定义-Nothing" class="headerlink" title="未定义 Nothing"></a>未定义 Nothing</h3><h3 id="时间戳-Interval"><a href="#时间戳-Interval" class="headerlink" title="时间戳 Interval"></a>时间戳 Interval</h3><p>官方文档：</p>
+<p><a target="_blank" rel="noopener" href="https://clickhouse.com/docs/en/sql-reference/data-types/">https://clickhouse.com/docs/en/sql-reference/data-types/</a></p>
+<p><a target="_blank" rel="noopener" href="https://help.aliyun.com/document_detail/146000.html">https://help.aliyun.com/document_detail/146000.html</a></p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>我是连边，专注于Java和架构领域，坚持撰写有原理，有实战，有体系的技术文章。</p>
+<p>关注 <code>订阅号@连边</code> 不错过精彩文章</p>
+<p><img src="https://mkstatic.lianbian.net/202204010752600.jpg" srcset="/img/loading.gif" lazyload alt="订阅号@连边"></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/clickhouse/" class="category-chain-item">clickhouse</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/clickhouse/" class="print-no-link">#clickhouse</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>ClickHouse数据类型</div>
+      <div>https://www.lianbian.net/clickhouse/42572c4acee4.html</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>连边</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年4月1日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/redis/493ee6a41e5c.html" title="一篇文章搞定Redis Stream">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">一篇文章搞定Redis Stream</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/%E7%AE%A1%E7%90%86/32f5423cb7f0.html" title="立项的那些事">
+                        <span class="hidden-mobile">立项的那些事</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+    <!-- 备案信息 ICP for China -->
+    <div class="beian">
+  <span>
+    <a href="http://beian.miit.gov.cn/" target="_blank" rel="nofollow noopener">
+      湘ICP备1900865号-3
+    </a>
+  </span>
+  
+    
+      <span>
+        <a
+          href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=湘ICP备1900865号-3"
+          rel="nofollow noopener"
+          class="beian-police"
+          target="_blank"
+        >
+          
+            <span style="visibility: hidden; width: 0">|</span>
+            <img src="/img/police_beian.png" srcset="/img/loading.gif" lazyload alt="police-icon"/>
+          
+          <span>湘ICP备1900865号-3</span>
+        </a>
+      </span>
+    
+  
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
