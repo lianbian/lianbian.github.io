@@ -1,7 +1,7 @@
 ---
 title: 真的有必要定义VO，BO，PO，DO，DTO吗？
 keywords: VO BO PO DO DTO
-categories: redis
+categories: java
 summary: 大家在项目中有用到VO，BO，PO，DO，DTO吗？知道为什么需要定义这些看似相同的类吗？
 author: 连边
 date: 2022-04-20

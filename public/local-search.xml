@@ -380,15 +380,15 @@
   
   <entry>
     <title>真的有必要定义VO，BO，PO，DO，DTO吗？</title>
-    <link href="/redis/58c0e3305e12.html"/>
-    <url>/redis/58c0e3305e12.html</url>
+    <link href="/java/58c0e3305e12.html"/>
+    <url>/java/58c0e3305e12.html</url>
     
     <content type="html"><![CDATA[<p>大家好，我是连边。</p><p>今天给大家带来一篇关于<code>VO，BO，PO，DO，DTO</code>的文章，阅读完这篇文章之后，希望大家对<code>VO，BO，PO，DO，DTO</code>有自己的见解。</p><p><img src="https://mkstatic.lianbian.net/202204201300400.png" alt="VO，BO，PO，DO，DTO"></p><h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><p>在讲具体的概念之前，我们先简单的讲一讲我们<code>MVC</code>开发模式。</p><p><strong>MVC的简单定义：</strong></p><p><code>M</code>层负责与数据库打交道；</p><p><code>C</code>层负责业务逻辑的编写；</p><p><code>V</code>层负责给用户展示（针对于前后端不分离的项目，不分离项目那种编写模版的方式，理解<code>V</code>的概念更直观）。</p><p>而我们今天要说的<code>VO，BO，PO，DO，DTO</code>呢，就是穿梭在这<code>M、V、C</code>层之间的<code>实体传输对象</code>。</p><p><img src="https://mkstatic.lianbian.net/202204201306683.png" alt="实体传输对象示意图"></p><ul><li>VO（<code>View Object</code>）：<strong>视图对象</strong>，用于展示层，它的作用是把某个指定页面（或组件）的所有数据封装起来。</li><li>DTO（<code>Data Transfer Object</code>）：<strong>数据传输对象</strong>，这个概念来源于J2EE的设计模式，原来的目的是为了EJB的分布式应用提供粗粒度的数据实体，以减少分布式调用的次数，从而提高分布式调用的性能和降低网络负载，但在这里，更符合泛指用于展示层与服务层之间的数据传输对象。</li><li>BO（<code>Business Object</code>）：<strong>业务对象</strong>，把业务逻辑封装为一个对象，这个对象可以包括一个或多个其它的对象。</li><li>PO（<code>Persistent Object</code>）：<strong>持久化对象</strong>，它跟持久层（通常是关系型数据库）的数据结构形成一一对应的映射关系，如果持久层是关系型数据库，那么，数据表中的每个字段（或若干个）就对应PO的一个（或若干个）属性。</li><li>DO（<code>Domain Object</code>）：<strong>领域对象</strong>，就是从现实世界中抽象出来的有形或无形的业务实体。</li></ul><h2 id="有必要用吗？"><a href="#有必要用吗？" class="headerlink" title="有必要用吗？"></a>有必要用吗？</h2><p>项目中真的有必要定义<code>VO，BO，PO，DO，DTO</code>吗？</p><p>还是要理性看待这个问题，要看我们项目“目的地”是什么。</p><p>如果项目比较小，是一个简单的<code>MVC</code>项目，又是<code>单兵作战</code>，我不建议使用<code>VO，BO，PO，DO，DTO</code>，直接用<code>POJO</code>负责各个层来传输就好，因为这种项目的“目的地”是快速完成。</p><p>而我们更多的时候，是持续迭代的团队协作项目，这个时候我们就建议用<code>VO，BO，PO，DO，DTO</code>，而且团队内要达成共识，形成一个<code>标准规范</code>。</p><ol><li>业务复杂，人员协同性要求高的场景下，这些规范性的东西不按着来虽然不会出错，程序照样跑，但是遵守规范会让程序更具扩展性和可读性；</li><li>让类语义更明确，很容易知道类的含义；</li></ol><p>其实就是提升项目的<code>可扩展性</code>、<code>可维护性</code>与<code>可阅读性</code>。</p><p>提升这些性能的尽头是<code>经济效益</code>。</p><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这篇文章很短，最后稍微总结一下，不管用哪种方式，只要团队内定义好一种适应的协同规范就行。</p><p>没有一个<code>绝对好</code>与<code>绝对坏</code>的方式方法。</p><p>团队规范的尽头能提升项目的<code>可扩展性</code>、<code>可维护性</code>与<code>可阅读性</code>，从而降低bug率。</p><p>另附这些概念命名规范：</p><ul><li>数据对象：xxxPO，xxx即为数据表名。(也可DO)</li><li>数据传输对象：xxxDTO，xxx为业务领域相关的名称。</li><li>展示对象：xxxVO，xxx一般为网页名称。</li><li>业务对象：xxxBO，xxx是业务名称。</li></ul><p>参考链接：<a href="https://mp.weixin.qq.com/s/3-wA3hh75pgoTJu0Rz3SXw">https://mp.weixin.qq.com/s/3-wA3hh75pgoTJu0Rz3SXw</a></p><p>我是连边，专注于Java和架构领域，坚持撰写有原理，有实战，有体系的技术文章。</p><p>关注 <code>订阅号@连边</code> 不错过精彩文章</p><p><img src="https://mkstatic.lianbian.net/202204201259459.jpg" alt="订阅号@连边"></p>]]></content>
     
     
     <categories>
       
-      <category>redis</category>
+      <category>java</category>
       
     </categories>
     
