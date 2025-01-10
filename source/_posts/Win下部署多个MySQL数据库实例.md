@@ -1,7 +1,7 @@
 ---
 title: Win下部署多个MySQL数据库实例
-keywords: mysql
-categories: mysql
+keywords: MySQL数据库实例
+categories: 数据库
 summary: 在同一台服务器上部署多个`MySQL`实例的操作过程。
 author: 连边
 date: 2021-12-06

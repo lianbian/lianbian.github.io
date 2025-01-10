@@ -1,7 +1,7 @@
 ---
 title: 精益制造中的 OEE：目标、评估方法和六大损失
 keywords: 设备OEE
-categories: OEE
+categories: 业务
 summary: 设备OEE
 author: 连边
 date: 2024-06-04

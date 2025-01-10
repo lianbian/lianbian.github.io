@@ -1,7 +1,7 @@
 ---
 title: MySQL的undo日志
 keywords: mysql undo log
-categories: mysql
+categories: 数据库
 summary: undo log是innodb引擎的一种日志，在事务的修改记录之前，会把该记录的原值（before image）先保存起来（undo log）再做修改，以便修改过程中出错能够恢复原值或者其他的事务读取。
 author: 连边
 date: 2021-10-03

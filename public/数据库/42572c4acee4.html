@@ -16,28 +16,29 @@
   
   <meta name="theme-color" content="#2f4154">
   <meta name="author" content="连边">
-  <meta name="keywords" content="设备OEE">
+  <meta name="keywords" content="clickhouse">
   
-    <meta name="description" content="OEE 是设备综合效率 (Overall Equipment Effectiveness) 的缩写，是精益管理实践的重要组成部分。该指标被制造企业广泛采用，是衡量生产效率的公认标准和基准。OEE 最初由日本设备维修协会开发，是一种用于评估制造设施的技术和组织维度的综合工具。 OEE 的目标OEE 的核心是全面客观地反映生产环境中生产效率的现状。这使得企业能够深入了解他们的设备和流程运行是否接近其最">
+    <meta name="description" content="大家好，我是连边。 今天我们继续来学习ClickHouse的数据类型，其实这块资料重要的资料还是看官网。 官网：ClickHouse数据类型 老规矩，还是先上阅读导读：  分类与语法规则ClickHouse与MySQL语法是及其相似的，我们先来看一个创建表语句。 123456CREATE TABLE dt(    &#96;id&#96; UInt32    &#96;name&#96; String,)ENGINE &#x3D; Tin">
 <meta property="og:type" content="article">
-<meta property="og:title" content="精益制造中的 OEE：目标、评估方法和六大损失">
-<meta property="og:url" content="https://www.lianbian.net/OEE/3bee08a3c6ef.html">
+<meta property="og:title" content="ClickHouse数据类型">
+<meta property="og:url" content="https://www.lianbian.net/%E6%95%B0%E6%8D%AE%E5%BA%93/42572c4acee4.html">
 <meta property="og:site_name" content="连边">
-<meta property="og:description" content="OEE 是设备综合效率 (Overall Equipment Effectiveness) 的缩写，是精益管理实践的重要组成部分。该指标被制造企业广泛采用，是衡量生产效率的公认标准和基准。OEE 最初由日本设备维修协会开发，是一种用于评估制造设施的技术和组织维度的综合工具。 OEE 的目标OEE 的核心是全面客观地反映生产环境中生产效率的现状。这使得企业能够深入了解他们的设备和流程运行是否接近其最">
+<meta property="og:description" content="大家好，我是连边。 今天我们继续来学习ClickHouse的数据类型，其实这块资料重要的资料还是看官网。 官网：ClickHouse数据类型 老规矩，还是先上阅读导读：  分类与语法规则ClickHouse与MySQL语法是及其相似的，我们先来看一个创建表语句。 123456CREATE TABLE dt(    &#96;id&#96; UInt32    &#96;name&#96; String,)ENGINE &#x3D; Tin">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://mkstatic.lianbian.net/202406042135572.png">
-<meta property="article:published_time" content="2024-06-03T16:00:00.000Z">
-<meta property="article:modified_time" content="2024-06-04T13:40:51.785Z">
+<meta property="og:image" content="https://mkstatic.lianbian.net/202204010756622.png">
+<meta property="og:image" content="https://mkstatic.lianbian.net/202204010752600.jpg">
+<meta property="article:published_time" content="2022-03-31T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-01-10T03:43:12.399Z">
 <meta property="article:author" content="连边">
-<meta property="article:tag" content="OEE">
+<meta property="article:tag" content="clickhouse">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://mkstatic.lianbian.net/202406042135572.png">
+<meta name="twitter:image" content="https://mkstatic.lianbian.net/202204010756622.png">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>精益制造中的 OEE：目标、评估方法和六大损失 - 连边</title>
+  <title>ClickHouse数据类型 - 连边</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -203,7 +204,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="精益制造中的 OEE：目标、评估方法和六大损失"></span>
+            <span id="subtitle" data-typed-text="ClickHouse数据类型"></span>
           
         </div>
 
@@ -214,8 +215,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2024-06-04 00:00" pubdate>
-          2024年6月4日 凌晨
+        <time datetime="2022-04-01 00:00" pubdate>
+          2022年4月1日 凌晨
         </time>
       </span>
     
@@ -226,7 +227,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          3k 字
+          2.5k 字
         
       </span>
     
@@ -237,7 +238,7 @@
         
         
         
-          25 分钟
+          22 分钟
         
       </span>
     
@@ -274,80 +275,167 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">精益制造中的 OEE：目标、评估方法和六大损失</h1>
+            <h1 id="seo-header">ClickHouse数据类型</h1>
             
             
               <div class="markdown-body">
                 
-                <p>OEE 是设备综合效率 (Overall Equipment Effectiveness) 的缩写，是精益管理实践的重要组成部分。该指标被制造企业广泛采用，是衡量生产效率的公认标准和基准。OEE 最初由日本设备维修协会开发，是一种用于评估制造设施的技术和组织维度的综合工具。</p>
-<h2 id="OEE-的目标"><a href="#OEE-的目标" class="headerlink" title="OEE 的目标"></a>OEE 的目标</h2><p>OEE 的核心是全面客观地反映生产环境中生产效率的现状。这使得企业能够深入了解他们的设备和流程运行是否接近其最大潜能。通过综合考虑设备的可用率、性能效率和生产质量等因素，OEE 能够呈现制造过程的总体效率。</p>
-<p>OEE 的强大之处在于它能够系统地揭示改进空间。通过分析影响 OEE 的各个因素（包括停机、速度损失和缺陷），可以找出瓶颈、低效和需要改进的地方。这种基于数据的方法让企业能够在流程优化和资源分配方面做出明智的决策。</p>
-<p>OEE 还是持续改进的指南针。通过不断地监测和提升 OEE，制造企业可以保障他们的经济绩效持续向好。OEE 不仅能反映当前的生产效率，还有助于制定合理的性能目标，并随着时间的推移评估各种改进措施的效果。</p>
-<h2 id="如何计算-OEE"><a href="#如何计算-OEE" class="headerlink" title="如何计算 OEE"></a>如何计算 OEE</h2><p>OEE 反映了有效生产时间占计划生产时间的比例。它的计算基于三个因素：可用率、性能和质量。</p>
+                <p>大家好，我是连边。</p>
+<p>今天我们继续来学习<code>ClickHouse</code>的数据类型，其实这块资料重要的资料还是看官网。</p>
+<p><a target="_blank" rel="noopener" href="https://clickhouse.com/docs/en/sql-reference/data-types/">官网：ClickHouse数据类型</a></p>
+<p>老规矩，还是先上阅读导读：</p>
+<p><img src="https://mkstatic.lianbian.net/202204010756622.png" srcset="/img/loading.gif" lazyload alt="ClickHouse数据类型"></p>
+<h2 id="分类与语法规则"><a href="#分类与语法规则" class="headerlink" title="分类与语法规则"></a>分类与语法规则</h2><p><code>ClickHouse</code>与<code>MySQL</code>语法是及其相似的，我们先来看一个创建表语句。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> dt<br>(<br>    `id` UInt32<br>    `name` String,<br>)<br>ENGINE <span class="hljs-operator">=</span> TinyLog;<br></code></pre></td></tr></table></figure>
+
+<p><code>id UInt32</code>中，id为字段名称，UInt32是我们的数据类型，就是语法规则，为了方便记忆，我结合语法规则和使用场景把数据类型分成了四种类型：</p>
 <ol>
-<li>可用率旨在消除中断，保证平稳运行。</li>
-<li>质量注重完美，目标是减少缺陷产品。</li>
-<li>性能旨在防止速度下降，保持高效率。</li>
+<li>基本数据类型</li>
 </ol>
-<p>OEE 可以用以下公式计算，其中可用率、性能和质量是制造领域的重要指标。</p>
-<p><strong>OEE = 可用率 x 性能 x 质量</strong></p>
-<h3 id="可用率"><a href="#可用率" class="headerlink" title="可用率"></a>可用率</h3><p>可用率反映了机器实际运行时间占计划运行时间的比例，以百分比表示。计算可用率的方法是，将实际运行时间除以计划运行时间，再乘以 100 得到百分比。</p>
-<p><strong>可用率 = 实际运行时间 / 计划运行时间</strong></p>
-<p>机器的计划运行时间可以从生产计划中获取。要获得实际运行时间，需要从计划运行时间中扣除所有停机时间。通过分析停机数据，不仅可以揭示停机的原因，还可以发现潜在的改进机会。</p>
-<h3 id="性能"><a href="#性能" class="headerlink" title="性能"></a>性能</h3><p>要确定性能，需要将实际产量与机器在最高运行速度下有效时间内的最大产量进行比较。</p>
-<p><strong>性能 = 实际性能 / 目标性能</strong></p>
-<p>实际性能是通过计算包括废品在内的全部产量来确定的。而目标性能则是根据机器每小时的最大产量与实际运行时间相乘来计算的，目标性能反映了在该时间段内的潜在生产能力。</p>
-<h3 id="质量"><a href="#质量" class="headerlink" title="质量"></a>质量</h3><p>质量是 OEE 必须计算的第三个要素。它是符合质量标准的合格产品在总产品中所占的比例。</p>
-<p><strong>质量 = 合格产品 / 总产品</strong></p>
-<p>在实际操作中，要计算合格产品的数量，通常是从给定时间段内生产的总产品数量中减去废品和返工产品的数量。这个公式表明，总产品的数量等于合格产品、废品和返工产品的数量之和。</p>
-<h2 id="OEE-性能评分"><a href="#OEE-性能评分" class="headerlink" title="OEE 性能评分"></a>OEE 性能评分</h2><p>如果可用率、性能和质量没有受到任何影响，就可以实现 100% 的完美 OEE。这意味着在没有中断的情况下，以最高速度生产出全部合格的产品。在实际生产中达到这一理论分数通常不太可能，OEE 分数超过 80% 就可以视为非常出色的表现。大多数制造企业的运营水平通常在 60% 到 80% 的 OEE 范围内。当 OEE 低于 60% 时，意味着工厂存在严重问题，这一水平的分数可以视为警告信号，表明存在巨大的改进空间。</p>
-<ul>
-<li>80% - 100% 为优秀 - 在实际中难以实现</li>
-<li>60% - 80% 为良好 - 大部分制造企业的水平</li>
-<li>60% 或以下为表现不佳 - 有很大的提升空间</li>
-</ul>
-<h2 id="六大损失"><a href="#六大损失" class="headerlink" title="六大损失"></a>六大损失</h2><p>OEE 的主要目标是减少或消除所谓的六大损失 (Six Big Losses)。它们是造成生产过程中与设备相关的生产效率损失的主要因素。</p>
-<p><img src="https://mkstatic.lianbian.net/202406042135572.png" srcset="/img/loading.gif" lazyload alt="六大损失"></p>
-<h3 id="可用率损失"><a href="#可用率损失" class="headerlink" title="可用率损失"></a>可用率损失</h3><p>OEE 的一个基本要素是机器和系统的可用率。正常运行时间是指机器或系统正常运行并进行生产的时间。相反，停机时间是指机器本应运行但却无法运行，从而造成经济损失的时间。</p>
-<ol>
-<li><p>计划内停机</p>
-<p>导致机器停机的计划内事件会降低 OEE。这些事件包括更换、维护、检查和清洁等。通过使用专业的软件，可以对这些计划内停机进行细致的分析和优化，以尽量减少它们的影响，尽管它们具有非负面性质，但仍有很大的改进空间。</p>
-</li>
-<li><p>计划外停机</p>
-<p>当计划内的生产因故障、宕机、停电、自然灾害或缺勤等意外事件而中断时，就称为计划外停机。为了减少这些无效时间，需要准确地追踪原因，进行数字化分类和持续分析，以找出流程中的薄弱环节。</p>
-</li>
+<p>基本数据类型是指我们Int、String …常见类型。</p>
+<ol start="2">
+<li>函数数据类型</li>
 </ol>
-<h3 id="性能损失"><a href="#性能损失" class="headerlink" title="性能损失"></a>性能损失</h3><p>OEE 的另一个重要要素是机器和系统的性能。这是指在规定的运行时间内，实际生产的产量与理论上能够生产的最大产量的比例。短暂中断或过慢的运行速度都可能导致性能损失。</p>
-<ol>
-<li><p>短暂停</p>
-<p>不到一分钟的短暂停是由工具问题、编程错误、传感器拥塞或需要快速清理等原因引起的，通常由操作员解决。这些中断虽然不引人注意，但却会累积数分钟的非生产时间。短暂停是可以预测并能够消除或控制的。</p>
-</li>
-<li><p>慢周期</p>
-<p>当机器因为机龄、维护、故障或材料等因素导致运行速度低于其潜在最高速度时，就会造成损失。与短暂停不同，慢周期情况下生产仍在继续，但以较慢的速度进行。如果无法确定理想的运行时间，管理层可以依据历史数据来确定这些时间，而进行充分研究是确定它们的关键。</p>
-</li>
+<p>看如下创建语句：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> lc_t<br>(<br>    `id` UInt16,<br>    `strings` LowCardinality(String)<br>)<br>ENGINE <span class="hljs-operator">=</span> MergeTree()<br><span class="hljs-keyword">ORDER</span> <span class="hljs-keyword">BY</span> id<br></code></pre></td></tr></table></figure>
+
+<p><code>strings LowCardinality(String)</code>的申明部分，带着<code>()</code>与我们的函数调用相似，所以我给他取名叫做<code>函数类型</code>。</p>
+<ol start="3">
+<li>场景类型</li>
 </ol>
-<h3 id="质量损失"><a href="#质量损失" class="headerlink" title="质量损失"></a>质量损失</h3><p>在 OEE 中，质量损失是指产品质量与预期标准不符。与其他两种损失相比，质量损失的影响要大得多。这是因为缺陷产品不仅浪费了材料，还浪费了生产时间。</p>
-<p>即使有缺陷的产品可以修复，返工也要占用操作员和机器资源，因此也属于损失。</p>
-<ol>
-<li><p>生产型废品</p>
-<p>有些问题必须进行生产后才能发现，例如过度包装、包装不足、标签错误或包装有缺陷。传感器或摄像头等技术手段可以实时识别质量问题，从而大大缓解这些问题。配合专业的 OEE 软件，这种类型的损失有望在不久的将来消除。</p>
-</li>
-<li><p>启动型废品</p>
-<p>当机器在启动、设置变更或产品调整过程中因不稳定而产生次品时，就会出现这种损失。操作员的专业技能在正确设定和避免反复试错方面至关重要。自动化数字辅助系统可快速显著地减少这种类型的损失。</p>
-</li>
+<p>IP地址、经纬度都有固定的存储格式，而且也很常用，很多数据库都为常见的场景做了单独的类型，我们把这一类，归为<code>场景类型</code>。</p>
+<ol start="4">
+<li>其他</li>
 </ol>
-<h2 id="OEE-的不足之处"><a href="#OEE-的不足之处" class="headerlink" title="OEE 的不足之处"></a>OEE 的不足之处</h2><p>随着智能制造领域的不断发展，人们越来越清楚地认识到，仅仅依靠 OEE 可能无法全面反映企业在智能制造方面的成就。对智能制造的评估不应只局限于 OEE，企业应该有更广阔的视野，以鼓励持续的发展和创新。</p>
-<p>OEE 的不足主要体现在：</p>
-<ul>
-<li><strong>缺乏供应链指标</strong> - OEE 虽然可以提高单个机器的效率，但却忽略了制造过程与供应链系统的紧密整合。</li>
-<li><strong>忽视人力因素</strong> - 技术熟练、积极主动的员工对于完善生产流程和提高生产效率有着重要影响。OEE 并没有涵盖这些因素。</li>
-<li><strong>忽视环境因素</strong> - 可持续性对制造商来说至关重要，制造商应该考虑其运营对环境的影响。OEE 没有考虑资源利用、能源节约或废弃物减少等方面。</li>
-</ul>
-<p>为了有效地分析智能制造计划、评估原材料准备、了解员工技能、以及推动可持续性发展，制造商应该采用更全面的 KPI。</p>
-<h2 id="使用-OMH-计算-OEE"><a href="#使用-OMH-计算-OEE" class="headerlink" title="使用 OMH 计算 OEE"></a>使用 OMH 计算 OEE</h2><p>EMQ 提出的 <a target="_blank" rel="noopener" href="https://www.emqx.com/zh/blog/open-manufacturing-hub-a-reference-architecture-for-industrial-iot">Open Manufacturing Hub（OMH）</a>解决方案为制造业的运营带来了 OEE 的显著提升，例如，通过实时监测和数据集成可立即洞察设备性能并进行准确的 OEE 计算。它采用预测性维护算法来防止意外停机，简化报告流程，借助历史数据和分析支持持续改进活动。此外，OMH 还通过优化资源分配、实现远程监测来提高设备的整体效率和生产性能，从而改善 OEE 指标。</p>
-<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>总之，OEE 通过对生产效率进行全面评估，在精益管理中发挥着重要的作用。OEE 能够提供客观的洞察、揭示改进的机会、指导决策并支持持续的改进，是提高制造运营整体效率和成功率的基石。</p>
-<p>转载： <a target="_blank" rel="noopener" href="https://www.emqx.com/zh/blog/oee-in-lean-manufacturing">https://www.emqx.com/zh/blog/oee-in-lean-manufacturing</a></p>
-<p><strong>找到解决问题的标准方法，理解它，吃透它，并坚定执行。</strong></p>
+<p>那些实在不好分类的几种数据类型，就把它放在<code>其他类型</code>里。</p>
+<p>做好了分类，我们依次来学习各种数据类型。</p>
+<h2 id="基本数据类型"><a href="#基本数据类型" class="headerlink" title="基本数据类型"></a>基本数据类型</h2><p>与我们变成语言一样，常见的这一些类型。</p>
+<h3 id="Int-amp-Boolean"><a href="#Int-amp-Boolean" class="headerlink" title="Int &amp; Boolean"></a>Int &amp; Boolean</h3><p><code>ClickHouse</code>数据库的<code>Int</code>类型区分有符号与无符号，命名也非常的简单粗暴，用简单直接的命名顶替了其他数据库的<code>Int</code>、<code>BigInt</code>之类的。</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>取值范围</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Int8</td>
+<td>[-128 : 127]</td>
+</tr>
+<tr>
+<td>Int16</td>
+<td>[-32768 : 32767]</td>
+</tr>
+<tr>
+<td>Int32</td>
+<td>[-2147483648 : 2147483647]</td>
+</tr>
+<tr>
+<td>…</td>
+<td></td>
+</tr>
+<tr>
+<td>UInt8</td>
+<td>[0 : 255]</td>
+</tr>
+<tr>
+<td>UInt16</td>
+<td>[0 : 65535]</td>
+</tr>
+<tr>
+<td>UInt32</td>
+<td>[0 : 4294967295]</td>
+</tr>
+</tbody></table>
+<p>U开头的表示无符号，同样的空间，能够存储更大的值。上面表格没有写全，最大可以到<code>Int256、UInt256</code>。</p>
+<p>这里需要单独拎出来说一下的是，在我们的<code>ClickHouse</code>里边，没有单独的<code>Boolean</code>类型，可以用<code>Int8</code>的0和1来表示。</p>
+<h3 id="Float-amp-Decimal"><a href="#Float-amp-Decimal" class="headerlink" title="Float &amp; Decimal"></a>Float &amp; Decimal</h3><p>官方是推荐我们使用<code>Int</code>存储，比如我们存金额的时候，会采取存<code>分</code>为单位，这样子就避免存小数。</p>
+<p>但是业务开发的时候，难免会碰到需要保留小数的后多少位，比如我们熟悉的<code>圆周率</code>。</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>取值范围</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Float32</td>
+<td>-2147483648 - 2147483647</td>
+</tr>
+<tr>
+<td>Float64</td>
+<td>-9223372036854775808 - 9223372036854775807</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Decimal32(S)</td>
+<td>( -1 * 10^(9 - S), 1 * 10^(9 - S) )</td>
+</tr>
+<tr>
+<td>Decimal64(S)</td>
+<td>( -1 * 10^(18 - S), 1 * 10^(18 - S) )</td>
+</tr>
+<tr>
+<td>Decimal128(S)</td>
+<td>( -1 * 10^(38 - S), 1 * 10^(38 - S) )</td>
+</tr>
+<tr>
+<td>Decimal256(S)</td>
+<td>( -1 * 10^(76 - S), 1 * 10^(76 - S) )</td>
+</tr>
+</tbody></table>
+<h3 id="String-amp-FixedString-amp-UUID"><a href="#String-amp-FixedString-amp-UUID" class="headerlink" title="String &amp; FixedString &amp; UUID"></a>String &amp; FixedString &amp; UUID</h3><p>在<code>ClickHouse</code>中，没有<code>varchar</code>这种结构，就是简单直接的提供了<code>String</code>类型，如果我们知道值是固定的长度，就用<code>FixdString</code>类型，它表示定长，与我们语言中的数组一样，申明的时候就固定了长度。比如我们存储MD5用<code>FixedString(16)</code> ，存储SHA256用 <code>FixedString(32)</code> 。</p>
+<p>但是他提供了一种特殊的类型，就是<code>UUID</code>，专门用来存储UUID的值。</p>
+<blockquote>
+<p>UUID：通用唯一标识符 (UUID) 是一个 16 字节的数字，用于标识记录。</p>
+</blockquote>
+<p><code>ClickHouse</code>里边，<a target="_blank" rel="noopener" href="https://clickhouse.com/docs/en/sql-reference/functions/uuid-functions/">generateUUIDv4</a>可以生成UUID</p>
+<h3 id="Date-amp-DateTime"><a href="#Date-amp-DateTime" class="headerlink" title="Date &amp; DateTime"></a>Date &amp; DateTime</h3><p>时间类型，Date与DateTime的区别在于格式不一样，Date里边细分Date和Date32，DateTime细分DateTime64，他们之间的区别在于能存储的范围不一样。</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>格式</th>
+<th>取值范围</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Date</td>
+<td>2022-04-01</td>
+<td>[1970-01-01, 2149-06-06]</td>
+</tr>
+<tr>
+<td>Date32</td>
+<td>2022-04-01</td>
+<td>[1925-01-01, 2283-11-11]</td>
+</tr>
+<tr>
+<td>DateTime</td>
+<td>2022-04-01 00:00:00</td>
+<td>[1970-01-01 00:00:00, 2106-02-07 06:28:15]</td>
+</tr>
+<tr>
+<td>DateTime64</td>
+<td>2022-04-01 00:00:00</td>
+<td>[1925-01-01 00:00:00, 2283-11-11 23:59:59.99999999] (注意: 最大值的精度是8)</td>
+</tr>
+</tbody></table>
+<p><code>DateTime64</code> 类型可以像存储其他数据列一样存储时区信息，时区会影响 <code>DateTime64</code> 类型的值如何以文本格式显示。</p>
+<h3 id="Enum"><a href="#Enum" class="headerlink" title="Enum"></a>Enum</h3><p>这个枚举和我们编程语言中的枚举可以说是一一对应了，分为8bit的枚举和16bit的枚举。</p>
+<p>8 位枚举。它最多可以包含在 [-128, 127] 范围内枚举的 256 个值。 </p>
+<p>16 位枚举。它最多可以包含 [-32768, 32767] 范围内枚举的 65536 个值。</p>
+<p>如果使用基于ClickHouse来实现数据字典，这将是一个值得深入研究的东西。</p>
+<p><a target="_blank" rel="noopener" href="https://clickhouse.com/docs/en/sql-reference/data-types/enum/">https://clickhouse.com/docs/en/sql-reference/data-types/enum/</a></p>
+<p>还有很多类型，我把它简单的归类一下，就不一一详细说明了，可以自行看文档。</p>
+<h2 id="函数数据类型"><a href="#函数数据类型" class="headerlink" title="函数数据类型"></a>函数数据类型</h2><h3 id="Nullable"><a href="#Nullable" class="headerlink" title="Nullable"></a>Nullable</h3><h3 id="LowCardinality"><a href="#LowCardinality" class="headerlink" title="LowCardinality"></a>LowCardinality</h3><h3 id="Array"><a href="#Array" class="headerlink" title="Array"></a>Array</h3><h3 id="AggregateFunction"><a href="#AggregateFunction" class="headerlink" title="AggregateFunction"></a>AggregateFunction</h3><h3 id="Nested"><a href="#Nested" class="headerlink" title="Nested"></a>Nested</h3><h3 id="Tuple"><a href="#Tuple" class="headerlink" title="Tuple"></a>Tuple</h3><h3 id="SimpleAggregateFunction"><a href="#SimpleAggregateFunction" class="headerlink" title="SimpleAggregateFunction"></a>SimpleAggregateFunction</h3><h2 id="场景类型"><a href="#场景类型" class="headerlink" title="场景类型"></a>场景类型</h2><h3 id="Map-Json？"><a href="#Map-Json？" class="headerlink" title="Map | Json？"></a>Map | Json？</h3><h3 id="Geo-保存经纬度"><a href="#Geo-保存经纬度" class="headerlink" title="Geo 保存经纬度"></a>Geo 保存经纬度</h3><h3 id="Domains-域名-IP体系"><a href="#Domains-域名-IP体系" class="headerlink" title="Domains 域名 IP体系"></a>Domains 域名 IP体系</h3><h4 id="IPv4"><a href="#IPv4" class="headerlink" title="IPv4"></a>IPv4</h4><h4 id="IPv6"><a href="#IPv6" class="headerlink" title="IPv6"></a>IPv6</h4><h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><h3 id="未定义-Nothing"><a href="#未定义-Nothing" class="headerlink" title="未定义 Nothing"></a>未定义 Nothing</h3><h3 id="时间戳-Interval"><a href="#时间戳-Interval" class="headerlink" title="时间戳 Interval"></a>时间戳 Interval</h3><p>官方文档：</p>
+<p><a target="_blank" rel="noopener" href="https://clickhouse.com/docs/en/sql-reference/data-types/">https://clickhouse.com/docs/en/sql-reference/data-types/</a></p>
+<p><a target="_blank" rel="noopener" href="https://help.aliyun.com/document_detail/146000.html">https://help.aliyun.com/document_detail/146000.html</a></p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>我是连边，专注于Java和架构领域，坚持撰写有原理，有实战，有体系的技术文章。</p>
+<p>关注 <code>订阅号@连边</code> 不错过精彩文章</p>
+<p><img src="https://mkstatic.lianbian.net/202204010752600.jpg" srcset="/img/loading.gif" lazyload alt="订阅号@连边"></p>
 
                 
               </div>
@@ -366,7 +454,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/OEE/" class="category-chain-item">OEE</a>
+  <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/" class="category-chain-item">数据库</a>
   
   
 
@@ -381,7 +469,7 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/OEE/" class="print-no-link">#OEE</a>
+        <a href="/tags/clickhouse/" class="print-no-link">#clickhouse</a>
       
     </div>
   
@@ -393,8 +481,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>精益制造中的 OEE：目标、评估方法和六大损失</div>
-      <div>https://www.lianbian.net/OEE/3bee08a3c6ef.html</div>
+      <div>ClickHouse数据类型</div>
+      <div>https://www.lianbian.net/数据库/42572c4acee4.html</div>
     </div>
     <div class="license-meta">
       
@@ -406,7 +494,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2024年6月4日</div>
+          <div>2022年4月1日</div>
         </div>
       
       
@@ -438,9 +526,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/%E7%AE%A1%E7%90%86/bf10de68d33d.html" title="组织架构调整">
+                      <a href="/redis/493ee6a41e5c.html" title="一篇文章搞定Redis Stream">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">组织架构调整</span>
+                        <span class="hidden-mobile">一篇文章搞定Redis Stream</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -448,8 +536,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/%E7%BD%91%E7%AB%99%E5%A4%87%E6%A1%88/e23d2c90db7d.html" title="组网方案建设书">
-                        <span class="hidden-mobile">组网方案建设书</span>
+                      <a href="/%E7%AE%A1%E7%90%86/32f5423cb7f0.html" title="立项的那些事">
+                        <span class="hidden-mobile">立项的那些事</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

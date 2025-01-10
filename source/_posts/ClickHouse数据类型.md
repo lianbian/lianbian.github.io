@@ -1,7 +1,7 @@
 ---
 title: ClickHouse数据类型
 keywords: clickhouse
-categories: clickhouse
+categories: 数据库
 summary: 了解一下ClickHouse那些数据类型，注意要看英文文档。
 author: 连边
 date: 2022-04-01

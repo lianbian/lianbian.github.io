@@ -16,29 +16,31 @@
   
   <meta name="theme-color" content="#2f4154">
   <meta name="author" content="连边">
-  <meta name="keywords" content="clickhouse">
+  <meta name="keywords" content="clickhouse 列式存储">
   
-    <meta name="description" content="大家好，我是连边。 今天我们继续来学习ClickHouse的数据类型，其实这块资料重要的资料还是看官网。 官网：ClickHouse数据类型 老规矩，还是先上阅读导读：  分类与语法规则ClickHouse与MySQL语法是及其相似的，我们先来看一个创建表语句。 123456CREATE TABLE dt(    &#96;id&#96; UInt32    &#96;name&#96; String,)ENGINE &#x3D; Tin">
+    <meta name="description" content="大家好，我是连边，这是我的第36篇原创文章。 今天这篇文章从一个简单的表格开始来给大家讲列式存储。 还是老规矩，先上导读图，然后开始～  从一个表格说起要讲列式存储，首先要讲表格，我们平常统计数据用Excel，就是最常见的表格。 如下表格，我们统计了学生的基本信息：    学号 姓名 性别 成绩    001 张三 男 60   002 李四 男 70   003 王五 男 80   行、列组成了">
 <meta property="og:type" content="article">
-<meta property="og:title" content="ClickHouse数据类型">
-<meta property="og:url" content="https://www.lianbian.net/clickhouse/42572c4acee4.html">
+<meta property="og:title" content="什么是列式存储？">
+<meta property="og:url" content="https://www.lianbian.net/%E6%95%B0%E6%8D%AE%E5%BA%93/d6d6610971f1.html">
 <meta property="og:site_name" content="连边">
-<meta property="og:description" content="大家好，我是连边。 今天我们继续来学习ClickHouse的数据类型，其实这块资料重要的资料还是看官网。 官网：ClickHouse数据类型 老规矩，还是先上阅读导读：  分类与语法规则ClickHouse与MySQL语法是及其相似的，我们先来看一个创建表语句。 123456CREATE TABLE dt(    &#96;id&#96; UInt32    &#96;name&#96; String,)ENGINE &#x3D; Tin">
+<meta property="og:description" content="大家好，我是连边，这是我的第36篇原创文章。 今天这篇文章从一个简单的表格开始来给大家讲列式存储。 还是老规矩，先上导读图，然后开始～  从一个表格说起要讲列式存储，首先要讲表格，我们平常统计数据用Excel，就是最常见的表格。 如下表格，我们统计了学生的基本信息：    学号 姓名 性别 成绩    001 张三 男 60   002 李四 男 70   003 王五 男 80   行、列组成了">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://mkstatic.lianbian.net/202204010756622.png">
-<meta property="og:image" content="https://mkstatic.lianbian.net/202204010752600.jpg">
-<meta property="article:published_time" content="2022-03-31T16:00:00.000Z">
-<meta property="article:modified_time" content="2023-11-29T22:09:56.384Z">
+<meta property="og:image" content="http://mkstatic.lianbian.net/202203032332940.png">
+<meta property="og:image" content="http://mkstatic.lianbian.net/202203032308971.png">
+<meta property="og:image" content="http://mkstatic.lianbian.net/202203032305135.png">
+<meta property="og:image" content="http://mkstatic.lianbian.net/202203032312839.png">
+<meta property="article:published_time" content="2022-03-05T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-01-10T03:40:47.963Z">
 <meta property="article:author" content="连边">
 <meta property="article:tag" content="clickhouse">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://mkstatic.lianbian.net/202204010756622.png">
+<meta name="twitter:image" content="http://mkstatic.lianbian.net/202203032332940.png">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>ClickHouse数据类型 - 连边</title>
+  <title>什么是列式存储？ - 连边</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -204,7 +206,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="ClickHouse数据类型"></span>
+            <span id="subtitle" data-typed-text="什么是列式存储？"></span>
           
         </div>
 
@@ -215,8 +217,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2022-04-01 00:00" pubdate>
-          2022年4月1日 凌晨
+        <time datetime="2022-03-06 00:00" pubdate>
+          2022年3月6日 凌晨
         </time>
       </span>
     
@@ -227,7 +229,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2.5k 字
+          1.7k 字
         
       </span>
     
@@ -238,7 +240,7 @@
         
         
         
-          22 分钟
+          15 分钟
         
       </span>
     
@@ -275,167 +277,187 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">ClickHouse数据类型</h1>
+            <h1 id="seo-header">什么是列式存储？</h1>
             
             
               <div class="markdown-body">
                 
-                <p>大家好，我是连边。</p>
-<p>今天我们继续来学习<code>ClickHouse</code>的数据类型，其实这块资料重要的资料还是看官网。</p>
-<p><a target="_blank" rel="noopener" href="https://clickhouse.com/docs/en/sql-reference/data-types/">官网：ClickHouse数据类型</a></p>
-<p>老规矩，还是先上阅读导读：</p>
-<p><img src="https://mkstatic.lianbian.net/202204010756622.png" srcset="/img/loading.gif" lazyload alt="ClickHouse数据类型"></p>
-<h2 id="分类与语法规则"><a href="#分类与语法规则" class="headerlink" title="分类与语法规则"></a>分类与语法规则</h2><p><code>ClickHouse</code>与<code>MySQL</code>语法是及其相似的，我们先来看一个创建表语句。</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> dt<br>(<br>    `id` UInt32<br>    `name` String,<br>)<br>ENGINE <span class="hljs-operator">=</span> TinyLog;<br></code></pre></td></tr></table></figure>
+                <p>大家好，我是连边，这是我的第<code>36</code>篇原创文章。</p>
+<p>今天这篇文章从一个简单的表格开始来给大家讲列式存储。</p>
+<p>还是老规矩，先上导读图，然后开始～</p>
+<p><img src="http://mkstatic.lianbian.net/202203032332940.png" srcset="/img/loading.gif" lazyload alt="什么是列式存储"></p>
+<h2 id="从一个表格说起"><a href="#从一个表格说起" class="headerlink" title="从一个表格说起"></a>从一个表格说起</h2><p>要讲列式存储，首先要讲表格，我们平常统计数据用Excel，就是最常见的表格。</p>
+<p>如下表格，我们统计了学生的基本信息：</p>
+<table>
+<thead>
+<tr>
+<th align="center">学号</th>
+<th align="center">姓名</th>
+<th align="center">性别</th>
+<th align="center">成绩</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">001</td>
+<td align="center">张三</td>
+<td align="center">男</td>
+<td align="center">60</td>
+</tr>
+<tr>
+<td align="center">002</td>
+<td align="center">李四</td>
+<td align="center">男</td>
+<td align="center">70</td>
+</tr>
+<tr>
+<td align="center">003</td>
+<td align="center">王五</td>
+<td align="center">男</td>
+<td align="center">80</td>
+</tr>
+</tbody></table>
+<p>行、列组成了我们看到的表格。而我们说的列式存储，是与行式存储是相对而言的。</p>
+<p>除开表头（学号、姓名、性别、成绩）这一行，我们看其他的三行数据。假如现在我说：“我们要把学生的基础信息以行来分开保存到记事本里边”，你下意识的会不会这么做？</p>
+<p>复制、粘贴第一行保存为记事本 《张三.txt》</p>
+<table>
+<thead>
+<tr>
+<th align="center">001</th>
+<th align="center">张三</th>
+<th align="center">男</th>
+<th align="center">60</th>
+</tr>
+</thead>
+</table>
+<p>复制、粘贴第二行保存到记事本 《李四.txt》</p>
+<table>
+<thead>
+<tr>
+<th align="center">002</th>
+<th align="center">李四</th>
+<th align="center">男</th>
+<th align="center">70</th>
+</tr>
+</thead>
+</table>
+<p>复制、粘贴第三行保存到记事本 《王五.txt》</p>
+<table>
+<thead>
+<tr>
+<th align="center">003</th>
+<th align="center">王五</th>
+<th align="center">男</th>
+<th align="center">80</th>
+</tr>
+</thead>
+</table>
+<p>其实你这个下意识的存储方式，就是我们的行式存储。</p>
+<p>抽象成存储的数据结构，可以长这样子：</p>
+<p><img src="http://mkstatic.lianbian.net/202203032308971.png" srcset="/img/loading.gif" lazyload alt="行式存储数据结构"></p>
+<p>而我们今天的主角，列式存储会是什么样子呢？相信你也非常清楚了吧？</p>
+<p>复制、粘贴第一列保存到记事本 《学号.txt》</p>
+<table>
+<thead>
+<tr>
+<th align="center">学号</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">001</td>
+</tr>
+<tr>
+<td align="center">002</td>
+</tr>
+<tr>
+<td align="center">003</td>
+</tr>
+</tbody></table>
+<p>复制、粘贴第一列保存到记事本 《姓名.txt》</p>
+<table>
+<thead>
+<tr>
+<th align="center">姓名</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">张三</td>
+</tr>
+<tr>
+<td align="center">李四</td>
+</tr>
+<tr>
+<td align="center">王五</td>
+</tr>
+</tbody></table>
+<p>复制、粘贴第一列保存到记事本 《性别.txt》</p>
+<table>
+<thead>
+<tr>
+<th align="center">性别</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">男</td>
+</tr>
+<tr>
+<td align="center">男</td>
+</tr>
+<tr>
+<td align="center">男</td>
+</tr>
+</tbody></table>
+<p>复制、粘贴第一列保存到记事本 《成绩.txt》</p>
+<table>
+<thead>
+<tr>
+<th align="center">成绩</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">60</td>
+</tr>
+<tr>
+<td align="center">70</td>
+</tr>
+<tr>
+<td align="center">80</td>
+</tr>
+</tbody></table>
+<p>抽象成存储的数据结构，可以长这样子：</p>
+<p><img src="http://mkstatic.lianbian.net/202203032305135.png" srcset="/img/loading.gif" lazyload alt="列式存储"></p>
+<h2 id="优势"><a href="#优势" class="headerlink" title="优势"></a>优势</h2><p>上边如果弄清楚了，我们再来聊一聊为什么列式存储会突然出现在我们面前？相比我们的行式存储，它有什么优势呢？</p>
+<p>其实从马云早些年喊出大数据是将来的石油开始，可见大数据在很多公司的地位，一些中小型公司也慢慢的重视起客户的数据分析一系列举措来提高成交量，数字化成为很多公司的战略。</p>
+<p>而大数据、数字化这些战略的背后，我们就需要有大数据的存储容器，即数据库。</p>
+<p>最开始，我们会一股脑的放在我们的MySQL里边，但是随着时间的推移，数据量越来越大，会发现很多统计查询会越来越慢，最后查询分析数据的速度，满足不了业务的需求了。</p>
+<p>怎么办？查询慢，赶快建索引啊！</p>
+<p>还不行又怎么办？彻底分析需求，还是得从数据结构上想办法。</p>
+<p>需求：求平均成绩</p>
+<p>计算方式：(60+70+80)/3 = 70</p>
+<p>SQL：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SELECT</span> <span class="hljs-built_in">AVG</span>(`成绩`) <span class="hljs-keyword">FROM</span> `Students`;<br></code></pre></td></tr></table></figure>
 
-<p><code>id UInt32</code>中，id为字段名称，UInt32是我们的数据类型，就是语法规则，为了方便记忆，我结合语法规则和使用场景把数据类型分成了四种类型：</p>
+<p>还是以上边的表格来说，如果我是行式存储，就是存储三个文件《张三.txt》、《李四.txt》、《王五.txt》，如果要拿出他们各自的成绩，我需要对他们三个文件去进行文件打开、获取成绩、文件关闭；获取到分别的成绩之后，然后进行平均值计算，这就消耗了三次IO。</p>
+<p>而如果我们以列式存储的呢？我是要求<code>成绩</code>这一列的平均值，我直接从《成绩.txt》这个文件里边拿出数据，再计算平均值就好了。</p>
+<p>感觉到他们的优势了吗？</p>
+<p>这也是列式存储的（最大）优势，即：</p>
+<p><strong>快速读取特定列。</strong></p>
+<p>如果从事大数据分析行业的朋友，想想你的一些需求，是不是大多数都是计算某列数据的值？</p>
+<p>继续讲列式存储的另外一个好处，<strong>连续的空间利于算法压缩</strong></p>
+<p>因为列式存储将同一列的数据存储在一起，所以使用压缩算法可以得到更高的压缩率，减少存储占用的磁盘空间。压缩算法的基本原理其实很简单，它使用基于特定规则的数据表示原数据，如下所示的字符串中包含连续的相同字符，我们使用最符合直觉的压缩算法就可以减少字符串的长度：</p>
+<p><img src="http://mkstatic.lianbian.net/202203032312839.png" srcset="/img/loading.gif" lazyload alt="重复数据压缩后的列式存储"></p>
+<p>以上就是把“男男男“，存储成了”男3“，表示重复的”男“这个字符，有3个。同理，如果我们数据量大了，有很多分数相同的，也可以进行同样的压缩。</p>
+<h2 id="不是银弹"><a href="#不是银弹" class="headerlink" title="不是银弹"></a>不是银弹</h2><p>列式存储也并非银弹（比喻什么问题都能解决的方式方法），也有他的缺点。</p>
+<p>我们开动脑筋的想一想，我举一个例子：</p>
+<p>列式存储是连续空间，连续空间就和我们的数组结构一样，虽然查询的速度是快了，但是修改（增删改）的速度就要各种挪动元素了。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>从一个简单的表格出发，讲了行式存储和列式存储，最后推出了列式存储的两个优点：</p>
 <ol>
-<li>基本数据类型</li>
+<li>快速读取特定列；</li>
+<li>连续的空间利于算法压缩；</li>
 </ol>
-<p>基本数据类型是指我们Int、String …常见类型。</p>
-<ol start="2">
-<li>函数数据类型</li>
-</ol>
-<p>看如下创建语句：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> lc_t<br>(<br>    `id` UInt16,<br>    `strings` LowCardinality(String)<br>)<br>ENGINE <span class="hljs-operator">=</span> MergeTree()<br><span class="hljs-keyword">ORDER</span> <span class="hljs-keyword">BY</span> id<br></code></pre></td></tr></table></figure>
-
-<p><code>strings LowCardinality(String)</code>的申明部分，带着<code>()</code>与我们的函数调用相似，所以我给他取名叫做<code>函数类型</code>。</p>
-<ol start="3">
-<li>场景类型</li>
-</ol>
-<p>IP地址、经纬度都有固定的存储格式，而且也很常用，很多数据库都为常见的场景做了单独的类型，我们把这一类，归为<code>场景类型</code>。</p>
-<ol start="4">
-<li>其他</li>
-</ol>
-<p>那些实在不好分类的几种数据类型，就把它放在<code>其他类型</code>里。</p>
-<p>做好了分类，我们依次来学习各种数据类型。</p>
-<h2 id="基本数据类型"><a href="#基本数据类型" class="headerlink" title="基本数据类型"></a>基本数据类型</h2><p>与我们变成语言一样，常见的这一些类型。</p>
-<h3 id="Int-amp-Boolean"><a href="#Int-amp-Boolean" class="headerlink" title="Int &amp; Boolean"></a>Int &amp; Boolean</h3><p><code>ClickHouse</code>数据库的<code>Int</code>类型区分有符号与无符号，命名也非常的简单粗暴，用简单直接的命名顶替了其他数据库的<code>Int</code>、<code>BigInt</code>之类的。</p>
-<table>
-<thead>
-<tr>
-<th>类型</th>
-<th>取值范围</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>Int8</td>
-<td>[-128 : 127]</td>
-</tr>
-<tr>
-<td>Int16</td>
-<td>[-32768 : 32767]</td>
-</tr>
-<tr>
-<td>Int32</td>
-<td>[-2147483648 : 2147483647]</td>
-</tr>
-<tr>
-<td>…</td>
-<td></td>
-</tr>
-<tr>
-<td>UInt8</td>
-<td>[0 : 255]</td>
-</tr>
-<tr>
-<td>UInt16</td>
-<td>[0 : 65535]</td>
-</tr>
-<tr>
-<td>UInt32</td>
-<td>[0 : 4294967295]</td>
-</tr>
-</tbody></table>
-<p>U开头的表示无符号，同样的空间，能够存储更大的值。上面表格没有写全，最大可以到<code>Int256、UInt256</code>。</p>
-<p>这里需要单独拎出来说一下的是，在我们的<code>ClickHouse</code>里边，没有单独的<code>Boolean</code>类型，可以用<code>Int8</code>的0和1来表示。</p>
-<h3 id="Float-amp-Decimal"><a href="#Float-amp-Decimal" class="headerlink" title="Float &amp; Decimal"></a>Float &amp; Decimal</h3><p>官方是推荐我们使用<code>Int</code>存储，比如我们存金额的时候，会采取存<code>分</code>为单位，这样子就避免存小数。</p>
-<p>但是业务开发的时候，难免会碰到需要保留小数的后多少位，比如我们熟悉的<code>圆周率</code>。</p>
-<table>
-<thead>
-<tr>
-<th>类型</th>
-<th>取值范围</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>Float32</td>
-<td>-2147483648 - 2147483647</td>
-</tr>
-<tr>
-<td>Float64</td>
-<td>-9223372036854775808 - 9223372036854775807</td>
-</tr>
-<tr>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Decimal32(S)</td>
-<td>( -1 * 10^(9 - S), 1 * 10^(9 - S) )</td>
-</tr>
-<tr>
-<td>Decimal64(S)</td>
-<td>( -1 * 10^(18 - S), 1 * 10^(18 - S) )</td>
-</tr>
-<tr>
-<td>Decimal128(S)</td>
-<td>( -1 * 10^(38 - S), 1 * 10^(38 - S) )</td>
-</tr>
-<tr>
-<td>Decimal256(S)</td>
-<td>( -1 * 10^(76 - S), 1 * 10^(76 - S) )</td>
-</tr>
-</tbody></table>
-<h3 id="String-amp-FixedString-amp-UUID"><a href="#String-amp-FixedString-amp-UUID" class="headerlink" title="String &amp; FixedString &amp; UUID"></a>String &amp; FixedString &amp; UUID</h3><p>在<code>ClickHouse</code>中，没有<code>varchar</code>这种结构，就是简单直接的提供了<code>String</code>类型，如果我们知道值是固定的长度，就用<code>FixdString</code>类型，它表示定长，与我们语言中的数组一样，申明的时候就固定了长度。比如我们存储MD5用<code>FixedString(16)</code> ，存储SHA256用 <code>FixedString(32)</code> 。</p>
-<p>但是他提供了一种特殊的类型，就是<code>UUID</code>，专门用来存储UUID的值。</p>
-<blockquote>
-<p>UUID：通用唯一标识符 (UUID) 是一个 16 字节的数字，用于标识记录。</p>
-</blockquote>
-<p><code>ClickHouse</code>里边，<a target="_blank" rel="noopener" href="https://clickhouse.com/docs/en/sql-reference/functions/uuid-functions/">generateUUIDv4</a>可以生成UUID</p>
-<h3 id="Date-amp-DateTime"><a href="#Date-amp-DateTime" class="headerlink" title="Date &amp; DateTime"></a>Date &amp; DateTime</h3><p>时间类型，Date与DateTime的区别在于格式不一样，Date里边细分Date和Date32，DateTime细分DateTime64，他们之间的区别在于能存储的范围不一样。</p>
-<table>
-<thead>
-<tr>
-<th>名称</th>
-<th>格式</th>
-<th>取值范围</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>Date</td>
-<td>2022-04-01</td>
-<td>[1970-01-01, 2149-06-06]</td>
-</tr>
-<tr>
-<td>Date32</td>
-<td>2022-04-01</td>
-<td>[1925-01-01, 2283-11-11]</td>
-</tr>
-<tr>
-<td>DateTime</td>
-<td>2022-04-01 00:00:00</td>
-<td>[1970-01-01 00:00:00, 2106-02-07 06:28:15]</td>
-</tr>
-<tr>
-<td>DateTime64</td>
-<td>2022-04-01 00:00:00</td>
-<td>[1925-01-01 00:00:00, 2283-11-11 23:59:59.99999999] (注意: 最大值的精度是8)</td>
-</tr>
-</tbody></table>
-<p><code>DateTime64</code> 类型可以像存储其他数据列一样存储时区信息，时区会影响 <code>DateTime64</code> 类型的值如何以文本格式显示。</p>
-<h3 id="Enum"><a href="#Enum" class="headerlink" title="Enum"></a>Enum</h3><p>这个枚举和我们编程语言中的枚举可以说是一一对应了，分为8bit的枚举和16bit的枚举。</p>
-<p>8 位枚举。它最多可以包含在 [-128, 127] 范围内枚举的 256 个值。 </p>
-<p>16 位枚举。它最多可以包含 [-32768, 32767] 范围内枚举的 65536 个值。</p>
-<p>如果使用基于ClickHouse来实现数据字典，这将是一个值得深入研究的东西。</p>
-<p><a target="_blank" rel="noopener" href="https://clickhouse.com/docs/en/sql-reference/data-types/enum/">https://clickhouse.com/docs/en/sql-reference/data-types/enum/</a></p>
-<p>还有很多类型，我把它简单的归类一下，就不一一详细说明了，可以自行看文档。</p>
-<h2 id="函数数据类型"><a href="#函数数据类型" class="headerlink" title="函数数据类型"></a>函数数据类型</h2><h3 id="Nullable"><a href="#Nullable" class="headerlink" title="Nullable"></a>Nullable</h3><h3 id="LowCardinality"><a href="#LowCardinality" class="headerlink" title="LowCardinality"></a>LowCardinality</h3><h3 id="Array"><a href="#Array" class="headerlink" title="Array"></a>Array</h3><h3 id="AggregateFunction"><a href="#AggregateFunction" class="headerlink" title="AggregateFunction"></a>AggregateFunction</h3><h3 id="Nested"><a href="#Nested" class="headerlink" title="Nested"></a>Nested</h3><h3 id="Tuple"><a href="#Tuple" class="headerlink" title="Tuple"></a>Tuple</h3><h3 id="SimpleAggregateFunction"><a href="#SimpleAggregateFunction" class="headerlink" title="SimpleAggregateFunction"></a>SimpleAggregateFunction</h3><h2 id="场景类型"><a href="#场景类型" class="headerlink" title="场景类型"></a>场景类型</h2><h3 id="Map-Json？"><a href="#Map-Json？" class="headerlink" title="Map | Json？"></a>Map | Json？</h3><h3 id="Geo-保存经纬度"><a href="#Geo-保存经纬度" class="headerlink" title="Geo 保存经纬度"></a>Geo 保存经纬度</h3><h3 id="Domains-域名-IP体系"><a href="#Domains-域名-IP体系" class="headerlink" title="Domains 域名 IP体系"></a>Domains 域名 IP体系</h3><h4 id="IPv4"><a href="#IPv4" class="headerlink" title="IPv4"></a>IPv4</h4><h4 id="IPv6"><a href="#IPv6" class="headerlink" title="IPv6"></a>IPv6</h4><h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><h3 id="未定义-Nothing"><a href="#未定义-Nothing" class="headerlink" title="未定义 Nothing"></a>未定义 Nothing</h3><h3 id="时间戳-Interval"><a href="#时间戳-Interval" class="headerlink" title="时间戳 Interval"></a>时间戳 Interval</h3><p>官方文档：</p>
-<p><a target="_blank" rel="noopener" href="https://clickhouse.com/docs/en/sql-reference/data-types/">https://clickhouse.com/docs/en/sql-reference/data-types/</a></p>
-<p><a target="_blank" rel="noopener" href="https://help.aliyun.com/document_detail/146000.html">https://help.aliyun.com/document_detail/146000.html</a></p>
-<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>我是连边，专注于Java和架构领域，坚持撰写有原理，有实战，有体系的技术文章。</p>
-<p>关注 <code>订阅号@连边</code> 不错过精彩文章</p>
-<p><img src="https://mkstatic.lianbian.net/202204010752600.jpg" srcset="/img/loading.gif" lazyload alt="订阅号@连边"></p>
+<p>然后也说了，列式存储并非银弹，只是在不同的诉求下，有不同的方案取舍。</p>
+<p>推荐文章：</p>
+<p><a target="_blank" rel="noopener" href="https://draveness.me/whys-the-design-olap-column-oriented/">https://draveness.me/whys-the-design-olap-column-oriented/</a></p>
+<p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844904118872440840">https://juejin.cn/post/6844904118872440840</a></p>
 
                 
               </div>
@@ -454,7 +476,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/clickhouse/" class="category-chain-item">clickhouse</a>
+  <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/" class="category-chain-item">数据库</a>
   
   
 
@@ -481,8 +503,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>ClickHouse数据类型</div>
-      <div>https://www.lianbian.net/clickhouse/42572c4acee4.html</div>
+      <div>什么是列式存储？</div>
+      <div>https://www.lianbian.net/数据库/d6d6610971f1.html</div>
     </div>
     <div class="license-meta">
       
@@ -494,7 +516,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2022年4月1日</div>
+          <div>2022年3月6日</div>
         </div>
       
       
@@ -526,9 +548,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/redis/493ee6a41e5c.html" title="一篇文章搞定Redis Stream">
+                      <a href="/%E6%95%B0%E6%8D%AE%E5%BA%93/943175992523.html" title="ClickHouse介绍与特点">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">一篇文章搞定Redis Stream</span>
+                        <span class="hidden-mobile">ClickHouse介绍与特点</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -536,8 +558,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/%E7%AE%A1%E7%90%86/32f5423cb7f0.html" title="立项的那些事">
-                        <span class="hidden-mobile">立项的那些事</span>
+                      <a href="/java/11ea8ad5840b.html" title="MyBatis 插件原理与实战">
+                        <span class="hidden-mobile">MyBatis 插件原理与实战</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

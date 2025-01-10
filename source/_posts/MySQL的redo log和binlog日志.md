@@ -1,7 +1,7 @@
 ---
 title: MySQL的redo log和binlog日志
 keywords: mysql redo log binlog
-categories: mysql
+categories: 数据库
 summary: 今天这篇文章给大家带来MySQL中重要的两个日志 - redo log、binlog，从理论概念出发，结合图解分析，看完这篇文章之后，你能对redo log、binlog有深入的理解。
 author: 连边
 date: 2021-09-09

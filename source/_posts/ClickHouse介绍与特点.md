@@ -1,7 +1,7 @@
 ---
 title: ClickHouse介绍与特点
 keywords: clickhouse
-categories: clickhouse
+categories: 数据库
 summary: 基础的ClickHouse的介绍，讲一讲什么场景下我们使用ClickHouse。
 author: 连边
 date: 2022-03-08
