@@ -30,15 +30,15 @@
     
     <entry>
       <title>及时处理还是非及时处理</title>
-      <link href="/%E7%BC%96%E7%A8%8B/c22f453bbbe3.html"/>
-      <url>/%E7%BC%96%E7%A8%8B/c22f453bbbe3.html</url>
+      <link href="/%E7%BC%96%E7%A8%8B%E6%80%9D%E6%83%B3/c22f453bbbe3.html"/>
+      <url>/%E7%BC%96%E7%A8%8B%E6%80%9D%E6%83%B3/c22f453bbbe3.html</url>
       
         <content type="html"><![CDATA[<p>在编写业务代码的时候，常规性的是<strong>及时处理</strong>业务逻辑，因为写代码一般是串行的，先做什么事，再做什么事，但是有时候为了业务接耦等原因，也会用到非及时处理的方式，比如常用的多线程，消息队列，定时任务都属于<strong>非及时处理</strong>。</p><p>用及时处理，还是非及时处理，应该从哪些方面思考呢？</p><p>第一思考方面是<strong>业务</strong>，其次是<strong>扩展性</strong>和<strong>容错性</strong>。</p><p>举几个最近遇到业务场景，思考下应该要用什么处理方式。</p><p><strong>场景1：</strong>做用户行为统计功能，设计的系统中有页面基础信息表需要维护，页面基础信息表包含页面标题、页面路径字段，前端工程师埋点上报的数据中包含页面标题和页面路径。</p><p>方案1（及时处理）：每次在上报埋点行为数据的时候进行保存，由于基础信息只需要保存一次，所以需要在保存之前判断页面基础信息是否存在；</p><p>方案2（非及时处理）：保存的地方不做基础信息保存的处理，单独启动一个定时任务，定时扫描最近5分钟上报的页面是否存在于基础信息表中，批量进行基础信息处理。</p><p>从业务出发，会选择方案2，因为统计数据对实时性要求没有那么高，而且代码业务也实现了解耦。</p><p><strong>场景2：</strong>根据制成品数量来完工订单的逻辑，比如某个订单需要制作某个产品（制成品）100件，应该怎么样控制订单状态？</p><p>方案1（及时处理）：每个制成品完工的时候与订单数量对比，如果达到订单数量，进行订单完工订单处理；</p><p>方案2（非及时处理）：制成品完工不做处理，单独启动一个定时任务进行扫描，如果到达指定数量，进行订单完工；</p><p>从业务出发，会选择方案1，因为订单完工状态必须及时更新，以便下一个订单及时开始。</p><p>先从业务出发，想清楚大方向是采用及时处理还是非及时处理，然后再基于处理方案选择中间件，进行架构。</p><p>好的架构中，<strong>剖析业务是首要任务</strong>，然后兼顾<strong>扩展性</strong>和<strong>容错性</strong>，后期将会节约很多运营工作和重构工作。</p>]]></content>
       
       
       <categories>
           
-          <category> 编程 </category>
+          <category> 编程思想 </category>
           
       </categories>
       
@@ -55,15 +55,15 @@
     
     <entry>
       <title>慎用非结构化数据</title>
-      <link href="/%E7%BC%96%E7%A8%8B/e36826130851.html"/>
-      <url>/%E7%BC%96%E7%A8%8B/e36826130851.html</url>
+      <link href="/%E7%BC%96%E7%A8%8B%E6%80%9D%E6%83%B3/e36826130851.html"/>
+      <url>/%E7%BC%96%E7%A8%8B%E6%80%9D%E6%83%B3/e36826130851.html</url>
       
         <content type="html"><![CDATA[<p>在nosql、json、map满天飞的年代，我还是喜欢用<strong>实体类包装的结构化数据，因为实体类结构化数据编码方式总会给我一种踏实感</strong>。</p><p>文章中讲的结构化数据，指关系型数据库的每一行数据、编码中的实体类。</p><p>在日常工作中，开发业务代码者应该还是居多，也有一些少数是开发功能性的中间件。</p><p>开发业务代码，应该在业务功能实现的同时，还需要特别注意<strong>代码的可读性</strong>和<strong>功能的扩展性</strong>。</p><p>这其中有一条铁律，即<strong>慎用非结构化数据</strong>，包括但不限于map、json。</p><p>刚参加工作那会儿，在电商公司负责营销板块银行卡支付打折活动。</p><p>业务场景是这样子的，使用工行卡支付，打9.8折，使用中行卡支付，打9.9折，在预见的将来又会有建行卡9.5折这类型的营销活动。</p><p>如果是你来负责，你在设计思考的时候，会思考哪些方面呢？</p><p>当时的实现方式是直接把营销活动信息（活动类型、折扣率、支付推荐语…）序列化存入数据库当中，当时还沾沾自喜的想着，我这个扩展变更很灵活，需要增加新功能的时候，不需要进行数据库的字段变更，但是牺牲了<strong>数据库层面的可读性</strong>，后来经常因为<strong>反序列化key不存在</strong>出过几次生产事故，大致是以为反序列化后存在某个key，实际又没有该key，迫不得已只能在代码上对反序列化结果做格式判断，从而导致非业务代码增加，又降低了<strong>代码层面的可读性</strong>。实现方式还有一个弊端，非常<strong>不利于功能扩展</strong>，营销活动信息会逐步增加，新版本扩展了新的序列化字段，在新版本上线的时候，对原来的数据，需要进行初始化，增加了运维成本，如果没有考虑初始化，到又会出现上面<strong>反序列化key不存在</strong>的问题。</p><p>上面是一个很好的反面例子，在设计思考的阶段，只考虑了业务功能的实现，没有充分考虑<strong>可读性</strong>与<strong>扩展性</strong>。</p><p>根据我的理解，把可读性从优到良分为4个层次：</p><p>**1.代码可读，数据可读    **</p><p>**2.代码可读，数据不可读    **</p><p>**3.数据可读，代码不可读    **</p><p><strong>4.代码不可读，数据不可读</strong></p><p>最近团队重新做质量追溯的功能板块，复盘去年设计一个追溯数据存储方案，又犯了类似的错误。</p><p>使用了非结构化数据Map（可以理解为MySQL的json格式）结构进行了数据存储。</p><p>犯了考虑问题不全面的错误，只考虑了功能的实现，没有考虑数据后期的<strong>可读性</strong>与<strong>维护性</strong>。最后导致采集的数据根本没法用。</p><p>现在复盘一下，我们采集数据应该自顶向下的来进行思考，思考采集数据的目的是什么？</p><p>是为了把数据采集上来存进数据库？还是为了真正的把数据分文别类的存储起来，然后把数据利用起来？当然是后者，我们当时连采集数据的结构都没有定义清楚，尽想着功能的灵活性了，后来纯粹的把事情做成了前者。</p><p>在v2.0的版本上，<strong>强调要使用结构化进行存储，没有把结构思考清楚，不进行数据存储。</strong></p><p><strong>重点要把输入和输出的数据结构定义好，将来优化逻辑，重写可控，测试也可控，反之则根本不敢动手，因为非结构化的数据扩散至项目的各处，不能评估其影响范围。</strong></p><p>不要写太“灵活”的代码，灵活就是给垃圾代码、垃圾数据提供给有利的生长环境，让代码看上去“呆”一点，一段代码只处理一个业务，就算几个业务之间有逻辑重复的地方，复制粘贴重复的代码也是可取的，一切从业务出发，业务是独立的，代码就应该是独立的，应该由业务定义代码，而不是代码来定义业务，因为业务现阶段看似一样，将来差别可能会很大。</p><p>一个好的架构中，<strong>可读性</strong>和<strong>维护性</strong>是高于业务的实现，因为没有保护好这两点，后期将会需要投入更大的人力来进行维护功能与重构工作，而保证可读性和维护性，<strong>慎用非结构化数据是铁律</strong>。</p>]]></content>
       
       
       <categories>
           
-          <category> 编程 </category>
+          <category> 编程思想 </category>
           
       </categories>
       
@@ -80,15 +80,15 @@
     
     <entry>
       <title>慎用数据字典</title>
-      <link href="/%E7%BC%96%E7%A8%8B/501bcdfdbadb.html"/>
-      <url>/%E7%BC%96%E7%A8%8B/501bcdfdbadb.html</url>
+      <link href="/%E7%BC%96%E7%A8%8B%E6%80%9D%E6%83%B3/501bcdfdbadb.html"/>
+      <url>/%E7%BC%96%E7%A8%8B%E6%80%9D%E6%83%B3/501bcdfdbadb.html</url>
       
         <content type="html"><![CDATA[<p>还是那个陈年老项目，在熟悉一个新模块，看到一些代码，记录一下。</p><p>编程中使用数据字典是很常见的，有时候使用它为了图方便能够造成滥用，最常见的的场景就是在数据库的数据字典里面配置某种个类型，然后在某种类型下面维护很多值，又在代码中强依赖它来写业务逻辑处理，这对代码的可读性是不友好的。</p><p>比如：在字典里面配置了“设备类型”这种类型字典，然后有值列表，设备类型包含1、2、3 …（或者稍微友好一些使用code = device_type_mac），然后在代码中根据设备类型做对应的业务处理。</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">if</span>(deviceType == <span class="hljs-number">1</span>) &#123;<br><span class="hljs-comment">// 针对设备类型1，做对应的业务处理  </span><br>&#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(deviceType == <span class="hljs-number">2</span>) &#123;<br><span class="hljs-comment">// 针对设备类型2，做对应的业务处理  </span><br>&#125;<br></code></pre></td></tr></table></figure><p>这样子会导致2个问题：</p><ol><li>需要跨工具职能去了解业务，假设了解某个设备做了哪些业务处理，总是往返于代码和数据当中，可能还因为数据的缺失导致对业务理解的断层，有点像我们数据库的存储过程和触发器这些工具的缺点，它的出发点是好的，是为了方便我们更方便的维护数据，但是它对我们代码的可读性也是不友好的，<strong>总要从代码和数据两个方面结合才能看到业务的整体</strong> 。</li><li>某天系统迁移到新的场景，有新的设备类型，可能由于我的设备类型没有正确配置，导致业务逻辑漏未做处理，会出现那种不是很明显，但是很重要的逻辑被疏漏，而且不容易排查。</li></ol><p>解决的方式，我推荐尽量用<strong>枚举</strong>来实现对应的功能，因为这种针对性业务处理它的<strong>枚举值是有限的</strong>，它能从引用关系就能看到整体业务的全貌，如果迁移到新的场景，它能显现的告诉阅读人员怎样去扩展。具体实现对应的业务处理可以结合<strong>策略模式</strong>优雅的扩展。</p>]]></content>
       
       
       <categories>
           
-          <category> 编程 </category>
+          <category> 编程思想 </category>
           
       </categories>
       
@@ -105,15 +105,15 @@
     
     <entry>
       <title>编程的这几个习惯要不得</title>
-      <link href="/%E7%BC%96%E7%A8%8B/5b04bba780ac.html"/>
-      <url>/%E7%BC%96%E7%A8%8B/5b04bba780ac.html</url>
+      <link href="/%E7%BC%96%E7%A8%8B%E6%80%9D%E6%83%B3/5b04bba780ac.html"/>
+      <url>/%E7%BC%96%E7%A8%8B%E6%80%9D%E6%83%B3/5b04bba780ac.html</url>
       
         <content type="html"><![CDATA[<p>最近有幸接手到一个成年老项目，看到一些问题，整理一下。</p><h3 id="不要使用Map作为返回值"><a href="#不要使用Map作为返回值" class="headerlink" title="不要使用Map作为返回值"></a>不要使用Map作为返回值</h3><p>强烈呼吁不要使用Map作为返回值，它的唯一好处是开发速度快，但是因为那一点点的开发速度，降低代码的可读性、可维护性，是非常不划算的。</p><p>他会导致几个问题，新人接手不能从返回值中了解到业务，而是要一层一层的跟进到SQL层面；还有就是如果数据库值为null，返回的Map中又无对于的key，前端同学就会很纳闷，怎么每条数据返回的数据结构都不一致。</p><h3 id="不要在SQL里面处理业务逻辑"><a href="#不要在SQL里面处理业务逻辑" class="headerlink" title="不要在SQL里面处理业务逻辑"></a>不要在SQL里面处理业务逻辑</h3><p>最近修改一个迭代近10年的老项目，由于迭代时间久，业务功能很丰富，这次需要重启一个业务模块，由于无文档，业务配置项不知道入口在哪里，所以只能从代码里面查找对应功能，看到了该模块很多几屏都放不下的SQL，SQL里面有各种子查询、三元运算符，看得人是眼花缭乱，基本所有的业务，都揉杂在SQL里面了，调试也无从下手，也无备注。</p><p>为了方便后续人员进行问题排查和了解业务，不要在SQL里面处理业务，可读性差，不方便业务功能调试，正确的方式应该是利用代码来处理业务逻辑。</p><h3 id="从工具职能上来解决问题"><a href="#从工具职能上来解决问题" class="headerlink" title="从工具职能上来解决问题"></a>从工具职能上来解决问题</h3><p>看到很多代码，总喜欢跨职能来解决问题，数据库有脏数据问题，正确的方式应该是找到脏数据产生的根因并进行生产数据修复；错误的方式就是在使用数据的时候，去处理数据，比如说从业务出发某记录数应该是不重复的，但是在使用的时候发现了重复数据，立即写代码来处理该重复数据问题。</p><p>数据问题，就应该从数据上去处理好，找到根因，处理好脏数据。而不是本来是数据的工作，错误的利用代码来写逻辑处理。</p><h3 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h3><p>最近在工作中有两点感悟，一是简单的编程规则很容易掌握，但是让一个团队在工作中好好的运用这些规则，又会很难。二是把简单的、常识性的知识点运用到实际工作中，就已经胜过了80%的人。</p><p>技能型的知识学习是为了运用，而不是为了徒增理论知识，先把简单的知识运用到工作中，然后再去琢磨新技术、新语法吧。</p>]]></content>
       
       
       <categories>
           
-          <category> 编程 </category>
+          <category> 编程思想 </category>
           
       </categories>
       
@@ -255,15 +255,15 @@
     
     <entry>
       <title>文章分类维护文档</title>
-      <link href="/%E7%BC%96%E7%A8%8B/67d69e55ec02.html"/>
-      <url>/%E7%BC%96%E7%A8%8B/67d69e55ec02.html</url>
+      <link href="/%E7%BC%96%E7%A8%8B%E6%80%9D%E6%83%B3/67d69e55ec02.html"/>
+      <url>/%E7%BC%96%E7%A8%8B%E6%80%9D%E6%83%B3/67d69e55ec02.html</url>
       
-        <content type="html"><![CDATA[<p><code>Java</code></p><p><code>团队管理</code></p><p><code>数据库</code></p><p><code>编程</code></p><p><code>redis</code></p><p><code>数字化</code></p>]]></content>
+        <content type="html"><![CDATA[<p><code>Java</code></p><p><code>团队管理</code></p><p><code>数据库</code></p><p><code>编程思想</code></p><p><code>redis</code></p><p><code>数字化</code></p>]]></content>
       
       
       <categories>
           
-          <category> 编程 </category>
+          <category> 编程思想 </category>
           
       </categories>
       
@@ -299,15 +299,15 @@
     
     <entry>
       <title>软件系统稳定的策略</title>
-      <link href="/%E7%BC%96%E7%A8%8B/f4d10d285dea.html"/>
-      <url>/%E7%BC%96%E7%A8%8B/f4d10d285dea.html</url>
+      <link href="/%E7%BC%96%E7%A8%8B%E6%80%9D%E6%83%B3/f4d10d285dea.html"/>
+      <url>/%E7%BC%96%E7%A8%8B%E6%80%9D%E6%83%B3/f4d10d285dea.html</url>
       
         <content type="html"><![CDATA[<p>记录一些最近发生的系统问题，以及制定的解决策略。</p><h3 id="场景1"><a href="#场景1" class="headerlink" title="场景1"></a>场景1</h3><p>关键同事请假，开发工作和运维工作无法正常运行。</p><p><strong>问题：</strong>项目和人的耦合度太高。</p><p><strong>策略：</strong>从业务入手，加强团队培训，设立A/B角色。</p><h3 id="场景2"><a href="#场景2" class="headerlink" title="场景2"></a>场景2</h3><p>慢SQL堆积，点击一个页面查询，直接把系统拖垮。</p><p><strong>问题：</strong>缺少SQL审查环节，系统没有进行隔离。</p><p><strong>策略：</strong>增加SQL审核机制，主业务系统和数控报表系统进行隔离，报表系统的查询，不影响正常的业务调度。</p><h3 id="场景3"><a href="#场景3" class="headerlink" title="场景3"></a>场景3</h3><p>A工程师觉得a中间件好，引入到项目，B工程师也引入他觉得好的中间件。</p><p><strong>问题：</strong>中间件混乱，实现同样功能的类似中间件重复引入，增加了维护的“黑匣子”。</p><p><strong>策略：</strong>中间件标准化，让指定部门（如基础架构部门）负责中间件的引入，同时也增加适用于所有人的中间件引入流程规范。</p><p><img src="https://mkstatic.lianbian.net/202312031107647.png" alt="时间的力量"></p><h3 id="场景4"><a href="#场景4" class="headerlink" title="场景4"></a>场景4</h3><p>系统不扛压，稍微有些数据，服务器资源占用直线上升。</p><p><strong>问题：</strong>程序员素养需要提升，提高时间复杂度和空间复杂度的技术培训。</p><p><strong>策略：</strong>在上线环节中增加压测节点，边技术培训边通过压测结果驱动系统往一个指定的性能指标看齐。</p><h3 id="场景5"><a href="#场景5" class="headerlink" title="场景5"></a>场景5</h3><p>系统不稳定，发版本总有会有些小问题。</p><p><strong>问题：</strong>代码质量考虑不周全，而工业对软件的稳定要求极高。</p><p><strong>策略：</strong>增加测试环节，把稳定的、公用的板块进行抽离（如与设备打交道的板块），增加代码review机制。</p><h3 id="场景6"><a href="#场景6" class="headerlink" title="场景6"></a>场景6</h3><p>客户反馈挂了，我们才知道系统挂了。</p><p><strong>问题：</strong>业务是否正常提供服务，监控不及时。</p><p><strong>策略：</strong>增加系统的物理主备和应用服务报警监测。</p><h3 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h3><p>以上是最近遇到常见场景及策略总结，最重要的还是按照策略去<strong>执行</strong>。</p>]]></content>
       
       
       <categories>
           
-          <category> 编程 </category>
+          <category> 编程思想 </category>
           
       </categories>
       

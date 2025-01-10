@@ -18,15 +18,15 @@
   <meta name="author" content="连边">
   <meta name="keywords" content="Java 编程">
   
-    <meta name="description" content="在编写业务代码的时候，常规性的是及时处理业务逻辑，因为写代码一般是串行的，先做什么事，再做什么事，但是有时候为了业务接耦等原因，也会用到非及时处理的方式，比如常用的多线程，消息队列，定时任务都属于非及时处理。 用及时处理，还是非及时处理，应该从哪些方面思考呢？ 第一思考方面是业务，其次是扩展性和容错性。 举几个最近遇到业务场景，思考下应该要用什么处理方式。 场景1：做用户行为统计功能，设计的系统中">
+    <meta name="description" content="还是那个陈年老项目，在熟悉一个新模块，看到一些代码，记录一下。 编程中使用数据字典是很常见的，有时候使用它为了图方便能够造成滥用，最常见的的场景就是在数据库的数据字典里面配置某种个类型，然后在某种类型下面维护很多值，又在代码中强依赖它来写业务逻辑处理，这对代码的可读性是不友好的。 比如：在字典里面配置了“设备类型”这种类型字典，然后有值列表，设备类型包含1、2、3 …（或者稍微友好一些使用code">
 <meta property="og:type" content="article">
-<meta property="og:title" content="及时处理还是非及时处理">
-<meta property="og:url" content="https://www.lianbian.net/%E7%BC%96%E7%A8%8B/c22f453bbbe3.html">
+<meta property="og:title" content="慎用数据字典">
+<meta property="og:url" content="https://www.lianbian.net/%E7%BC%96%E7%A8%8B%E6%80%9D%E6%83%B3/501bcdfdbadb.html">
 <meta property="og:site_name" content="连边">
-<meta property="og:description" content="在编写业务代码的时候，常规性的是及时处理业务逻辑，因为写代码一般是串行的，先做什么事，再做什么事，但是有时候为了业务接耦等原因，也会用到非及时处理的方式，比如常用的多线程，消息队列，定时任务都属于非及时处理。 用及时处理，还是非及时处理，应该从哪些方面思考呢？ 第一思考方面是业务，其次是扩展性和容错性。 举几个最近遇到业务场景，思考下应该要用什么处理方式。 场景1：做用户行为统计功能，设计的系统中">
+<meta property="og:description" content="还是那个陈年老项目，在熟悉一个新模块，看到一些代码，记录一下。 编程中使用数据字典是很常见的，有时候使用它为了图方便能够造成滥用，最常见的的场景就是在数据库的数据字典里面配置某种个类型，然后在某种类型下面维护很多值，又在代码中强依赖它来写业务逻辑处理，这对代码的可读性是不友好的。 比如：在字典里面配置了“设备类型”这种类型字典，然后有值列表，设备类型包含1、2、3 …（或者稍微友好一些使用code">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2024-09-02T16:00:00.000Z">
-<meta property="article:modified_time" content="2024-09-23T16:13:16.714Z">
+<meta property="article:published_time" content="2024-06-24T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-01-10T06:57:01.620Z">
 <meta property="article:author" content="连边">
 <meta property="article:tag" content="Java">
 <meta name="twitter:card" content="summary_large_image">
@@ -35,7 +35,7 @@
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>及时处理还是非及时处理 - 连边</title>
+  <title>慎用数据字典 - 连边</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -201,7 +201,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="及时处理还是非及时处理"></span>
+            <span id="subtitle" data-typed-text="慎用数据字典"></span>
           
         </div>
 
@@ -212,8 +212,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2024-09-03 00:00" pubdate>
-          2024年9月3日 凌晨
+        <time datetime="2024-06-25 00:00" pubdate>
+          2024年6月25日 凌晨
         </time>
       </span>
     
@@ -224,7 +224,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          730 字
+          702 字
         
       </span>
     
@@ -235,7 +235,7 @@
         
         
         
-          7 分钟
+          6 分钟
         
       </span>
     
@@ -272,25 +272,22 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">及时处理还是非及时处理</h1>
+            <h1 id="seo-header">慎用数据字典</h1>
             
             
               <div class="markdown-body">
                 
-                <p>在编写业务代码的时候，常规性的是<strong>及时处理</strong>业务逻辑，因为写代码一般是串行的，先做什么事，再做什么事，但是有时候为了业务接耦等原因，也会用到非及时处理的方式，比如常用的多线程，消息队列，定时任务都属于<strong>非及时处理</strong>。</p>
-<p>用及时处理，还是非及时处理，应该从哪些方面思考呢？</p>
-<p>第一思考方面是<strong>业务</strong>，其次是<strong>扩展性</strong>和<strong>容错性</strong>。</p>
-<p>举几个最近遇到业务场景，思考下应该要用什么处理方式。</p>
-<p><strong>场景1：</strong>做用户行为统计功能，设计的系统中有页面基础信息表需要维护，页面基础信息表包含页面标题、页面路径字段，前端工程师埋点上报的数据中包含页面标题和页面路径。</p>
-<p>方案1（及时处理）：每次在上报埋点行为数据的时候进行保存，由于基础信息只需要保存一次，所以需要在保存之前判断页面基础信息是否存在；</p>
-<p>方案2（非及时处理）：保存的地方不做基础信息保存的处理，单独启动一个定时任务，定时扫描最近5分钟上报的页面是否存在于基础信息表中，批量进行基础信息处理。</p>
-<p>从业务出发，会选择方案2，因为统计数据对实时性要求没有那么高，而且代码业务也实现了解耦。</p>
-<p><strong>场景2：</strong>根据制成品数量来完工订单的逻辑，比如某个订单需要制作某个产品（制成品）100件，应该怎么样控制订单状态？</p>
-<p>方案1（及时处理）：每个制成品完工的时候与订单数量对比，如果达到订单数量，进行订单完工订单处理；</p>
-<p>方案2（非及时处理）：制成品完工不做处理，单独启动一个定时任务进行扫描，如果到达指定数量，进行订单完工；</p>
-<p>从业务出发，会选择方案1，因为订单完工状态必须及时更新，以便下一个订单及时开始。</p>
-<p>先从业务出发，想清楚大方向是采用及时处理还是非及时处理，然后再基于处理方案选择中间件，进行架构。</p>
-<p>好的架构中，<strong>剖析业务是首要任务</strong>，然后兼顾<strong>扩展性</strong>和<strong>容错性</strong>，后期将会节约很多运营工作和重构工作。</p>
+                <p>还是那个陈年老项目，在熟悉一个新模块，看到一些代码，记录一下。</p>
+<p>编程中使用数据字典是很常见的，有时候使用它为了图方便能够造成滥用，最常见的的场景就是在数据库的数据字典里面配置某种个类型，然后在某种类型下面维护很多值，又在代码中强依赖它来写业务逻辑处理，这对代码的可读性是不友好的。</p>
+<p>比如：在字典里面配置了“设备类型”这种类型字典，然后有值列表，设备类型包含1、2、3 …（或者稍微友好一些使用code = device_type_mac），然后在代码中根据设备类型做对应的业务处理。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">if</span>(deviceType == <span class="hljs-number">1</span>) &#123;<br><span class="hljs-comment">// 针对设备类型1，做对应的业务处理  </span><br>&#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(deviceType == <span class="hljs-number">2</span>) &#123;<br><span class="hljs-comment">// 针对设备类型2，做对应的业务处理  </span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这样子会导致2个问题：</p>
+<ol>
+<li>需要跨工具职能去了解业务，假设了解某个设备做了哪些业务处理，总是往返于代码和数据当中，可能还因为数据的缺失导致对业务理解的断层，有点像我们数据库的存储过程和触发器这些工具的缺点，它的出发点是好的，是为了方便我们更方便的维护数据，但是它对我们代码的可读性也是不友好的，<strong>总要从代码和数据两个方面结合才能看到业务的整体</strong> 。</li>
+<li>某天系统迁移到新的场景，有新的设备类型，可能由于我的设备类型没有正确配置，导致业务逻辑漏未做处理，会出现那种不是很明显，但是很重要的逻辑被疏漏，而且不容易排查。</li>
+</ol>
+<p>解决的方式，我推荐尽量用<strong>枚举</strong>来实现对应的功能，因为这种针对性业务处理它的<strong>枚举值是有限的</strong>，它能从引用关系就能看到整体业务的全貌，如果迁移到新的场景，它能显现的告诉阅读人员怎样去扩展。具体实现对应的业务处理可以结合<strong>策略模式</strong>优雅的扩展。</p>
 
                 
               </div>
@@ -309,7 +306,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/%E7%BC%96%E7%A8%8B/" class="category-chain-item">编程</a>
+  <a href="/categories/%E7%BC%96%E7%A8%8B%E6%80%9D%E6%83%B3/" class="category-chain-item">编程思想</a>
   
   
 
@@ -336,8 +333,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>及时处理还是非及时处理</div>
-      <div>https://www.lianbian.net/编程/c22f453bbbe3.html</div>
+      <div>慎用数据字典</div>
+      <div>https://www.lianbian.net/编程思想/501bcdfdbadb.html</div>
     </div>
     <div class="license-meta">
       
@@ -349,7 +346,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2024年9月3日</div>
+          <div>2024年6月25日</div>
         </div>
       
       
@@ -381,9 +378,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/%E6%95%B0%E5%AD%97%E5%8C%96/99ef44486532.html" title="更专注一些">
+                      <a href="/%E7%BC%96%E7%A8%8B%E6%80%9D%E6%83%B3/e36826130851.html" title="慎用非结构化数据">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">更专注一些</span>
+                        <span class="hidden-mobile">慎用非结构化数据</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -391,8 +388,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/%E7%BC%96%E7%A8%8B/e36826130851.html" title="慎用非结构化数据">
-                        <span class="hidden-mobile">慎用非结构化数据</span>
+                      <a href="/%E7%BC%96%E7%A8%8B%E6%80%9D%E6%83%B3/5b04bba780ac.html" title="编程的这几个习惯要不得">
+                        <span class="hidden-mobile">编程的这几个习惯要不得</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
