@@ -1,7 +1,7 @@
 ---
 title: 解决Maven同一依赖多版本共存
 keywords: java Maven
-categories: Maven
+categories: java
 author: 连边
 date: 2021-10-28
 tags:
