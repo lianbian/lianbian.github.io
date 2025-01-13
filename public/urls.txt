@@ -36,10 +36,10 @@ https://www.lianbian.net/redis/21e0e69ffb2a.html
 https://www.lianbian.net/java/236c4f4e7821.html
 https://www.lianbian.net/java/8cd76013616c.html
 https://www.lianbian.net/java/8558ecaea2fb.html
-https://www.lianbian.net/categories/index.html
-https://www.lianbian.net/tags/index.html
-https://www.lianbian.net/friends/index.html
 https://www.lianbian.net/about/index.html
+https://www.lianbian.net/categories/index.html
+https://www.lianbian.net/friends/index.html
+https://www.lianbian.net/tags/index.html
 https://www.lianbian.net/redis/c8b89b4766ce.html
 https://www.lianbian.net/java/192b8638c566.html
 https://www.lianbian.net/java/d1d8d45277af.html
