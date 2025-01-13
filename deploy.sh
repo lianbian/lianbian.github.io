@@ -1,4 +1,4 @@
-# hexo clean
+hexo clean
 hexo generate
 git add .
 git commit -m "博客文章发布"
