@@ -1,0 +1,779 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="连边">
+  <meta name="keywords" content="java">
+  
+    <meta name="description" content="大家好，我是连边。 之前在写不重启JVM替换掉已经加载的类，有读者朋友要我写一篇关于开发环境不重启服务也能进行功能开发的文章，我呢，最近接手了一个项目，启动项目服务需要10分钟，在项目启动速度无法优化的前提下，为了节约时间摸鱼，为了能敲更多的bug，为了能掉更多的头发，所以呢，机缘巧合，开整。 文章导读 环境Spring Boot 2.3.2 RELEASE +Mybatis-plus 3.2.2">
+<meta property="og:type" content="article">
+<meta property="og:title" content="不重启服务进行功能开发，热部署">
+<meta property="og:url" content="https://www.lianbian.net/java/8558ecaea2fb.html">
+<meta property="og:site_name" content="连边">
+<meta property="og:description" content="大家好，我是连边。 之前在写不重启JVM替换掉已经加载的类，有读者朋友要我写一篇关于开发环境不重启服务也能进行功能开发的文章，我呢，最近接手了一个项目，启动项目服务需要10分钟，在项目启动速度无法优化的前提下，为了节约时间摸鱼，为了能敲更多的bug，为了能掉更多的头发，所以呢，机缘巧合，开整。 文章导读 环境Spring Boot 2.3.2 RELEASE +Mybatis-plus 3.2.2">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://mkstatic.lianbian.net/202112012347413.png">
+<meta property="og:image" content="http://mkstatic.lianbian.net/202111251943777.png">
+<meta property="og:image" content="http://mkstatic.lianbian.net/202111251949436.png">
+<meta property="og:image" content="http://mkstatic.lianbian.net/202111251940342.png">
+<meta property="og:image" content="http://mkstatic.lianbian.net/202111251950958.png">
+<meta property="og:image" content="http://mkstatic.lianbian.net/202111251951055.png">
+<meta property="og:image" content="http://mkstatic.lianbian.net/202112012325135.png">
+<meta property="og:image" content="http://mkstatic.lianbian.net/202112012325174.png">
+<meta property="og:image" content="http://mkstatic.lianbian.net/202112012326934.png">
+<meta property="og:image" content="http://mkstatic.lianbian.net/202112012327419.png">
+<meta property="og:image" content="http://mkstatic.lianbian.net/202112012327652.png">
+<meta property="article:published_time" content="2021-12-02T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-01-22T08:28:33.984Z">
+<meta property="article:author" content="连边">
+<meta property="article:tag" content="java">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://mkstatic.lianbian.net/202112012347413.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>不重启服务进行功能开发，热部署 - 连边</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"www.lianbian.net","root":"/","version":"1.9.5","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>连边</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="不重启服务进行功能开发，热部署"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2021-12-03 00:00" pubdate>
+          2021年12月3日 凌晨
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.8k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          24 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">不重启服务进行功能开发，热部署</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>大家好，我是连边。</p>
+<p>之前在写<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/Lw9kQZEl5eTMsKxNSNMVww">不重启JVM替换掉已经加载的类</a>，有读者朋友要我写一篇关于开发环境不重启服务也能进行功能开发的文章，我呢，最近接手了一个项目，启动项目服务需要<code>10分钟</code>，在项目启动速度无法优化的前提下，为了节约时间摸鱼，为了能敲更多的<code>bug</code>，为了能掉更多的头发，所以呢，机缘巧合，开整。</p>
+<h2 id="文章导读"><a href="#文章导读" class="headerlink" title="文章导读"></a>文章导读</h2><p><img src="http://mkstatic.lianbian.net/202112012347413.png" srcset="/img/loading.gif" lazyload alt="不重启服务进行功能开发"></p>
+<h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><p><code>Spring Boot 2.3.2 RELEASE</code> +<code>Mybatis-plus 3.2.2</code></p>
+<p>不要看着这个环境不适合就跑了，不要怕，是通用的，只是我是在这种环境下写的<code>JavaHotDevbugTool</code>这个工具demo。</p>
+<h2 id="分析问题"><a href="#分析问题" class="headerlink" title="分析问题"></a>分析问题</h2><p>我们在日常开发过程中，改得最多的无非是<code>控制器</code>、<code>接口层</code>，还是就是<code>mapper xml</code>；不管我们修改一个字母，还是更细微的改动，都需要重启服务，这个重启是重启整个<code>Spring</code>容器，粒度相当大，当我们应用包含了较多的<code>bean</code>的时候，重启的时候还是挺久的，像我现在接手的这个项目，就是<code>10分钟</code>，在开发调试阶段，这个时间是无法接受的，自然的就想着从两方面下手，一种方式是缩短启动时间，还有一种就是热部署（在不重启服务的前提下进行开发）。我选择了后者，因为前者需要对业务太大入侵性太大。</p>
+<p><strong>而热部署就很容易想到能不能增量部署，即没有变更的文件，我们就不去重新加载，只加载有变更的文件。</strong></p>
+<p>想想我们日常开发当中，改得最多的就是java文件和mybatis的xml文件，所以这篇文章就是要解决两个问题，<strong>java文件和xml文件的热更新问题</strong>。</p>
+<h2 id="Java文件热更新"><a href="#Java文件热更新" class="headerlink" title="Java文件热更新"></a>Java文件热更新</h2><h3 id="DevTools介绍"><a href="#DevTools介绍" class="headerlink" title="DevTools介绍"></a>DevTools介绍</h3><p>spring为开发者提供了一个名为<code>spring-boot-devtools</code>的模块来使Spring Boot应用支持热部署，提高开发者的开发效率，无需手动重启Spring Boot应用。原理是使用了两个<code>ClassLoader</code>，一个<code>Classloader</code>加载那些不会改变的类（第三方Jar包），另一个<code>ClassLoader</code>加载会更改的类，称为<code>restart ClassLoader</code>,这样在有代码更改的时候，原来的<code>restart ClassLoader</code> 被丢弃，重新创建一个<code>restart ClassLoader</code>，由于需要加载的类相比较少，所以实现了较快的重启时间。</p>
+<h3 id="引用包"><a href="#引用包" class="headerlink" title="引用包"></a>引用包</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.boot<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-boot-devtools<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">optional</span>&gt;</span>true<span class="hljs-tag">&lt;/<span class="hljs-name">optional</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p><img src="http://mkstatic.lianbian.net/202111251943777.png" srcset="/img/loading.gif" lazyload alt="配置pom并引用"></p>
+<h3 id="重启服务"><a href="#重启服务" class="headerlink" title="重启服务"></a>重启服务</h3><p><img src="http://mkstatic.lianbian.net/202111251949436.png" srcset="/img/loading.gif" lazyload alt="重启服务"></p>
+<h3 id="测试效果"><a href="#测试效果" class="headerlink" title="测试效果"></a>测试效果</h3><p><strong>手动编译</strong>快捷键编译（ctrl + f9），网络上有很多帖子，说<code>idea</code>有一个保存的时候，自动编译功能，我几番设置没有成功，后来选择了手动编译，一个字：稳。</p>
+<p><strong>编译的本质</strong>可以简单的理解为是重新生成我们target文件下边的.class文件。</p>
+<p><img src="http://mkstatic.lianbian.net/202111251940342.png" srcset="/img/loading.gif" lazyload alt="编译进度条"></p>
+<p>如果有类热更新了，会有相应的提示，如下图：</p>
+<p><img src="http://mkstatic.lianbian.net/202111251950958.png" srcset="/img/loading.gif" lazyload alt="热更新代码"></p>
+<p><img src="http://mkstatic.lianbian.net/202111251951055.png" srcset="/img/loading.gif" lazyload alt="reload成功提示"></p>
+<p>可以更深入的进行打断点进行调试，都是有效果的，这里需要注意的一点：</p>
+<p><strong>不是java文件的所有地方都有效果，像新增文件、修改注解参数之类的是无效果的，和他的加载方式有关系，新增控制器什么的，只能重启服务。</strong></p>
+<p>解决了Java文件的热更新，我们继续看另外一个高频更改的<code>mapper xml</code>文件的热更新。</p>
+<h2 id="Mapper-XML文件热更新"><a href="#Mapper-XML文件热更新" class="headerlink" title="Mapper XML文件热更新"></a>Mapper XML文件热更新</h2><p>在<code>Mybatis</code>在<code>3.0</code>以前的版本，有一个<code>MybatisMapperRefresh</code>类，但是在<code>3.0</code>的版本移除改功能了，这也是为什么下边的配置无效的原因。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs xml">mybatis-plus:<br>  global-config:<br>    #刷新mapper 调试神器<br>    refresh-mapper: true<br></code></pre></td></tr></table></figure>
+
+
+
+<p>我使用的<code>3.3.2</code>版本，因为我是在<code>spring boot</code>环境中使用，所以加上如下引用：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>com.baomidou<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>mybatis-plus-boot-starter<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>3.3.2<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="具体步骤"><a href="#具体步骤" class="headerlink" title="具体步骤"></a>具体步骤</h3><ol>
+<li>找到所有的<code>mapper xml</code>路径；</li>
+<li>启动线程监听；</li>
+<li>重新加载<code>xml</code>文件；</li>
+</ol>
+<h3 id="XmlMapperReload类"><a href="#XmlMapperReload类" class="headerlink" title="XmlMapperReload类"></a>XmlMapperReload类</h3><p><strong>定义</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// XmlMapperReload 类</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">XmlMapperReload</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">Runnable</span> &#123;<br>  <br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>构造方法</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// XmlMapperReload 构造方法</span><br><span class="hljs-comment">// mapperLocations：mapper xml 路径</span><br><span class="hljs-comment">// checkSeconds 多久检测一次</span><br><span class="hljs-comment">// enabled 是否开启</span><br><span class="hljs-keyword">public</span> <span class="hljs-title function_">XmlMapperReload</span><span class="hljs-params">(Resource[] mapperLocations, SqlSessionFactory sqlSessionFactory,<span class="hljs-type">int</span> checkSeconds, <span class="hljs-type">boolean</span> enabled)</span> &#123;&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>开启监听</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs java"><br><span class="hljs-meta">@Override</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">run</span><span class="hljs-params">()</span> &#123;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="XmlMapperReload-Bean-Config"><a href="#XmlMapperReload-Bean-Config" class="headerlink" title="XmlMapperReload Bean Config"></a>XmlMapperReload Bean Config</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Configuration</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">XmlMapperReloadConfig</span> &#123;<br><br>    <span class="hljs-meta">@Bean</span><br>    <span class="hljs-meta">@Profile(&quot;dev&quot;)</span><br>    <span class="hljs-keyword">public</span> XmlMapperReload <span class="hljs-title function_">xmlMapperReload</span><span class="hljs-params">(SqlSessionFactory sqlSessionFactory, MybatisPlusProperties mybatisPlusProperties)</span> &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">XmlMapperReload</span>(mybatisPlusProperties.resolveMapperLocations(), sqlSessionFactory, <span class="hljs-number">2</span>, <span class="hljs-literal">true</span>);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<p><strong>完整的源码，放在github上边了，可以拿来直接跑起来的项目，连接地址：</strong></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/lianbian/JavaHotDevbugTool">https://github.com/lianbian/JavaHotDevbugTool</a></p>
+<h3 id="重启服务-1"><a href="#重启服务-1" class="headerlink" title="重启服务"></a>重启服务</h3><p><img src="http://mkstatic.lianbian.net/202112012325135.png" srcset="/img/loading.gif" lazyload alt="重启服务"></p>
+<h3 id="测试效果-1"><a href="#测试效果-1" class="headerlink" title="测试效果"></a>测试效果</h3><p><img src="http://mkstatic.lianbian.net/202112012325174.png" srcset="/img/loading.gif" lazyload alt="开始1条记录"></p>
+<p><img src="http://mkstatic.lianbian.net/202112012326934.png" srcset="/img/loading.gif" lazyload alt="删除limit 1"></p>
+<p><img src="http://mkstatic.lianbian.net/202112012327419.png" srcset="/img/loading.gif" lazyload alt="手动编译"></p>
+<p><img src="http://mkstatic.lianbian.net/202112012327652.png" srcset="/img/loading.gif" lazyload alt="5条记录全部显示"></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这篇文章写到这里就完成了，几个注意点：</p>
+<ol>
+<li>很多时候是因为idea自动编译没生效导致热部署失败，采用<strong>手动编译</strong>方式，也挺好的；</li>
+<li>完整的简洁的项目代码放在了github上边（<a target="_blank" rel="noopener" href="https://github.com/lianbian/JavaHotDevbugTool%EF%BC%89%EF%BC%8C%E9%9C%80%E8%A6%81%E7%9A%84%E8%87%AA%E5%8F%96%EF%BC%8C%E6%8B%BF%E7%9D%80%E5%B0%B1%E8%83%BD%E8%B7%91%E8%B5%B7%E6%9D%A5%E7%9A%84%E9%A1%B9%E7%9B%AE%EF%BC%8C%E4%B9%9F%E5%8F%AF%E4%BB%A5%E6%96%87%E6%9C%AB%E7%9A%84%E6%9F%A5%E7%9C%8B%E5%8E%9F%E6%96%87%EF%BC%9B">https://github.com/lianbian/JavaHotDevbugTool），需要的自取，拿着就能跑起来的项目，也可以文末的查看原文；</a></li>
+<li>最后，就是<strong>注意细节</strong>。</li>
+</ol>
+<p>衷心感谢每一位认真读文章的人，我是连边，专注于Java和架构领域，坚持撰写有原理，有实战，有体系的技术文章。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/java/" class="category-chain-item">java</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/java/" class="print-no-link">#java</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>不重启服务进行功能开发，热部署</div>
+      <div>https://www.lianbian.net/java/8558ecaea2fb.html</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>连边</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2021年12月3日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/%E6%95%B0%E6%8D%AE%E5%BA%93/955c852efe57.html" title="Win下部署多个MySQL数据库实例">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Win下部署多个MySQL数据库实例</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/redis/21e0e69ffb2a.html" title="手写Redis的LRU淘汰策略">
+                        <span class="hidden-mobile">手写Redis的LRU淘汰策略</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+    <!-- 备案信息 ICP for China -->
+    <div class="beian">
+  <span>
+    <a href="http://beian.miit.gov.cn/" target="_blank" rel="nofollow noopener">
+      湘ICP备1900865号-3
+    </a>
+  </span>
+  
+    
+      <span>
+        <a
+          href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=湘ICP备1900865号-3"
+          rel="nofollow noopener"
+          class="beian-police"
+          target="_blank"
+        >
+          
+            <span style="visibility: hidden; width: 0">|</span>
+            <img src="/img/police_beian.png" srcset="/img/loading.gif" lazyload alt="police-icon"/>
+          
+          <span>湘ICP备1900865号-3</span>
+        </a>
+      </span>
+    
+  
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

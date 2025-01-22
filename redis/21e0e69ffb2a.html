@@ -1,0 +1,818 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="连边">
+  <meta name="keywords" content="redis">
+  
+    <meta name="description" content="大家好，我是连边。 今天我们这篇文章的目的只有一个，那就是搞懂LRU淘汰策略以及实现一个LRU算法。 文章会结合图解循序渐进的讲解，跟着我的思路慢慢来就能看懂，我们开始吧。 文章导读 Redis的淘汰策略为什么要有淘汰策略呢？ 因为存储内存的空间是有限的，所以需要有淘汰的策略。 Redis的清理内存淘汰策略有哪些呢？  LRU算法简介LRU是Least Recently Used的缩写，即最近最少">
+<meta property="og:type" content="article">
+<meta property="og:title" content="手写Redis的LRU淘汰策略">
+<meta property="og:url" content="https://www.lianbian.net/redis/21e0e69ffb2a.html">
+<meta property="og:site_name" content="连边">
+<meta property="og:description" content="大家好，我是连边。 今天我们这篇文章的目的只有一个，那就是搞懂LRU淘汰策略以及实现一个LRU算法。 文章会结合图解循序渐进的讲解，跟着我的思路慢慢来就能看懂，我们开始吧。 文章导读 Redis的淘汰策略为什么要有淘汰策略呢？ 因为存储内存的空间是有限的，所以需要有淘汰的策略。 Redis的清理内存淘汰策略有哪些呢？  LRU算法简介LRU是Least Recently Used的缩写，即最近最少">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://mkstatic.lianbian.net/202110291439151.png">
+<meta property="og:image" content="http://mkstatic.lianbian.net/202110291452127.png">
+<meta property="og:image" content="http://mkstatic.lianbian.net/202110290847476.png">
+<meta property="og:image" content="http://mkstatic.lianbian.net/202110290919765.png">
+<meta property="og:image" content="http://mkstatic.lianbian.net/202110291228385.png">
+<meta property="og:image" content="http://mkstatic.lianbian.net/202110291019095.png">
+<meta property="og:image" content="http://mkstatic.lianbian.net/202110291025402.png">
+<meta property="og:image" content="http://mkstatic.lianbian.net/202110291249801.png">
+<meta property="og:image" content="http://mkstatic.lianbian.net/202110291312430.png">
+<meta property="og:image" content="http://mkstatic.lianbian.net/202110291329584.png">
+<meta property="og:image" content="http://mkstatic.lianbian.net/202110291341404.png">
+<meta property="og:image" content="https://mkstatic.lianbian.net/202203160758473.jpg">
+<meta property="article:published_time" content="2021-10-28T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-01-22T08:28:33.984Z">
+<meta property="article:author" content="连边">
+<meta property="article:tag" content="redis">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://mkstatic.lianbian.net/202110291439151.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>手写Redis的LRU淘汰策略 - 连边</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"www.lianbian.net","root":"/","version":"1.9.5","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>连边</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="手写Redis的LRU淘汰策略"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2021-10-29 00:00" pubdate>
+          2021年10月29日 凌晨
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.6k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          39 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">手写Redis的LRU淘汰策略</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>大家好，我是连边。</p>
+<p>今天我们这篇文章的目的只有一个，那就是<code>搞懂LRU淘汰策略</code>以及<code>实现一个LRU算法</code>。</p>
+<p>文章会结合图解循序渐进的讲解，跟着我的思路慢慢来就能看懂，我们开始吧。</p>
+<h2 id="文章导读"><a href="#文章导读" class="headerlink" title="文章导读"></a>文章导读</h2><p><img src="http://mkstatic.lianbian.net/202110291439151.png" srcset="/img/loading.gif" lazyload alt="LRU"></p>
+<h2 id="Redis的淘汰策略"><a href="#Redis的淘汰策略" class="headerlink" title="Redis的淘汰策略"></a>Redis的淘汰策略</h2><p>为什么要有淘汰策略呢？</p>
+<p><strong>因为存储内存的空间是有限的，所以需要有淘汰的策略。</strong></p>
+<p>Redis的清理内存淘汰策略有哪些呢？</p>
+<p><img src="http://mkstatic.lianbian.net/202110291452127.png" srcset="/img/loading.gif" lazyload alt="Redis内存淘汰策略"></p>
+<h2 id="LRU算法简介"><a href="#LRU算法简介" class="headerlink" title="LRU算法简介"></a>LRU算法简介</h2><p>LRU是<code>Least Recently Used</code>的缩写，即<code>最近最少使用</code>，是一种常见的页面置换算法。</p>
+<p>我们手机的后台窗口（苹果手机双击Home的效果），他总是会把最近常用的窗口放在最前边，而最不常用的应用窗口，就排列在后边了，如果再加上只能放置N个应用窗口的限制，淘汰最不常用的最近最少用的应用窗口，那就是一个活生生的<code>LRU</code>。</p>
+<p><img src="http://mkstatic.lianbian.net/202110290847476.png" srcset="/img/loading.gif" lazyload alt="手机后台应用窗口"></p>
+<h2 id="实现思想推导"><a href="#实现思想推导" class="headerlink" title="实现思想推导"></a>实现思想推导</h2><p><img src="http://mkstatic.lianbian.net/202110290919765.png" srcset="/img/loading.gif" lazyload alt="手机应用案例"></p>
+<p>从上边的示意图，我们可以分析出这么几个点：</p>
+<ol>
+<li>有序；</li>
+<li>如果应用开满3个了，要淘汰最不常用的应用，每次新访问应用，需要把数据插入队头（按照业务可以设定左右哪一边是队头）；</li>
+<li>O(1)复杂度是我们查找数据的追求，我们什么结构能够实现快速的O(1)查找呢？</li>
+</ol>
+<p><img src="http://mkstatic.lianbian.net/202110291228385.png" srcset="/img/loading.gif" lazyload alt="推导图"></p>
+<p><strong>通过上边的推导，我们就能得出，<code>LRU</code>算法核心是<code>HashMap + DoubleLinkedList</code>。</strong></p>
+<p>思想搞明白了，我们接下来编码实现。</p>
+<h2 id="巧用LinkedHashMap"><a href="#巧用LinkedHashMap" class="headerlink" title="巧用LinkedHashMap"></a>巧用LinkedHashMap</h2><p>我们查看Java的<code>LinkedHashMap</code>使用说明。</p>
+<p><img src="http://mkstatic.lianbian.net/202110291019095.png" srcset="/img/loading.gif" lazyload alt="LinkedHashMap使用说明"></p>
+<p><strong>翻译：这种Map结构很适合构建LRU缓存。</strong></p>
+<p>继承<code>LinkedHashMap</code>实现<code>LRU</code>算法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">LRUDemo</span>&lt;K, V&gt; <span class="hljs-keyword">extends</span> <span class="hljs-title class_">LinkedHashMap</span>&lt;K, V&gt; &#123;<br>    <span class="hljs-keyword">private</span> <span class="hljs-type">int</span> capacity;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-title function_">LRUDemo</span><span class="hljs-params">(<span class="hljs-type">int</span> capacity)</span> &#123;<br>        <span class="hljs-built_in">super</span>(capacity, <span class="hljs-number">0.75F</span>, <span class="hljs-literal">true</span>);<br>        <span class="hljs-built_in">this</span>.capacity = capacity;<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">protected</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">removeEldestEntry</span><span class="hljs-params">(Map.Entry&lt;K, V&gt; eldest)</span> &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-built_in">super</span>.size() &gt; capacity;<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>        <span class="hljs-type">LRUDemo</span> <span class="hljs-variable">lruDemo</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">LRUDemo</span>(<span class="hljs-number">3</span>);<br>        lruDemo.put(<span class="hljs-number">1</span>, <span class="hljs-string">&quot;a&quot;</span>);<br>        lruDemo.put(<span class="hljs-number">2</span>, <span class="hljs-string">&quot;b&quot;</span>);<br>        lruDemo.put(<span class="hljs-number">3</span>, <span class="hljs-string">&quot;c&quot;</span>);<br>        System.out.println(lruDemo.keySet());<br><br>        lruDemo.put(<span class="hljs-number">4</span>, <span class="hljs-string">&quot;d&quot;</span>);<br>        lruDemo.put(<span class="hljs-number">5</span>, <span class="hljs-string">&quot;e&quot;</span>);<br>        System.out.println(lruDemo.keySet());<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>重点讲解：</strong></p>
+<ol>
+<li><p>构造方法：<code>super(capacity, 0.75F, true)</code>，主要看第三个参数：</p>
+<ol>
+<li><p><img src="http://mkstatic.lianbian.net/202110291025402.png" srcset="/img/loading.gif" lazyload alt="order参数"></p>
+</li>
+<li><p><code>true -&gt; access-order // false -&gt; insertion-order</code>即按照访问时间排序，还是按照插入的时间来排序</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// 构造方法改成false</span><br><span class="hljs-built_in">super</span>(capacity, <span class="hljs-number">0.75F</span>, <span class="hljs-literal">false</span>);<br><span class="hljs-comment">// 使用示例</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>  <span class="hljs-type">LRUDemo</span> <span class="hljs-variable">lruDemo</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">LRUDemo</span>(<span class="hljs-number">3</span>);<br>  lruDemo.put(<span class="hljs-number">1</span>, <span class="hljs-string">&quot;a&quot;</span>);<br>  lruDemo.put(<span class="hljs-number">2</span>, <span class="hljs-string">&quot;b&quot;</span>);<br>  lruDemo.put(<span class="hljs-number">3</span>, <span class="hljs-string">&quot;c&quot;</span>);<br>  System.out.println(lruDemo.keySet());<br><br>  lruDemo.put(<span class="hljs-number">1</span>, <span class="hljs-string">&quot;y&quot;</span>);<br>  <span class="hljs-comment">// 构造方法order=true，输出：[2,3,1]，</span><br>  <span class="hljs-comment">// 构造方法order=false，输出：[1,2,3]，</span><br>  System.out.println(lruDemo.keySet());<br>&#125;<br></code></pre></td></tr></table></figure></li>
+</ol>
+</li>
+<li><p><code>removeEldestEntry</code>方法：什么时候移除最年长的元素。</p>
+</li>
+</ol>
+<p>通过上面，相信大家对<code>LRU</code>算法有所理解了，接下来我们不依赖JDK的<code>LinkedHashMap</code>，通过我们自己的理解，动手实现一个<code>LRU</code>算法，让我们的<code>LRU</code>算法刻入我们的大脑。</p>
+<h2 id="手写LRU"><a href="#手写LRU" class="headerlink" title="手写LRU"></a>手写LRU</h2><p>上边的推导图中可以看出，我们用<code>HashMap</code>来做具体的数据储存，但是我们还需要构造一个<code>DoubleLinkedList</code>对象（结构体）来储存<code>HashMap</code>的具体<code>key</code>顺序关系。</p>
+<h3 id="第一步：构建DoubleLinkedList对象"><a href="#第一步：构建DoubleLinkedList对象" class="headerlink" title="第一步：构建DoubleLinkedList对象"></a>第一步：构建DoubleLinkedList对象</h3><ol>
+<li>所以我们现在<strong>第一步</strong>，就是构建一个<code>DoubleLinkedList</code>对象：</li>
+</ol>
+<p><img src="http://mkstatic.lianbian.net/202110291249801.png" srcset="/img/loading.gif" lazyload alt="DoubleLinkedList示意图"></p>
+<p>我们可以从<code>HashMap</code>源码中找一些灵感，他们都是使用一个<code>Node</code>静态内部类来储存节点的值。</p>
+<h3 id="第二步：构建节点"><a href="#第二步：构建节点" class="headerlink" title="第二步：构建节点"></a>第二步：构建节点</h3><p>通过上边的示意图，我们可以得知<strong>节点</strong>应该要储存的内容：</p>
+<ol>
+<li>key</li>
+<li>value</li>
+<li>prev节点</li>
+<li>next节点</li>
+</ol>
+<p>翻译成代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Node</span>&lt;K, V&gt; &#123;<br>    K key;<br>    V value;<br>    Node&lt;K, V&gt; prev;<br>    Node&lt;K, V&gt; next;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-title function_">Node</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-built_in">this</span>.prev = <span class="hljs-built_in">this</span>.next = <span class="hljs-literal">null</span>;<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-title function_">Node</span><span class="hljs-params">(K key, V value)</span> &#123;<br>        <span class="hljs-built_in">this</span>.key = key;<br>        <span class="hljs-built_in">this</span>.value = value;<br>        <span class="hljs-built_in">this</span>.prev = <span class="hljs-built_in">this</span>.next = <span class="hljs-literal">null</span>;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="第三步：初始化DoubleLinkedList对象"><a href="#第三步：初始化DoubleLinkedList对象" class="headerlink" title="第三步：初始化DoubleLinkedList对象"></a>第三步：初始化DoubleLinkedList对象</h3><p><img src="http://mkstatic.lianbian.net/202110291312430.png" srcset="/img/loading.gif" lazyload alt="DoubleLinkedList初始化示意图"></p>
+<p>还是通过上边的示意图，我们可以得知<strong>DoubleLinkedList对象</strong>应该要储存的内容：</p>
+<ol>
+<li>头节点</li>
+<li>尾节点</li>
+</ol>
+<p>翻译成代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">class</span> <span class="hljs-title class_">DoubleLinkedList</span>&lt;K, V&gt; &#123;<br>    Node&lt;K, V&gt; head;<br>    Node&lt;K, V&gt; tail;<br><br>    <span class="hljs-comment">// 构造方法</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-title function_">DoubleLinkedList</span><span class="hljs-params">()</span>&#123;<br>        head = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Node</span>&lt;&gt;();<br>        tail = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Node</span>&lt;&gt;();<br>        head.next = tail;<br>        tail.prev = head;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="从头添加节点"><a href="#从头添加节点" class="headerlink" title="从头添加节点"></a>从头添加节点</h4><p><img src="http://mkstatic.lianbian.net/202110291329584.png" srcset="/img/loading.gif" lazyload alt="从头添加节点"></p>
+<p>翻译成代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">addHead</span><span class="hljs-params">(Node&lt;K, V&gt; node)</span> &#123;<br>    node.next = head.next;<br>    node.prev = head;<br>    head.next.prev = node;<br>    head.next = node;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="删除节点"><a href="#删除节点" class="headerlink" title="删除节点"></a>删除节点</h4><p><img src="http://mkstatic.lianbian.net/202110291341404.png" srcset="/img/loading.gif" lazyload alt="删除节点"></p>
+<p>翻译成代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">removeNode</span><span class="hljs-params">(Node&lt;K, V&gt; node)</span> &#123;<br>    node.next.prev = node.prev;<br>    node.prev.next = node.next;<br>    node.prev = <span class="hljs-literal">null</span>;<br>    node.next = <span class="hljs-literal">null</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="获取最后一个节点"><a href="#获取最后一个节点" class="headerlink" title="获取最后一个节点"></a>获取最后一个节点</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> Node <span class="hljs-title function_">getLast</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-keyword">return</span> tail.prev;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="第四步：LRU对象属性"><a href="#第四步：LRU对象属性" class="headerlink" title="第四步：LRU对象属性"></a>第四步：LRU对象属性</h3><h4 id="cacheSize"><a href="#cacheSize" class="headerlink" title="cacheSize"></a>cacheSize</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">private</span> <span class="hljs-type">int</span> cacheSize;<br></code></pre></td></tr></table></figure>
+
+<h4 id="map"><a href="#map" class="headerlink" title="map"></a>map</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java">Map&lt;Integer, Node&lt;Integer, String&gt;&gt; map;<br></code></pre></td></tr></table></figure>
+
+<h4 id="doubleLinkedList"><a href="#doubleLinkedList" class="headerlink" title="doubleLinkedList"></a>doubleLinkedList</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java">DoubleLinkedList&lt;Integer, String&gt; doubleLinkedList;<br></code></pre></td></tr></table></figure>
+
+<h3 id="第五步：LRU对象的方法"><a href="#第五步：LRU对象的方法" class="headerlink" title="第五步：LRU对象的方法"></a>第五步：LRU对象的方法</h3><h4 id="构造方法"><a href="#构造方法" class="headerlink" title="构造方法"></a>构造方法</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-title function_">LRUDemo</span><span class="hljs-params">(<span class="hljs-type">int</span> cacheSize)</span> &#123;<br>    <span class="hljs-built_in">this</span>.cacheSize = cacheSize;<br>    map = <span class="hljs-keyword">new</span> <span class="hljs-title class_">HashMap</span>&lt;&gt;();<br>    doubleLinkedList = <span class="hljs-keyword">new</span> <span class="hljs-title class_">DoubleLinkedList</span>&lt;&gt;();<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="refreshNode刷新节点"><a href="#refreshNode刷新节点" class="headerlink" title="refreshNode刷新节点"></a>refreshNode刷新节点</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">refreshNode</span><span class="hljs-params">(Node node)</span> &#123;<br>    doubleLinkedList.removeNode(node);<br>    doubleLinkedList.addHead(node);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="get节点"><a href="#get节点" class="headerlink" title="get节点"></a>get节点</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> String <span class="hljs-title function_">get</span><span class="hljs-params">(<span class="hljs-type">int</span> key)</span> &#123;<br>    <span class="hljs-keyword">if</span> (!map.containsKey(key)) &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;&quot;</span>;<br>    &#125;<br><br>    Node&lt;Integer, String&gt; node = map.get(key);<br>    refreshNode(node);<br>    <span class="hljs-keyword">return</span> node.value;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="put节点"><a href="#put节点" class="headerlink" title="put节点"></a>put节点</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">put</span><span class="hljs-params">(<span class="hljs-type">int</span> key, String value)</span> &#123;<br>    <span class="hljs-keyword">if</span> (map.containsKey(key)) &#123;<br>        Node&lt;Integer, String&gt; node = map.get(key);<br>        node.value = value;<br>        map.put(key, node);<br><br>        refreshNode(node);<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        <span class="hljs-keyword">if</span> (map.size() == cacheSize) &#123;<br>            <span class="hljs-type">Node</span> <span class="hljs-variable">lastNode</span> <span class="hljs-operator">=</span> doubleLinkedList.getLast();<br>            map.remove(lastNode.key);<br>            doubleLinkedList.removeNode(lastNode);<br>        &#125;<br><br>        Node&lt;Integer, String&gt; newNode = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Node</span>&lt;&gt;(key, value);<br>        map.put(key, newNode);<br>        doubleLinkedList.addHead(newNode);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="第六步：测试"><a href="#第六步：测试" class="headerlink" title="第六步：测试"></a>第六步：测试</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>    <span class="hljs-type">LRUDemo</span> <span class="hljs-variable">lruDemo</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">LRUDemo</span>(<span class="hljs-number">3</span>);<br>    lruDemo.put(<span class="hljs-number">1</span>, <span class="hljs-string">&quot;美团&quot;</span>);<br>    lruDemo.put(<span class="hljs-number">2</span>, <span class="hljs-string">&quot;微信&quot;</span>);<br>    lruDemo.put(<span class="hljs-number">3</span>, <span class="hljs-string">&quot;抖音&quot;</span>);<br>    lruDemo.put(<span class="hljs-number">4</span>, <span class="hljs-string">&quot;微博&quot;</span>);<br>    System.out.println(lruDemo.map.keySet());<br><br>    System.out.println(lruDemo.get(<span class="hljs-number">2</span>));<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p><code>LRU</code>算法到这里就写完啦，<a href="https://www.lianbian.net/2021/10/29/Redis/LRU%E5%AE%8C%E6%95%B4%E4%BB%A3%E7%A0%81/">完整的代码</a>可以从阅读原文的链接地址获取。</p>
+<p>希望看完这篇文章之后，彻底弄懂LRU算法。</p>
+<p>衷心感谢每一位认真读文章的人，我是连边，专注于Java和架构领域，坚持撰写有原理，有实战，有体系的技术文章。</p>
+<p>参考资料：</p>
+<p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1Hy4y1B78T?p=64">https://www.bilibili.com/video/BV1Hy4y1B78T?p=64</a></p>
+<p>我是连边，专注于Java和架构领域，坚持撰写有原理，有实战，有体系的技术文章。</p>
+<p>关注 <code>订阅号@连边</code> 不错过精彩文章。</p>
+<p><img src="https://mkstatic.lianbian.net/202203160758473.jpg" srcset="/img/loading.gif" lazyload alt="订阅号@连边"></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/redis/" class="category-chain-item">redis</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/redis/" class="print-no-link">#redis</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>手写Redis的LRU淘汰策略</div>
+      <div>https://www.lianbian.net/redis/21e0e69ffb2a.html</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>连边</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2021年10月29日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/java/8558ecaea2fb.html" title="不重启服务进行功能开发，热部署">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">不重启服务进行功能开发，热部署</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/java/5f304de4d3ee.html" title="几行代码，优雅的实现策略模式">
+                        <span class="hidden-mobile">几行代码，优雅的实现策略模式</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+    <!-- 备案信息 ICP for China -->
+    <div class="beian">
+  <span>
+    <a href="http://beian.miit.gov.cn/" target="_blank" rel="nofollow noopener">
+      湘ICP备1900865号-3
+    </a>
+  </span>
+  
+    
+      <span>
+        <a
+          href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=湘ICP备1900865号-3"
+          rel="nofollow noopener"
+          class="beian-police"
+          target="_blank"
+        >
+          
+            <span style="visibility: hidden; width: 0">|</span>
+            <img src="/img/police_beian.png" srcset="/img/loading.gif" lazyload alt="police-icon"/>
+          
+          <span>湘ICP备1900865号-3</span>
+        </a>
+      </span>
+    
+  
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
